@@ -1,16 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Donate│CallMeViiru's Site</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate│CallMeViiru's Site</title>
+    <link rel="icon" href="X" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav {
+            margin: 10px 0;
+            text-align: center;
+        }
+        nav a {
+            margin: 0 15px;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        .donate-button {
+            background-color: #ff4500;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        viiricon {
+            border-radius:5px;  
+            padding:10px 20px;
+            margin-left: 10px
+            width: 50px;
+            height: 50px;
+        }
+    </style>
 </head>
 <body>
-<h1><b>Donations</b></h1>
-<h2><b>Ways To Donate:</b></h2>
-1. <a href="Viiru Clicker.html">Roblox</a> <br>
-2. <a href="Clan.html">Pet Simulator</a> <br>
-3. <a href="index.html">Irl Money (W.I.P)</a> <br>
-<br>
-Return to <a href="index.html">HOME</a> Page <br>
+    <header>
+        <img src="Images/CallMeViiru.png" id="viiricon"></img>   
+        <br>
+        <h1>CallMeViiru</h1>
+        <nav>
+            <a href="home">Home</a>
+            <a href="about">About</a>
+            <a href="#">Videos</a>
+            <a href="news">News</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Donate to Us!</h2>
+            <p>Thanks!</p>
+        </section>
+        <section>
+            <img src="img_girl.jpg" alt="Our Donation Link">
+        </section>
+    </main>
+
+    <footer>
+        <a class="donate-button" href="https://postimg.cc/BXcHnp9G">Donate</a>
+        <p>&copy; <span id="year"></span> CallMeViiru's Productions. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>  
 </body>
 </html>
