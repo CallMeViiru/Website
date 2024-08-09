@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS99 Deal Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            margin-top: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculate Ps99 Trading Plaza Maximum Priced "Great Deal"</h1>
+    <input type="number" id="numberInput" placeholder="Enter Current RAP">
+    <button onclick="calculatePercentage()">Calculate Price For Great Deal</button>
+    <div id="result"></div>
+
+    <script>
+        function calculatePercentage() {
+            const number = parseFloat(document.getElementById('numberInput').value);
+            if (isNaN(number)) {
+                document.getElementById('result').textContent = "Please enter a valid number.";
+            } else {
+                const result = number * 0.79;
+                document.getElementById('result').textContent = `79% of ${number} is ${result.toFixed(2)}`;
+            }
+        }
+    </script>
+</body>
+</html>
