@@ -81,7 +81,22 @@
 
         </section>
         <section id="section2">
+               <div>
+    <label for="numberInput">Enter the RAP Value: </label>
+    <input type="number" id="numberInput" oninput="calculatePercentage()" />
+</div>
 
+<div>
+    <p>Great deal maximum is: <span id="result">0</span></p>
+</div>
+
+<script>
+    function calculatePercentage() {
+        var number = document.getElementById("numberInput").value;
+        var percentage = number * 0.79;
+        document.getElementById("result").textContent = percentage.toFixed(2);
+    }
+</script>
         </section>
         <footer id="footer">
             <h3 id="FH3">Copyright CallMeViiru 2024 </h3>
