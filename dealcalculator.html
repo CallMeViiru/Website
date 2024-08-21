@@ -32,20 +32,25 @@
         const number = parseFloat(document.getElementById('numberInput').value);
         if (isNaN(number)) {
             document.getElementById('result').textContent = "Please enter a valid number.";
+            document.getElementById('copyButton').style.display = 'none';
         } else {
             const result = Math.floor(number * 0.79);
             document.getElementById('result').textContent = `Price is: ${result}`;
+            document.getElementById('copyButton').style.display = 'inline-block';
         }
     }
+
     function copyToClipboard() {
-            const resultText = document.getElementById('result').textContent;
-            const price = resultText.split(': ')[1]; // Get the numeric part after "Price is: "
-            navigator.clipboard.writeText(price).then(() => {
-                alert('Price copied to clipboard: ' + price);
-            }).catch(err => {
-                alert('Failed to copy: ', err);
-            });
-</script>
+        const resultText = document.getElementById('result').textContent;
+        const price = resultText.split(': ')[1]; // Get the numeric part after "Price is: "
+        navigator.clipboard.writeText(price).then(() => {
+            alert('Price copied to clipboard: ' + price);
+        }).catch(err => {
+            alert('Failed to copy: ', err);
+        });
+    }
+    </script>
+
     <br>
     <br>
     <br>
@@ -54,3 +59,4 @@
     <h4>©2024 CallMeViiru</h4>
 </body>
 </html>
+
