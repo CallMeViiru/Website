@@ -43,10 +43,7 @@
     function copyToClipboard() {
         const resultText = document.getElementById('result').textContent;
         const price = resultText.split(': ')[1]; // Get the numeric part after "Price is: "
-        navigator.clipboard.writeText(price).then(() => {
-            alert('Price copied to clipboard: ' + price);
-        }).catch(err => {
-            alert('Failed to copy: ', err);
+        navigator.clipboard.writeText(price)
         });
     }
     </script>
