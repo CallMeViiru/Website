@@ -27,15 +27,15 @@
     <div id="result"></div>
 
     <script>
-        function calculatePercentage() {
-            const number = parseFloat(document.getElementById('numberInput').value);
-            if (isNaN(number)) {
-                document.getElementById('result').textContent = "Please enter a valid number.";
-            } else {
-                const result = number * 0.79;
-                document.getElementById('result').textContent = `Price is: ${result.toFixed(2)}`;
-            }
+    function calculatePercentage() {
+        const number = parseFloat(document.getElementById('numberInput').value);
+        if (isNaN(number)) {
+            document.getElementById('result').textContent = "Please enter a valid number.";
+        } else {
+            const result = Math.floor(number * 0.79);
+            document.getElementById('result').textContent = `Price is: ${result}`;
         }
-    </script>
+    }
+</script>
 </body>
 </html>
