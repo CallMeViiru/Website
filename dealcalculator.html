@@ -43,7 +43,12 @@
     function copyToClipboard() {
         const resultText = document.getElementById('result').textContent;
         const price = resultText.split(': ')[1]; // Get the numeric part after "Price is: "
-        navigator.clipboard.writeText(price)
+        navigator.clipboard.writeText(price).then(() => {
+            // Copy was successful
+            console.log('Price copied to clipboard: ' + price);
+        }).catch(err => {
+            // Copy failed
+            console.error('Failed to copy: ', err);
         });
     }
     </script>
@@ -56,4 +61,3 @@
     <h4>©2024 CallMeViiru</h4>
 </body>
 </html>
-
