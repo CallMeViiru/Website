@@ -25,6 +25,7 @@
     <input type="number" id="numberInput" placeholder="Enter Current RAP">
     <button onclick="calculatePercentage()">Calculate Price For Great Deal</button>
     <div id="result"></div>
+    <button id="copyButton" style="display: none;" onclick="copyToClipboard()">Copy to clipboard</button>
 
     <script>
     function calculatePercentage() {
@@ -36,6 +37,14 @@
             document.getElementById('result').textContent = `Price is: ${result}`;
         }
     }
+    function copyToClipboard() {
+            const resultText = document.getElementById('result').textContent;
+            const price = resultText.split(': ')[1]; // Get the numeric part after "Price is: "
+            navigator.clipboard.writeText(price).then(() => {
+                alert('Price copied to clipboard: ' + price);
+            }).catch(err => {
+                alert('Failed to copy: ', err);
+            });
 </script>
     <br>
     <br>
