@@ -114,4 +114,9 @@ section {
     border: none;
     border-radius: 12px;
 }
+.video-title {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    margin-bottom: 20px;
+}
 
