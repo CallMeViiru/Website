@@ -100,8 +100,11 @@ section {
 }
 #shopgrid {
   display: grid;
-  padding: 10px;
-  vertical-align: middle;
+  grid-template-columns: repeat(3, 1fr); /* 3 per row */
+  gap: 30px;
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
 }
 .textsection {
     padding-bottom: 50px;
@@ -110,15 +113,12 @@ section {
     text-align: center;
 }
 .productbox {
-    border-width: 10px;
-    border-color: black;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    font-size: 1.2rem;
-    color: black;
-    text-align: center;
+  background: #fff;
+  border: 1px solid #ddd; /* Clear border for separation */
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  transition: box-shadow 0.3s;
 }
 #productimage {
   width: 75px;
