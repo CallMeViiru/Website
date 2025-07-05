@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Store | CallMeViiru's Site</title>
+  <link rel="stylesheet" href="shopstyle.css" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9235877052315560"
+   crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header id="header">
+    <div class="logo">
+      <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
+      <h1 id="HH1">CallMeViiru's Site</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="Store.html" class="active">Store</a></li>
+        <li><a href="Socials.html">Socials</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Store Hero -->
+  <section class="store-hero">
+    <h2>Store</h2>
+    <p>This is my store! Buy CatCraft items, promotions, or sponsorships. More coming soon!</p>
+  </section>
+
+  <!-- Category Filter -->
+  <section class="filter-section">
+    <label for="category">Filter by Category:</label>
+    <select id="category" onchange="filterProducts()">
+      <option value="all">All</option>
+      <option value="catcraft">CatCraft Items</option>
+      <option value="ads">Paid Advertisements / Sponsorships</option>
+      <!-- Add more options here -->
+    </select>
+  </section>
+
+  <!-- Product Grid -->
+  <section id="shopgrid">
+    <div class="productbox" data-category="catcraft">
+      <img src="Images/Viiru.png" alt="Product 1">
+      <h3>CatCraft Item 1</h3>
+      <p>$5.00</p>
+      <a href="#">Buy Now</a>
+    </div>
+    <div class="productbox" data-category="ads">
+      <img src="Images/Viiru.png" alt="Product 2">
+      <h3>Sponsorship Slot</h3>
+      <p>$15.00</p>
+      <a href="#">Buy Now</a>
+    </div>
+    <div class="productbox" data-category="catcraft">
+      <img src="Images/Viiru.png" alt="Product 3">
+      <h3>CatCraft Item 2</h3>
+      <p>$8.00</p>
+      <a href="#">Buy Now</a>
+    </div>
+    <!-- Add more products here -->
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer">
+    <p>&copy; 2025 viiru.top & viiru.ee</p>
+    <a href="privacypolicy.html">Privacy Policy</a> |
+    <a href="tos.html">Terms Of Service</a>
+  </footer>
+
+  <!-- Filter Script -->
+  <script>
+    function filterProducts() {
+      const selectedCategory = document.getElementById('category').value;
+      const products = document.querySelectorAll('.productbox');
+
+      products.forEach(product => {
+        if (selectedCategory === 'all' || product.dataset.category === selectedCategory) {
+          product.style.display = 'block';
+        } else {
+          product.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
