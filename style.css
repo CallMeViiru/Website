@@ -267,6 +267,11 @@ section {
 .see-more-btn:hover {
   background: #005fa3;
 }
+.in-content-ad {
+  margin: 30px 0; /* adds spacing above and below */
+  text-align: center; /* centers the ad */
+}
+
 
 
 
