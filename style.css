@@ -1,4 +1,4 @@
-/* === GLOBAL BODY === */
+/* === RESET & BODY === */
 body {
   font-family: Arial, sans-serif;
   background-color: #f7f9fc;
@@ -8,10 +8,10 @@ body {
 }
 
 section, .textsection {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 40px auto;
   padding: 30px;
-  background-color: #ffffff;
+  background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
@@ -25,14 +25,14 @@ p {
   line-height: 1.6;
 }
 
-/* === HEADER === */
+/* === HEADER (GLOBAL) === */
 #header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
+  justify-content: space-between;
+  background: #1e293b;
   padding: 15px 30px;
-  background-color: #1e293b;
   border-bottom: 5px solid #0f172a;
 }
 
@@ -43,18 +43,12 @@ p {
 }
 
 #HH1 {
-  display: inline-block;
   color: #93c5fd;
   font-size: 1.6rem;
   margin: 0;
 }
 
-#header > img,
-#header > h1 {
-  vertical-align: middle;
-}
-
-nav ul {
+#header nav ul {
   list-style: none;
   display: flex;
   gap: 20px;
@@ -62,22 +56,22 @@ nav ul {
   padding: 0;
 }
 
-nav li a {
+#header nav li a {
   color: #f1f5f9;
   text-decoration: none;
   font-weight: bold;
-  border-radius: 5px;
   padding: 10px 15px;
+  border-radius: 5px;
   transition: background 0.3s;
 }
 
-nav li a:hover,
-nav li a.active {
-  background-color: #0f172a;
+#header nav li a:hover,
+#header nav li a.active {
+  background: #0f172a;
 }
 
 #darkModeToggle {
-  background: transparent;
+  background: none;
   border: none;
   color: #93c5fd;
   font-size: 1.5rem;
@@ -89,13 +83,8 @@ nav li a.active {
   color: #60a5fa;
 }
 
-/* === HEADER FLEX FIX === */
-#header {
-  display: flex;
-  align-items: center;
-}
-
-#header > img {
+/* === FIX HEADER LOGO & TITLE ALIGN === */
+#header img {
   margin-right: 10px;
 }
 
@@ -106,6 +95,11 @@ nav li a.active {
 #header nav {
   display: flex;
   align-items: center;
+}
+
+/* === SPECIFIC HEADER FIX FOR STORE ONLY === */
+body.store-page #header {
+  flex-wrap: nowrap; /* Make sure store header stays one line */
 }
 
 /* === RECOMMENDED PRODUCTS GRID === */
@@ -132,7 +126,6 @@ nav li a.active {
 .product-box img {
   max-width: 100%;
   height: auto;
-  margin-bottom: 10px;
 }
 
 .see-more-container {
@@ -141,7 +134,7 @@ nav li a.active {
 }
 
 .see-more-btn {
-  background-color: #3b82f6;
+  background: #3b82f6;
   color: #fff;
   text-decoration: none;
   padding: 10px 20px;
@@ -149,10 +142,10 @@ nav li a.active {
 }
 
 .see-more-btn:hover {
-  background-color: #2563eb;
+  background: #2563eb;
 }
 
-/* === STORE PAGE === */
+/* === STORE PAGE GRID === */
 .store-section {
   max-width: 1200px;
   margin: 40px auto;
@@ -160,7 +153,7 @@ nav li a.active {
 
 .store-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 3 x N grid */
   gap: 30px;
 }
 
@@ -176,7 +169,6 @@ nav li a.active {
 .store-item img {
   max-width: 100%;
   height: auto;
-  margin-bottom: 15px;
 }
 
 .store-item h3 {
@@ -194,23 +186,22 @@ nav li a.active {
 }
 
 .store-item .add-to-cart {
-  background-color: #3b82f6;
+  background: #3b82f6;
   color: #fff;
   border: none;
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 .store-item .add-to-cart:hover {
-  background-color: #2563eb;
+  background: #2563eb;
 }
 
 /* === FOOTER === */
 #footer {
   text-align: center;
-  background-color: #1e293b;
+  background: #1e293b;
   color: #93c5fd;
   padding: 20px;
   margin: 40px 20px 20px;
@@ -220,7 +211,6 @@ nav li a.active {
 #footer a {
   color: #60a5fa;
   text-decoration: underline;
-  margin: 0 10px;
 }
 
 #footer a:hover {
@@ -229,7 +219,7 @@ nav li a.active {
 
 /* === DARK MODE === */
 body.dark-mode {
-  background-color: #0f172a;
+  background: #0f172a;
   color: #e2e8f0;
 }
 
@@ -237,7 +227,7 @@ body.dark-mode section,
 body.dark-mode .textsection,
 body.dark-mode .product-box,
 body.dark-mode .store-item {
-  background-color: #1e293b;
+  background: #1e293b;
 }
 
 body.dark-mode nav li a {
@@ -246,27 +236,33 @@ body.dark-mode nav li a {
 
 body.dark-mode nav li a:hover,
 body.dark-mode nav li a.active {
-  background-color: #334155;
+  background: #334155;
 }
 
 body.dark-mode #footer {
-  background-color: #0f172a;
+  background: #0f172a;
 }
 
 body.dark-mode .see-more-btn,
 body.dark-mode .add-to-cart {
-  background-color: #3b82f6;
+  background: #3b82f6;
 }
 
 body.dark-mode .see-more-btn:hover,
 body.dark-mode .add-to-cart:hover {
-  background-color: #2563eb;
+  background: #2563eb;
 }
 
-/* === RESPONSIVE === */
+/* === RESPONSIVE NAV === */
 @media (max-width: 700px) {
-  nav ul {
+  #header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #header nav ul {
     flex-direction: column;
     gap: 10px;
   }
 }
+
