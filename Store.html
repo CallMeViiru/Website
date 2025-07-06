@@ -15,15 +15,18 @@
       <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
       <h1 id="HH1">CallMeViiru's Site</h1>
     </div>
-    <nav>
-      <ul>
-        <li><a href="https://www.viiru.top/">Home</a></li>
-        <li><a href="https://www.viiru.top/Store" class="active">Store</a></li>
-        <li><a href="https://www.viiru.top/Socials">Socials</a></li>
-        <li><a href="https://www.viiru.top/about">About</a></li>
-      </ul>
-    </nav>
-    <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+    
+    <div class="right-header">
+      <nav>
+        <ul>
+          <li><a href="https://www.viiru.top/">Home</a></li>
+          <li><a href="https://www.viiru.top/Store" class="active">Store</a></li>
+          <li><a href="https://www.viiru.top/Socials">Socials</a></li>
+          <li><a href="https://www.viiru.top/about">About</a></li>
+        </ul>
+      </nav>
+      <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+    </div>
   </header>
   
   <!-- Store Hero -->
@@ -39,37 +42,35 @@
       <option value="all">All</option>
       <option value="catcraft">CatCraft Items</option>
       <option value="ads">Paid Advertisements / Sponsorships</option>
-      <!-- Add more options here -->
     </select>
   </section>
 
   <!-- Product Grid -->
   <section id="shopgrid">
     <div class="productbox" data-category="catcraft">
-      <img src="Images/Diamond_Armor_Set.png" alt="Product 1">
+      <img src="Images/Diamond_Armor_Set.png" alt="Full Diamond Armor Set">
       <h3>Full Diamond Armor Set (CatCraft)</h3>
       <p>16 Diamonds</p>
       <a href="https://forms.gle/J26bvUkvF47JpcaG7">Buy Now</a>
     </div>
     <div class="productbox" data-category="catcraft">
-      <img src="Images/Enchanted_Book.jpg" alt="Product 3">
+      <img src="Images/Enchanted_Book.jpg" alt="2x Mending or 2x Silk Touch Books">
       <h3>2x Mending or 2x Silk Touch Books (Enchanted books) (CatCraft)</h3>
       <p>1 Diamond</p>
       <a href="https://forms.gle/J26bvUkvF47JpcaG7">Buy Now</a>
     </div>
     <div class="productbox" data-category="catcraft">
-      <img src="Images/Enchanted_Netherite_Axe.webp" alt="Product 3">
+      <img src="Images/Enchanted_Netherite_Axe.webp" alt="Fully Enchanted Netherite Axe">
       <h3>Fully Enchanted Netherite Axe (CatCraft)</h3>
       <p>80 Diamonds</p>
       <a href="https://forms.gle/J26bvUkvF47JpcaG7">Buy Now</a>
     </div>
     <div class="productbox" data-category="ads">
-      <img src="Images/Viiru.png" alt="Product 2">
+      <img src="Images/Viiru.png" alt="Sponsorship Slot">
       <h3>Sponsorship Slot</h3>
       <p>NOT FOR SALE!</p>
       <a href="#">Buy Now</a>
     </div>
-    <!-- Add more products here -->
   </section>
 
   <!-- Footer -->
@@ -94,20 +95,21 @@
       });
     }
   </script>
+
+  <!-- Dark Mode Toggle Script -->
   <script>
-  const toggleButton = document.getElementById('darkModeToggle');
+    const toggleButton = document.getElementById('darkModeToggle');
 
-  toggleButton.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
+    toggleButton.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
 
-    // Switch icons based on mode
-    if (document.body.classList.contains('dark-mode')) {
-      toggleButton.textContent = '☀️'; // Sun icon when dark mode is ON
-    } else {
-      toggleButton.textContent = '🌙'; // Moon icon when dark mode is OFF
-    }
-  });
-</script>
-
+      if (document.body.classList.contains('dark-mode')) {
+        toggleButton.textContent = '☀️'; // Sun icon when dark mode ON
+      } else {
+        toggleButton.textContent = '🌙'; // Moon icon when dark mode OFF
+      }
+    });
+  </script>
 </body>
 </html>
+
