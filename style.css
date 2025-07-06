@@ -1,36 +1,34 @@
-/* === GENERAL BODY & TYPOGRAPHY === */
+/* === GLOBAL BODY & TYPOGRAPHY === */
 body {
   font-family: Arial, sans-serif;
-  background-color: lavender;
+  background-color: #f7f9fc;
+  color: #333;
   margin: 0;
   padding: 0;
-  color: #333;
 }
 
-section {
-  margin: 20px;
-  padding: 25px;
-  background-color: cornsilk;
-  border: 5px solid dimgray;
-  border-radius: 12px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+/* General sections or content boxes */
+section, .text-content {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 h1, h2 {
   text-align: center;
-  color: black;
+  color: #222;
 }
 
 p {
-  line-height: 1.6;
-  font-size: 16px;
-  text-align: center;
+  line-height: 1.7;
+  font-size: 1rem;
 }
 
 ul {
-  padding: 0;
   list-style-position: inside;
-  text-align: center;
 }
 
 /* === HEADER & NAVIGATION === */
@@ -38,198 +36,164 @@ ul {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
-  background-color: dimgray;
-  border: 9px solid black;
   flex-wrap: wrap;
+  padding: 20px 40px;
+  background-color: #1e293b; /* dark navy */
+  border-bottom: 5px solid #0f172a;
 }
 
-/* Logo container: image + site name */
 .logo {
   display: flex;
   align-items: center;
 }
 
 #HIcon {
-  max-width: 75px;
+  max-width: 70px;
   margin-right: 10px;
 }
 
 #HH1 {
-  color: rgb(124, 176, 243);
+  color: #93c5fd; /* soft blue */
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.8rem;
 }
 
-/* Container for nav + dark mode button */
 .right-header {
   display: flex;
   align-items: center;
-  gap: 15px; /* spacing between nav and button */
+  gap: 20px;
 }
 
-/* Navigation menu */
 nav ul {
   list-style: none;
   display: flex;
   margin: 0;
   padding: 0;
-  background-color: #333;
-  border-radius: 5px;
-}
-
-nav li {
-  margin: 0;
 }
 
 nav li a {
   display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 20px;
+  color: #f1f5f9; /* light gray */
+  padding: 12px 18px;
   text-decoration: none;
   font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
 nav li a:hover,
 nav li a.active {
-  background-color: #111;
+  background-color: #0f172a;
 }
 
-/* === DARK MODE BUTTON === */
+/* === DARK MODE TOGGLE BUTTON === */
 #darkModeToggle {
-  cursor: pointer;
   background: transparent;
   border: none;
-  color: rgb(124, 176, 243);
+  color: #93c5fd; /* soft blue */
   font-size: 1.8rem;
+  cursor: pointer;
   transition: color 0.3s ease;
 }
 
 #darkModeToggle:hover {
-  color: #005fa3;
+  color: #60a5fa; /* lighter blue */
 }
 
-/* === STORE PAGE PRODUCT GRID & FILTER === */
+/* === STORE PAGE GRID === */
 #shopgrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 per row */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 30px;
   padding: 40px;
   max-width: 1200px;
-  margin: auto;
+  margin: 0 auto;
 }
 
 .productbox {
-  background: #fff;
+  background: #ffffff;
   border: 1px solid #ddd;
   border-radius: 10px;
-  text-align: center;
   padding: 20px;
+  text-align: center;
   transition: box-shadow 0.3s;
-  color: #222;
+}
+
+.productbox:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .productbox img {
   max-width: 100%;
   height: auto;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .productbox h3 {
-  margin: 10px 0 5px;
-  font-size: 1.1rem;
+  margin: 10px 0;
 }
 
 .productbox p {
-  margin: 5px 0 15px;
   font-weight: bold;
+  color: #0f172a;
 }
 
 .productbox a {
   display: inline-block;
-  background-color: rgb(124, 176, 243);
-  color: white;
+  margin-top: 10px;
+  background-color: #3b82f6; /* bright blue */
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 5px;
   text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-weight: bold;
   transition: background-color 0.3s ease;
 }
 
 .productbox a:hover {
-  background-color: rgb(90, 130, 210);
+  background-color: #2563eb;
 }
 
-/* Filter section */
 .filter-section {
   text-align: center;
-  margin: 0 auto 20px;
-  max-width: 400px;
+  margin-bottom: 20px;
 }
 
 .filter-section label {
   font-weight: bold;
   margin-right: 10px;
-  font-size: 1.1rem;
 }
 
 .filter-section select {
   padding: 8px 12px;
-  font-size: 1rem;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid #ccc;
-}
-
-/* === TEXT CONTENT BOX FOR ABOUT & OTHER SECTIONS === */
-.text-content {
-  max-width: 900px;
-  padding: 30px;
-  background-color: white;
-  color: #000000;
-  font-family: sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin: 0 auto 40px;
-}
-
-.text-content a {
-  color: rgb(124, 176, 243);
-  text-decoration: underline;
 }
 
 /* === FOOTER === */
 #footer {
-  padding: 20px;
-  background-color: dimgray;
-  border: 7px solid black;
-  color: rgb(124, 176, 243);
   text-align: center;
-  margin: 10px;
+  background-color: #1e293b;
+  color: #93c5fd;
+  padding: 20px;
+  margin: 40px 20px 20px;
   border-radius: 10px;
 }
 
-/* === RESPONSIVE === */
-@media (max-width: 900px) {
-  #shopgrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+#footer a {
+  color: #60a5fa;
+  text-decoration: underline;
+  margin: 0 10px;
 }
 
-@media (max-width: 600px) {
+#footer a:hover {
+  text-decoration: none;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 700px) {
   nav ul {
     flex-direction: column;
-  }
-
-  #HH1 {
-    display: block;
-    margin-top: 10px;
-  }
-
-  #header {
-    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .right-header {
@@ -238,66 +202,61 @@ nav li a.active {
     margin-top: 10px;
   }
 
-  #shopgrid {
-    grid-template-columns: 1fr;
+  #header {
     padding: 20px;
   }
 }
 
-/* === DARK MODE STYLES === */
+/* === DARK MODE === */
 body.dark-mode {
-  background-color: #121212;
-  color: #e0e0e0;
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+
+body.dark-mode section, 
+body.dark-mode .text-content {
+  background-color: #1e293b;
+  color: #f1f5f9;
 }
 
 body.dark-mode #header {
-  background-color: #222;
-  border-color: #444;
+  background-color: #0f172a;
+  border-color: #020617;
 }
 
 body.dark-mode nav ul {
-  background-color: #333;
+  background: none;
 }
 
 body.dark-mode nav li a {
-  color: #ccc;
+  color: #f1f5f9;
 }
 
 body.dark-mode nav li a:hover,
 body.dark-mode nav li a.active {
-  background-color: #555;
+  background-color: #334155;
+}
+
+body.dark-mode #darkModeToggle {
+  color: #93c5fd;
 }
 
 body.dark-mode #shopgrid .productbox {
-  background-color: #1e1e1e;
-  border-color: #444;
-  color: #eee;
+  background-color: #1e293b;
+  border-color: #334155;
 }
 
-body.dark-mode #shopgrid .productbox a {
-  background-color: rgb(124, 176, 243);
-  color: #111;
+body.dark-mode .productbox p {
+  color: #93c5fd;
 }
 
-body.dark-mode #shopgrid .productbox a:hover {
-  background-color: rgb(90, 130, 210);
-  color: white;
-}
-
-body.dark-mode section {
-  background-color: #222;
-  border-color: #444;
-  color: #eee;
-}
-
-body.dark-mode .text-content {
-  background-color: #222;
-  color: #eee;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+body.dark-mode .productbox a {
+  background-color: #3b82f6;
+  color: #fff;
 }
 
 body.dark-mode #footer {
-  background-color: #222;
-  border-color: #444;
-  color: #aaa;
+  background-color: #0f172a;
+  color: #93c5fd;
 }
+
