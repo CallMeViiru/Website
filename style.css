@@ -1,16 +1,38 @@
-/* === Modern Base Styles === */
-body {
-  background-color: #f5f7fa; /* modern light gray */
-  font-family: Arial, sans-serif;
-  margin: 0;
-  color: #111; /* improved contrast for text */
+/* === Base Variables === */
+:root {
+  --bg-color: #f5f7fa;         /* light background */
+  --text-color: #111;          /* dark text */
+  --header-bg: #1f2937;        /* dark header/nav */
+  --section-bg: #ffffff;       /* content background */
+  --accent-color: #00b4d8;     /* primary accent blue */
+  --link-color: #00b4d8;       /* links match accent */
+  --card-border: #ddd;         /* light border */
 }
 
-/* === Header === */
+/* === Dark Mode Overrides === */
+body.dark-mode {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --header-bg: #1e1e1e;
+  --section-bg: #1f1f1f;
+  --accent-color: #00b4d8;
+  --link-color: #00b4d8;
+  --card-border: #333;
+}
+
+/* === Base Styles === */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+/* === Header & Nav === */
 #header {
   padding: 20px;
-  background-color: #1f2937; /* dark charcoal/navy */
-  border-bottom: 4px solid #00b4d8; /* accent bottom border */
+  background-color: var(--header-bg);
+  border: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -22,7 +44,7 @@ body {
 }
 
 #HH1 {
-  color: #ffffff; /* pure white logo text */
+  color: var(--accent-color);
   margin: 0;
   font-size: 2rem;
   flex-grow: 1;
@@ -33,40 +55,57 @@ nav ul {
   margin: 0;
   padding: 0;
   display: flex;
-  background-color: transparent;
-  border-radius: 5px;
+  background: none;
+}
+
+nav li {
+  margin: 0;
 }
 
 nav li a {
   display: block;
-  color: #ffffff;
+  color: #fff;
   text-align: center;
-  padding: 12px 18px;
+  padding: 14px 20px;
   text-decoration: none;
   font-weight: bold;
-  transition: background-color 0.3s;
 }
 
 nav li a:hover,
 nav li a.active {
-  background-color: #00b4d8; /* highlight active/hover link */
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 5px;
+}
+
+/* === Dark Mode Toggle Button === */
+#darkModeToggle {
+  background: none;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 20px;
+  transition: all 0.3s ease;
+}
+
+#darkModeToggle:hover {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
 }
 
 /* === Sections === */
 section {
   margin: 25px 10px;
   padding: 20px;
-  background-color: #ffffff; /* white cards */
-  border: 1px solid #ddd; /* subtle border */
+  background-color: var(--section-bg);
+  border: 1px solid var(--card-border);
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* soft shadow for depth */
 }
 
-#intro {
+#intro, .textsection {
   padding-bottom: 50px;
   font-size: 1.2rem;
-  color: #111;
   text-align: center;
 }
 
@@ -84,75 +123,61 @@ section {
 
 #socials ul li a {
   text-decoration: none;
-  color: #4b5563; /* neutral gray */
+  color: var(--text-color);
   font-weight: bold;
 }
 
 #socials ul li a:hover {
-  color: #00b4d8; /* accent on hover */
+  text-decoration: underline;
 }
 
 /* === Footer === */
 #footer {
   padding: 20px;
-  background-color: #1f2937; /* match header */
-  border-top: 4px solid #00b4d8;
-  color: #ffffff;
+  background-color: var(--header-bg);
+  color: var(--accent-color);
   text-align: center;
-  margin: 10px 0 0 0;
-  border-radius: 0;
+  margin: 10px;
+  border-radius: 10px;
 }
 
-#footer a {
-  color: #00b4d8;
-}
-
-/* === General Text Section === */
+/* === Text Content === */
 .text-content {
   max-width: 900px;
   padding: 30px;
-  background-color: #ffffff;
-  color: #222;
+  background-color: var(--section-bg);
+  color: var(--text-color);
   font-size: 16px;
   line-height: 1.6;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 .text-content a {
-  color: #00b4d8;
+  color: var(--link-color);
   text-decoration: underline;
 }
 
-.textsection {
-  padding-bottom: 50px;
-  font-size: 1.2rem;
-  text-align: center;
-  color: #111;
-}
-
-.store-section-logo {
-  padding: 10px;
-  width: 75px;
-  height: 75px;
-}
-
-/* === Article Preview === */
+/* === Article Previews === */
 .article-section {
-  background-color: #ffffff;
-  border: 2px solid #00b4d8;
+  background-color: var(--section-bg);
+  border: 2px solid var(--accent-color);
   border-radius: 12px;
   padding: 30px;
   margin: 30px auto;
   max-width: 900px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
 .article-section h2 {
   text-align: center;
   font-size: 2rem;
-  color: #00b4d8;
+  color: var(--accent-color);
   margin-bottom: 15px;
+}
+
+.article-content {
+  text-align: center;
 }
 
 .article-thumb {
@@ -164,7 +189,7 @@ section {
 
 .read-more-btn {
   display: inline-block;
-  background-color: #00b4d8;
+  background-color: var(--accent-color);
   color: #fff;
   text-decoration: none;
   padding: 10px 20px;
@@ -174,35 +199,34 @@ section {
 }
 
 .read-more-btn:hover {
-  background-color: #0077a8;
+  background-color: #333;
 }
 
-/* === Full Article Page === */
+/* === Full Article === */
 .full-article {
-  background-color: #ffffff;
-  border: 2px solid #00b4d8;
+  background-color: var(--section-bg);
+  border: 2px solid var(--accent-color);
   border-radius: 12px;
   padding: 40px;
   margin: 40px auto;
   max-width: 1000px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
 .full-article h2 {
   text-align: center;
   font-size: 2.2rem;
-  color: #00b4d8;
+  color: var(--accent-color);
   margin-bottom: 20px;
 }
 
 .full-article p {
   font-size: 1.1rem;
   line-height: 1.7;
-  color: #333;
   margin-bottom: 30px;
 }
 
-/* === Gallery === */
+/* === Gallery Grid === */
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -212,27 +236,17 @@ section {
 
 .gallery img {
   width: 100%;
+  height: auto;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
   object-fit: cover;
-}
-
-@media (max-width: 768px) {
-  .article-section, .full-article {
-    padding: 20px;
-    margin: 20px 10px;
-  }
-
-  .gallery {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
 }
 
 /* === Recommended Products === */
 .recommended-products {
   padding: 60px 20px;
   text-align: center;
-  background: #f9f9f9;
+  background: var(--section-bg);
 }
 
 .recommended-products h2 {
@@ -249,8 +263,8 @@ section {
 }
 
 .product-box {
-  background: #ffffff;
-  border: 1px solid #ddd;
+  background: var(--section-bg);
+  border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 20px;
   transition: box-shadow 0.3s;
@@ -270,7 +284,7 @@ section {
 }
 
 .product-box p {
-  color: #555;
+  color: var(--text-color);
   font-size: 14px;
 }
 
@@ -281,27 +295,37 @@ section {
 .see-more-btn {
   display: inline-block;
   padding: 12px 25px;
-  background: #00b4d8;
+  background: var(--accent-color);
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
-  transition: background 0.3s;
 }
 
 .see-more-btn:hover {
-  background: #0077a8;
+  background: #005fa3;
 }
 
-/* === Ads === */
-.in-content-ad {
+/* === In-Content Ads === */
+.in-content-ad,
+.in-feed-ad {
   margin: 30px 0;
   text-align: center;
-}
-
-.in-feed-ad {
-  border: 1px solid #ddd;
+  border: 1px solid var(--card-border);
   padding: 10px;
   box-sizing: border-box;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .article-section,
+  .full-article {
+    padding: 20px;
+    margin: 20px 10px;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
 }
 
 
