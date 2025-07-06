@@ -327,6 +327,32 @@ section {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 }
+/* === Store Page Specific === */
+#shopgrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 per row */
+  gap: 30px;
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.productbox {
+  background: #fff;
+  border: 1px solid #ddd; /* Clear border for separation */
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  transition: box-shadow 0.3s;
+}
+
+#productimage {
+  width: 75px;
+  height: 75px;
+  padding: 10px;
+  vertical-align: middle;
+}
+
 
 
 
