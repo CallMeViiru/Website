@@ -153,59 +153,51 @@ nav li a.active {
 }
 
 /* === STORE PAGE === */
-.store-section {
-  max-width: 1200px;
-  margin: 40px auto;
-}
-
-.store-grid {
+#shopgrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
+  grid-auto-flow: column;            /* Fill down first, then add columns */
+  grid-template-rows: repeat(3, 1fr); /* Exactly 3 rows */
+  grid-auto-columns: 300px;          /* Each column 300px wide */
+  gap: 20px;
+  overflow-x: auto;
+  width: max-content;
+  min-height: calc(3 * 320px + 40px); /* Force enough height for 3 rows, adjust 320px to your product height + padding */
 }
 
-.store-item {
-  background: #ffffff;
+/* Make sure product boxes fit nicely */
+.productbox {
+  background: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
-  padding: 20px;
+  padding: 15px;
   text-align: center;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 280px;  /* slightly smaller than grid-auto-columns for padding */
+  box-sizing: border-box; /* includes padding and border in width */
 }
 
-.store-item img {
+.productbox img {
   max-width: 100%;
   height: auto;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
-.store-item h3 {
-  margin: 10px 0;
-}
-
-.store-item p {
-  font-size: 14px;
-  margin: 10px 0;
-}
-
-.store-item .price {
-  font-weight: bold;
-  color: #1e40af;
-}
-
-.store-item .add-to-cart {
+.productbox a {
+  display: inline-block;
   background-color: #3b82f6;
-  color: #fff;
-  border: none;
+  color: white;
+  text-decoration: none;
   padding: 10px 15px;
   border-radius: 5px;
-  cursor: pointer;
   margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.store-item .add-to-cart:hover {
+.productbox a:hover {
   background-color: #2563eb;
 }
+
 
 /* === FOOTER === */
 #footer {
