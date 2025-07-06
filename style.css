@@ -1,398 +1,303 @@
-/* === Base Styles === */
+/* === GENERAL BODY & TYPOGRAPHY === */
 body {
-    background-color: #f0f4f8; /* Light modern gray-blue background */
-    color: #222; /* Dark text for readability */
-    font-family: Arial, sans-serif;
-    margin: 0;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-#header {
-    padding: 20px;
-    background-color: #444; /* Darker gray for header */
-    border: 9px solid #222; /* Dark border */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-#HIcon {
-    max-width: 75px;
-    margin-right: 10px;
-}
-
-#HH1 {
-    color: #7cb0f3; /* Soft blue */
-    margin: 0;
-    font-size: 2rem;
-    flex-grow: 1;
-}
-
-nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    background-color: #222; /* Dark nav background */
-    border-radius: 5px;
-}
-
-nav li {
-    margin: 0;
-}
-
-nav li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 20px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-nav li a:hover, nav li a.active {
-    background-color: #111;
+  font-family: Arial, sans-serif;
+  background-color: lavender;
+  margin: 0;
+  padding: 0;
+  color: #333;
 }
 
 section {
-    margin: 25px 10px;
-    padding: 20px;
-    background-color: #ffffff; /* White background for sections */
-    border: 7px solid #444; /* Match header color */
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  margin: 20px;
+  padding: 25px;
+  background-color: cornsilk;
+  border: 5px solid dimgray;
+  border-radius: 12px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-#intro {
-    padding-bottom: 50px;
-    font-size: 1.2rem;
-    color: #222;
-    text-align: center;
+h1, h2 {
+  text-align: center;
+  color: black;
 }
 
-#socials {
-    text-align: center;
+p {
+  line-height: 1.6;
+  font-size: 16px;
+  text-align: center;
 }
 
-#socials ul {
-    list-style-type: none;
-    padding: 0;
-    display: inline-flex;
-    gap: 20px;
+ul {
+  padding: 0;
+  list-style-position: inside;
+  text-align: center;
 }
 
-#socials ul li a {
-    text-decoration: none;
-    color: #696969; /* dimgray */
-    font-weight: bold;
+/* === HEADER & NAVIGATION === */
+#header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: dimgray;
+  border: 9px solid black;
+  flex-wrap: wrap;
 }
 
-#socials ul li a:hover {
-    text-decoration: underline;
+/* Logo container: image + site name */
+.logo {
+  display: flex;
+  align-items: center;
 }
 
-#footer {
-    padding: 20px;
-    background-color: #444;
-    border: 7px solid #222;
-    color: #7cb0f3;
-    text-align: center;
-    margin: 10px;
-    border-radius: 10px;
+#HIcon {
+  max-width: 75px;
+  margin-right: 10px;
 }
 
-.text-content {
-    max-width: 900px;
-    padding: 30px;
-    background-color: white;
-    color: #000000;
-    font-family: sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+#HH1 {
+  color: rgb(124, 176, 243);
+  margin: 0;
+  font-size: 2rem;
 }
 
-.text-content a {
-    color: #7cb0f3;
-    text-decoration: underline;
+/* Container for nav + dark mode button */
+.right-header {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* spacing between nav and button */
 }
 
-/* Shop Grid */
+/* Navigation menu */
+nav ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  background-color: #333;
+  border-radius: 5px;
+}
+
+nav li {
+  margin: 0;
+}
+
+nav li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 20px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav li a:hover,
+nav li a.active {
+  background-color: #111;
+}
+
+/* === DARK MODE BUTTON === */
+#darkModeToggle {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: rgb(124, 176, 243);
+  font-size: 1.8rem;
+  transition: color 0.3s ease;
+}
+
+#darkModeToggle:hover {
+  color: #005fa3;
+}
+
+/* === STORE PAGE PRODUCT GRID & FILTER === */
 #shopgrid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    padding: 40px;
-    max-width: 1200px;
-    margin: auto;
-}
-
-.textsection {
-    padding-bottom: 50px;
-    font-size: 1.2rem;
-    color: #222;
-    text-align: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 per row */
+  gap: 30px;
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
 }
 
 .productbox {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    text-align: center;
-    padding: 20px;
-    transition: box-shadow 0.3s;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  transition: box-shadow 0.3s;
+  color: #222;
 }
 
-.productbox:hover {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+.productbox img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 15px;
 }
 
-#productimage {
-    width: 75px;
-    height: 75px;
-    padding: 10px;
-    vertical-align: middle;
+.productbox h3 {
+  margin: 10px 0 5px;
+  font-size: 1.1rem;
 }
 
-/* Article Previews */
-.article-section {
-    background-color: #fff;
-    border: 4px solid #7cb0f3;
-    border-radius: 12px;
-    padding: 30px;
-    margin: 30px auto;
-    max-width: 900px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+.productbox p {
+  margin: 5px 0 15px;
+  font-weight: bold;
 }
 
-.article-section h2 {
-    text-align: center;
-    font-size: 2rem;
-    color: #7cb0f3;
-    margin-bottom: 15px;
+.productbox a {
+  display: inline-block;
+  background-color: rgb(124, 176, 243);
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-.article-content {
-    text-align: center;
+.productbox a:hover {
+  background-color: rgb(90, 130, 210);
 }
 
-.article-thumb {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 15px;
+/* Filter section */
+.filter-section {
+  text-align: center;
+  margin: 0 auto 20px;
+  max-width: 400px;
 }
 
-.read-more-btn {
-    display: inline-block;
-    background-color: #7cb0f3;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+.filter-section label {
+  font-weight: bold;
+  margin-right: 10px;
+  font-size: 1.1rem;
 }
 
-.read-more-btn:hover {
-    background-color: #333;
+.filter-section select {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-/* Full Article Page */
-.full-article {
-    background-color: #fff;
-    border: 4px solid #7cb0f3;
-    border-radius: 12px;
-    padding: 40px;
-    margin: 40px auto;
-    max-width: 1000px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+/* === TEXT CONTENT BOX FOR ABOUT & OTHER SECTIONS === */
+.text-content {
+  max-width: 900px;
+  padding: 30px;
+  background-color: white;
+  color: #222;
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto 40px;
 }
 
-.full-article h2 {
-    text-align: center;
-    font-size: 2.2rem;
-    color: #7cb0f3;
-    margin-bottom: 20px;
+.text-content a {
+  color: rgb(124, 176, 243);
+  text-decoration: underline;
 }
 
-.full-article p {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #333;
-    margin-bottom: 30px;
+/* === FOOTER === */
+#footer {
+  padding: 20px;
+  background-color: dimgray;
+  border: 7px solid black;
+  color: rgb(124, 176, 243);
+  text-align: center;
+  margin: 10px;
+  border-radius: 10px;
 }
 
-/* Gallery Grid */
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  #shopgrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.gallery img {
+@media (max-width: 600px) {
+  nav ul {
+    flex-direction: column;
+  }
+
+  #HH1 {
+    display: block;
+    margin-top: 10px;
+  }
+
+  #header {
+    flex-wrap: wrap;
+  }
+
+  .right-header {
     width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    object-fit: cover;
-}
+    justify-content: space-between;
+    margin-top: 10px;
+  }
 
-/* Recommended Products Section */
-.recommended-products {
-    padding: 60px 20px;
-    text-align: center;
-    background: #f9f9f9;
-}
-
-.recommended-products h2 {
-    font-size: 32px;
-    margin-bottom: 30px;
-}
-
-.recommended-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: auto;
-}
-
-.product-box {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+  #shopgrid {
+    grid-template-columns: 1fr;
     padding: 20px;
-    transition: box-shadow 0.3s;
+  }
 }
 
-.product-box:hover {
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.product-box img {
-    max-width: 100%;
-    border-radius: 5px;
-}
-
-.product-box h3 {
-    margin: 15px 0 10px;
-}
-
-.product-box p {
-    color: #555;
-    font-size: 14px;
-}
-
-.see-more-container {
-    margin-top: 30px;
-}
-
-.see-more-btn {
-    display: inline-block;
-    padding: 12px 25px;
-    background: #007acc;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.see-more-btn:hover {
-    background: #005fa3;
-}
-
-.in-content-ad {
-    margin: 30px 0;
-    text-align: center;
-}
-
-.in-feed-ad {
-    border: 1px solid #ccc;
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-/* === Dark Mode === */
+/* === DARK MODE STYLES === */
 body.dark-mode {
-    background-color: #121212;
-    color: #e0e0e0;
+  background-color: #121212;
+  color: #e0e0e0;
 }
 
 body.dark-mode #header {
-    background-color: #222;
-    border-color: #555;
-}
-
-body.dark-mode #HH1 {
-    color: #81aaff;
+  background-color: #222;
+  border-color: #444;
 }
 
 body.dark-mode nav ul {
-    background-color: #222;
+  background-color: #333;
 }
 
 body.dark-mode nav li a {
-    color: #ddd;
+  color: #ccc;
 }
 
 body.dark-mode nav li a:hover,
 body.dark-mode nav li a.active {
-    background-color: #444;
+  background-color: #555;
+}
+
+body.dark-mode #shopgrid .productbox {
+  background-color: #1e1e1e;
+  border-color: #444;
+  color: #eee;
+}
+
+body.dark-mode #shopgrid .productbox a {
+  background-color: rgb(124, 176, 243);
+  color: #111;
+}
+
+body.dark-mode #shopgrid .productbox a:hover {
+  background-color: rgb(90, 130, 210);
+  color: white;
 }
 
 body.dark-mode section {
-    background-color: #1e1e1e;
-    border-color: #444;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  background-color: #222;
+  border-color: #444;
+  color: #eee;
 }
 
-body.dark-mode .text-content,
-body.dark-mode .productbox,
-body.dark-mode .article-section,
-body.dark-mode .full-article,
-body.dark-mode .product-box {
-    background-color: #2c2c2c;
-    color: #ddd;
-    border-color: #555;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+body.dark-mode .text-content {
+  background-color: #222;
+  color: #eee;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 body.dark-mode #footer {
-    background-color: #222;
-    border-color: #555;
-    color: #81aaff;
+  background-color: #222;
+  border-color: #444;
+  color: #aaa;
 }
-
-/* === Dark Mode Toggle Button Styles === */
-#darkModeToggle {
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    color: #7cb0f3;
-    font-size: 1.8rem;
-    margin-left: 20px;
-    transition: color 0.3s ease;
-}
-
-#darkModeToggle:hover {
-    color: #005fa3;
-}
-
-/* === Responsive === */
-@media (max-width: 768px) {
-    .article-section, .full-article {
-        padding: 20px;
-        margin: 20px 10px;
-    }
-
-    .gallery {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-
-    nav ul {
-        flex-direction: column;
-    }
-}
-
