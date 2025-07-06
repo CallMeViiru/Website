@@ -1,135 +1,158 @@
-/* style.css */
+/* === Modern Base Styles === */
 body {
-    background-color: lavender;
-    font-family: Arial, sans-serif;
-    margin: 0;
+  background-color: #f5f7fa; /* modern light gray */
+  font-family: Arial, sans-serif;
+  margin: 0;
+  color: #111; /* improved contrast for text */
 }
+
+/* === Header === */
 #header {
-    padding: 20px;
-    background-color: dimgray;
-    border: 9px solid black;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  padding: 20px;
+  background-color: #1f2937; /* dark charcoal/navy */
+  border-bottom: 4px solid #00b4d8; /* accent bottom border */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
 #HIcon {
-    max-width: 75px;
-    margin-right: 10px;
+  max-width: 75px;
+  margin-right: 10px;
 }
+
 #HH1 {
-    color: rgb(124, 176, 243);
-    margin: 0;
-    font-size: 2rem;
-    flex-grow: 1;
+  color: #ffffff; /* pure white logo text */
+  margin: 0;
+  font-size: 2rem;
+  flex-grow: 1;
 }
+
 nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    background-color: #333;
-    border-radius: 5px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  background-color: transparent;
+  border-radius: 5px;
 }
-nav li {
-    margin: 0;
-}
+
 nav li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 20px;
-    text-decoration: none;
-    font-weight: bold;
+  display: block;
+  color: #ffffff;
+  text-align: center;
+  padding: 12px 18px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
 }
-nav li a:hover, nav li a.active {
-    background-color: #111;
+
+nav li a:hover,
+nav li a.active {
+  background-color: #00b4d8; /* highlight active/hover link */
+  border-radius: 5px;
 }
+
+/* === Sections === */
 section {
-    margin: 25px 10px;
-    padding: 20px;
-    background-color: cornsilk;
-    border: 7px solid dimgray;
-    border-radius: 10px;
+  margin: 25px 10px;
+  padding: 20px;
+  background-color: #ffffff; /* white cards */
+  border: 1px solid #ddd; /* subtle border */
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* soft shadow for depth */
 }
+
 #intro {
-    padding-bottom: 50px;
-    font-size: 1.2rem;
-    color: black;
-    text-align: center;
+  padding-bottom: 50px;
+  font-size: 1.2rem;
+  color: #111;
+  text-align: center;
 }
+
+/* === Socials === */
 #socials {
-    text-align: center;
+  text-align: center;
 }
+
 #socials ul {
-    list-style-type: none;
-    padding: 0;
-    display: inline-flex;
-    gap: 20px;
+  list-style-type: none;
+  padding: 0;
+  display: inline-flex;
+  gap: 20px;
 }
+
 #socials ul li a {
-    text-decoration: none;
-    color: rgb(105, 105, 105);
-    font-weight: bold;
+  text-decoration: none;
+  color: #4b5563; /* neutral gray */
+  font-weight: bold;
 }
+
 #socials ul li a:hover {
-    text-decoration: underline;
+  color: #00b4d8; /* accent on hover */
 }
+
+/* === Footer === */
 #footer {
-    padding: 20px;
-    background-color: dimgray;
-    border: 7px solid black;
-    color: rgb(124, 176, 243);
-    text-align: center;
-    margin: 10px;
-    border-radius: 10px;
+  padding: 20px;
+  background-color: #1f2937; /* match header */
+  border-top: 4px solid #00b4d8;
+  color: #ffffff;
+  text-align: center;
+  margin: 10px 0 0 0;
+  border-radius: 0;
 }
+
+#footer a {
+  color: #00b4d8;
+}
+
+/* === General Text Section === */
 .text-content {
   max-width: 900px;
   padding: 30px;
-  background-color: white;
+  background-color: #ffffff;
   color: #222;
-  font-family: sans-serif;
   font-size: 16px;
   line-height: 1.6;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-.text-content a {
-  color: rgb(124, 176, 243);
-  text-decoration: underline;
-}
-.textsection {
-    padding-bottom: 50px;
-    font-size: 1.2rem;
-    color: black;
-    text-align: center;
-}
-.store-section-logo {
-    padding: 10px;
-    width: 75px;
-    height: 75px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* === Article Preview Styles === */
+.text-content a {
+  color: #00b4d8;
+  text-decoration: underline;
+}
+
+.textsection {
+  padding-bottom: 50px;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #111;
+}
+
+.store-section-logo {
+  padding: 10px;
+  width: 75px;
+  height: 75px;
+}
+
+/* === Article Preview === */
 .article-section {
   background-color: #ffffff;
-  border: 4px solid rgb(124, 176, 243);
+  border: 2px solid #00b4d8;
   border-radius: 12px;
   padding: 30px;
   margin: 30px auto;
   max-width: 900px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
 .article-section h2 {
   text-align: center;
   font-size: 2rem;
-  color: rgb(124, 176, 243);
+  color: #00b4d8;
   margin-bottom: 15px;
-}
-
-.article-content {
-  text-align: center;
 }
 
 .article-thumb {
@@ -141,7 +164,7 @@ section {
 
 .read-more-btn {
   display: inline-block;
-  background-color: rgb(124, 176, 243);
+  background-color: #00b4d8;
   color: #fff;
   text-decoration: none;
   padding: 10px 20px;
@@ -151,24 +174,24 @@ section {
 }
 
 .read-more-btn:hover {
-  background-color: #333;
+  background-color: #0077a8;
 }
 
 /* === Full Article Page === */
 .full-article {
   background-color: #ffffff;
-  border: 4px solid rgb(124, 176, 243);
+  border: 2px solid #00b4d8;
   border-radius: 12px;
   padding: 40px;
   margin: 40px auto;
   max-width: 1000px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
 .full-article h2 {
   text-align: center;
   font-size: 2.2rem;
-  color: rgb(124, 176, 243);
+  color: #00b4d8;
   margin-bottom: 20px;
 }
 
@@ -179,7 +202,7 @@ section {
   margin-bottom: 30px;
 }
 
-/* === Gallery Grid === */
+/* === Gallery === */
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -189,9 +212,8 @@ section {
 
 .gallery img {
   width: 100%;
-  height: auto;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
   object-fit: cover;
 }
 
@@ -205,7 +227,8 @@ section {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 }
-/* Recommended Products Section */
+
+/* === Recommended Products === */
 .recommended-products {
   padding: 60px 20px;
   text-align: center;
@@ -226,8 +249,8 @@ section {
 }
 
 .product-box {
-  background: #fff;
-  border: 1px solid #ddd; /* Border to differentiate */
+  background: #ffffff;
+  border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
   transition: box-shadow 0.3s;
@@ -258,21 +281,25 @@ section {
 .see-more-btn {
   display: inline-block;
   padding: 12px 25px;
-  background: #007acc;
+  background: #00b4d8;
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
+  transition: background 0.3s;
 }
 
 .see-more-btn:hover {
-  background: #005fa3;
+  background: #0077a8;
 }
+
+/* === Ads === */
 .in-content-ad {
-  margin: 30px 0; /* adds spacing above and below */
-  text-align: center; /* centers the ad */
+  margin: 30px 0;
+  text-align: center;
 }
+
 .in-feed-ad {
-  border: 1px solid #ccc; /* optional: match product boxes */
+  border: 1px solid #ddd;
   padding: 10px;
   box-sizing: border-box;
 }
