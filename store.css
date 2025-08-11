@@ -1,28 +1,22 @@
-/* ===== General Body Styling ===== */
+/* ---------- Base layout and colors (matching home page) ---------- */
 body {
     font-family: Arial, sans-serif;
-    background-color: #e9f0fa; /* Light blue background */
+    background-color: lavender; /* home page background */
     margin: 0;
-    color: #000;
+    padding: 0;
 }
 
-/* ===== Header Styling ===== */
+/* ---------- Header (same as home) ---------- */
 #header {
-    background-color: #0d1b2a; /* Dark blue */
+    background-color: dimgray;
     display: flex;
     align-items: center;
     padding: 10px 20px;
-    box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
 }
 
 #header img {
     height: 50px;
     margin-right: 10px;
-}
-
-#header h1 {
-    color: white;
-    margin: 0;
 }
 
 #header nav ul {
@@ -40,94 +34,161 @@ body {
     text-decoration: none;
     color: white;
     font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-#header nav ul li a:hover {
-    color: #7cb0f3; /* Light blue hover */
 }
 
 #header nav ul li a.active {
-    color: #7cb0f3;
+    color: rgb(124, 176, 243); /* blue accent */
 }
 
-/* ===== Store Section ===== */
+/* ---------- Store section container (like home sections) ---------- */
 .store-section {
+    margin: 25px 10px;
     padding: 20px;
-    text-align: center;
+    background-color: cornsilk;
+    border: 7px dimgray solid;
+    border-radius: 10px;
+    max-width: 1200px;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* ===== Category Dropdown ===== */
+/* ---------- Category filter ---------- */
 .category-filter {
-    margin-bottom: 20px;
+    text-align: right;
+    margin-bottom: 18px;
+}
+
+.category-filter label {
+    font-weight: bold;
+    margin-right: 8px;
+    color: #000;
 }
 
 .category-filter select {
     padding: 8px 12px;
     font-size: 16px;
-    border: 2px solid #0d1b2a;
-    border-radius: 5px;
+    border: 3px solid dimgray;
+    border-radius: 6px;
     background-color: white;
-    color: #0d1b2a;
+    color: #000;
     cursor: pointer;
 }
 
 .category-filter select:hover {
-    border-color: #7cb0f3;
+    border-color: rgb(124, 176, 243);
 }
 
-/* ===== Product Grid ===== */
+/* ---------- Product grid ---------- */
 .recommended-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+    box-sizing: border-box;
+    padding-bottom: 6px;
 }
 
-/* ===== Product Cards ===== */
+/* ---------- Product cards ---------- */
 .product-box {
-    background-color: white;
-    border: 2px solid #0d1b2a;
-    padding: 15px;
-    text-align: center;
-    width: 200px;
+    background: white;
+    border: 1px solid #ddd;
     border-radius: 10px;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
-    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
 }
 
 .product-box:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    transform: translateY(-6px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
 
 .product-box img {
     width: 100%;
-    border-radius: 5px;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
 }
 
 .product-box h3 {
-    margin: 10px 0 5px;
-    color: #0d1b2a;
+    margin: 8px 0 4px;
+    color: #000;
+    font-size: 1.05rem;
+}
+
+.product-box .price {
+    margin: 2px 0 6px;
+    font-weight: 700;
+    color: #1e40af; /* price blue */
 }
 
 .product-box p {
-    font-size: 14px;
+    margin: 0;
     color: #333;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    flex: 1;
 }
 
-/* ===== Buy Now Button ===== */
-button {
-    background-color: #0d6efd; /* Bootstrap blue */
-    color: white;
+/* ---------- Buy button ---------- */
+.product-box .buy-button,
+.product-box button {
+    display: inline-block;
+    background-color: rgb(124, 176, 243);
+    color: #fff;
     border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 5px;
+    padding: 10px 14px;
+    border-radius: 22px;
     font-weight: bold;
-    transition: background-color 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: 10px;
+    align-self: center;
+    transition: background-color 0.18s ease;
 }
 
-button:hover {
-    background-color: #084298; /* Darker blue */
+.product-box .buy-button:hover,
+.product-box button:hover {
+    background-color: #0b69c9;
+}
+
+/* ---------- See more button ---------- */
+.see-more-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.see-more-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: rgb(124, 176, 243);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.see-more-btn:hover {
+    background-color: #0b69c9;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .category-filter { text-align: center; }
+    .category-filter select { width: 100%; max-width: 360px; }
+}
+
+@media (max-width: 520px) {
+    .recommended-grid { grid-template-columns: 1fr; padding: 0 10px; }
+    .product-box { padding: 12px; }
 }
