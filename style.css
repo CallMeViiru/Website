@@ -261,4 +261,39 @@ body.dark-mode .add-to-cart:hover {
     flex-direction: column;
     gap: 10px;
   }
+  }
+/* Product Grid (JSON Loaded) */
+.recommended-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.product-box {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  width: 200px;
+  border-radius: 8px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-box:hover {
+  transform: scale(1.05);
+}
+
+.product-box img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.product-box h3 {
+  margin: 5px 0;
+}
+
+.product-box p {
+  font-size: 14px;
+  color: #555;
 }
