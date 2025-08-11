@@ -1,14 +1,18 @@
+/* ===== General Body Styling ===== */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #e9f0fa; /* Light blue background */
     margin: 0;
+    color: #000;
 }
 
+/* ===== Header Styling ===== */
 #header {
-    background-color: #fff;
+    background-color: #0d1b2a; /* Dark blue */
     display: flex;
     align-items: center;
     padding: 10px 20px;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
 }
 
 #header img {
@@ -16,10 +20,16 @@ body {
     margin-right: 10px;
 }
 
+#header h1 {
+    color: white;
+    margin: 0;
+}
+
 #header nav ul {
     list-style: none;
     display: flex;
     margin-left: auto;
+    padding: 0;
 }
 
 #header nav ul li {
@@ -28,27 +38,45 @@ body {
 
 #header nav ul li a {
     text-decoration: none;
-    color: black;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+#header nav ul li a:hover {
+    color: #7cb0f3; /* Light blue hover */
 }
 
 #header nav ul li a.active {
-    color: blue;
+    color: #7cb0f3;
 }
 
+/* ===== Store Section ===== */
 .store-section {
     padding: 20px;
     text-align: center;
 }
 
+/* ===== Category Dropdown ===== */
 .category-filter {
     margin-bottom: 20px;
 }
 
 .category-filter select {
-    padding: 5px;
+    padding: 8px 12px;
     font-size: 16px;
+    border: 2px solid #0d1b2a;
+    border-radius: 5px;
+    background-color: white;
+    color: #0d1b2a;
+    cursor: pointer;
 }
 
+.category-filter select:hover {
+    border-color: #7cb0f3;
+}
+
+/* ===== Product Grid ===== */
 .recommended-grid {
     display: flex;
     flex-wrap: wrap;
@@ -56,18 +84,21 @@ body {
     justify-content: center;
 }
 
+/* ===== Product Cards ===== */
 .product-box {
     background-color: white;
-    border: 1px solid #ddd;
-    padding: 10px;
+    border: 2px solid #0d1b2a;
+    padding: 15px;
     text-align: center;
     width: 200px;
-    border-radius: 8px;
-    transition: transform 0.2s ease-in-out;
+    border-radius: 10px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
 }
 
 .product-box:hover {
     transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
 }
 
 .product-box img {
@@ -76,23 +107,27 @@ body {
 }
 
 .product-box h3 {
-    margin: 5px 0;
+    margin: 10px 0 5px;
+    color: #0d1b2a;
 }
 
 .product-box p {
     font-size: 14px;
-    color: #555;
+    color: #333;
 }
 
+/* ===== Buy Now Button ===== */
 button {
-    background-color: blue;
+    background-color: #0d6efd; /* Bootstrap blue */
     color: white;
     border: none;
-    padding: 8px;
+    padding: 8px 12px;
     cursor: pointer;
     border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: darkblue;
+    background-color: #084298; /* Darker blue */
 }
