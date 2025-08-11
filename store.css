@@ -7,6 +7,24 @@ body {
   padding: 0;
 }
 
+section, .textsection {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+  color: #000;
+  margin: 0;
+}
+
+p {
+  line-height: 1.6;
+}
+
 /* === HEADER === */
 #header {
   display: flex;
@@ -53,28 +71,25 @@ nav li a.active {
   background-color: #0f172a;
 }
 
-/* === STORE MAIN SECTION === */
-.store-section {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+#darkModeToggle {
+  background: transparent;
+  border: none;
+  color: #93c5fd;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: 15px;
 }
 
-.category-filter {
-  margin-bottom: 20px;
-}
-
-.category-filter select {
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+#darkModeToggle:hover {
+  color: #60a5fa;
 }
 
 /* === PRODUCT GRID === */
+.recommended-products {
+  max-width: 1200px;
+  margin: 40px auto;
+}
+
 .recommended-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -98,13 +113,12 @@ nav li a.active {
 .product-box img {
   max-width: 100%;
   height: auto;
-  border-radius: 5px;
   margin-bottom: 10px;
+  border-radius: 5px;
 }
 
 .product-box h3 {
   margin: 10px 0;
-  color: #000;
 }
 
 .product-box p {
@@ -112,21 +126,18 @@ nav li a.active {
   color: #555;
 }
 
-/* === BUTTONS === */
-button,
-.add-to-cart {
+button, .add-to-cart {
   background-color: #3b82f6;
   color: #fff;
   border: none;
   padding: 10px 15px;
-  cursor: pointer;
   border-radius: 5px;
-  text-decoration: none;
+  cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: 14px;
 }
 
-button:hover,
-.add-to-cart:hover {
+button:hover, .add-to-cart:hover {
   background-color: #2563eb;
 }
 
@@ -156,7 +167,8 @@ body.dark-mode {
   color: #e2e8f0;
 }
 
-body.dark-mode .store-section,
+body.dark-mode section,
+body.dark-mode .textsection,
 body.dark-mode .product-box {
   background-color: #1e293b;
 }
