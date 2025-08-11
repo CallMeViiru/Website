@@ -1,121 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Store | CallMeViiru's Site</title>
-  <link rel="stylesheet" href="style.css" />
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9235877052315560"
-   crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="/Images/favicon.ico">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Viiru | Store</title>
+    <link rel="stylesheet" href="store.css" />
 </head>
-<body class="store-page">
-  <!-- Header -->
-  <header id="header">
-  <div class="logo">
+<body>
+
+<header id="header">
     <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
-    <h1 id="HH1">CallMeViiru's Site</h1>
-  </div>
-  <div class="right-header">
+    <h1 id="HH1">Viiru</h1>
     <nav>
-      <ul>
-        <li><a href="https://www.viiru.top/">Home</a></li>
-        <li><a href="https://www.viiru.top/Store" class="active">Store</a></li>
-        <li><a href="https://www.viiru.top/Socials">Socials</a></li>
-        <li><a href="https://www.viiru.top/about">About</a></li>
-      </ul>
+        <ul>
+            <li><a href="https://www.viiru.top/">Home</a></li>
+            <li><a href="https://www.viiru.top/Store" class="active">Store</a></li>
+            <li><a href="https://www.viiru.top/Socials">Socials</a></li>
+            <li><a href="https://www.viiru.top/about">About</a></li>
+        </ul>
     </nav>
-    <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
-  </div>
 </header>
 
-  
-  <!-- Store Hero -->
-  <section class="store-hero">
-    <h2>Store</h2>
-    <p>This is my store! Buy CatCraft items, promotions, or sponsorships. More coming soon!</p>
-  </section>
-
-  <!-- Category Filter -->
-  <section class="filter-section">
-    <label for="category">Filter by Category:</label>
-    <select id="category" onchange="filterProducts()">
-      <option value="all">All</option>
-      <option value="catcraft">CatCraft Items</option>
-      <option value="ads">Paid Advertisements / Sponsorships</option>
-    </select>
-  </section>
-
-  <!-- Product Grid -->
-  <section id="shopgrid">
-    <div class="productbox" data-category="catcraft">
-      <img src="Images/Diamond_Armor_Set.png" alt="Full Diamond Armor Set">
-      <h3>Full Diamond Armor Set (CatCraft)</h3>
-      <p>16 Diamonds</p>
-      <a href="https://forms.gle/J26bvUkvF47JpcaG7">Buy Now</a>
+<section class="store-section">
+    <h2>Our Store</h2>
+    
+    <!-- Category Dropdown -->
+    <div class="category-filter">
+        <label for="categorySelect">Filter by category:</label>
+        <select id="categorySelect">
+            <option value="all">All</option>
+            <option value="games">Games</option>
+            <option value="electronics">Electronics</option>
+            <option value="books">Books</option>
+        </select>
     </div>
-    <div class="productbox" data-category="catcraft">
-      <img src="Images/Enchanted_Book.jpg" alt="2x Mending or 2x Silk Touch Books">
-      <h3>2x Mending or 2x Silk Touch Books (Enchanted books) (CatCraft)</h3>
-      <p>1 Diamond</p>
-      <a href="https://forms.gle/J26bvUkvF47JpcaG7">Buy Now</a>
+
+    <!-- Product Grid -->
+    <div class="recommended-grid" id="store-product-list">
+        <!-- Products will load here from JSON -->
     </div>
-    <div class="productbox" data-category="catcraft">
-      <img src="Images/Enchanted_Netherite_Axe.webp" alt="Fully Enchanted Netherite Axe">
-      <h3>Fully Enchanted Netherite Axe (CatCraft)</h3>
-      <p>80 Diamonds</p>
-      <a href="https://forms.gle/J26bvUkvF47JpcaG7">Buy Now</a>
-    </div>
-    <div class="productbox" data-category="catcraft">
-      <img src="Images/Enchanted_Netherite_Axe.webp" alt="Mango Axe">
-      <h3>Mango Axe (CatCraft)</h3>
-      <p>358 Diamonds</p>
-      <a href="https://forms.gle/J26bvUkvF47JpcaG7">Buy Now</a>
-    </div>
-    <div class="productbox" data-category="ads">
-      <img src="Images/Viiru.png" alt="Sponsorship Slot">
-      <h3>Sponsorship Slot</h3>
-      <p>NOT FOR SALE!</p>
-      <a href="#">Buy Now</a>
-    </div>
-  </section>
+</section>
 
-  <!-- Footer -->
-  <footer id="footer">
-    <p>&copy; 2025 viiru.top & viiru.ee</p>
-    <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a> |
-    <a href="https://www.viiru.top/tos">Terms Of Service</a>
-  </footer>
+<footer id="footer">
+    <p>Copyright &copy; viiru.top 2025</p>
+    <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a>
+    <a href="https://www.viiru.top/tos">Terms of Service</a>
+</footer>
 
-  <!-- Filter Script -->
-  <script>
-    function filterProducts() {
-      const selectedCategory = document.getElementById('category').value;
-      const products = document.querySelectorAll('.productbox');
-
-      products.forEach(product => {
-        if (selectedCategory === 'all' || product.dataset.category === selectedCategory) {
-          product.style.display = 'block';
-        } else {
-          product.style.display = 'none';
-        }
-      });
-    }
-  </script>
-
-  <!-- Dark Mode Toggle Script -->
-  <script>
-    const toggleButton = document.getElementById('darkModeToggle');
-
-    toggleButton.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-
-      if (document.body.classList.contains('dark-mode')) {
-        toggleButton.textContent = '☀️'; // Sun icon when dark mode ON
-      } else {
-        toggleButton.textContent = '🌙'; // Moon icon when dark mode OFF
-      }
-    });
-  </script>
+<script src="store.js"></script>
 </body>
 </html>
-
