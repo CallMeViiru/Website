@@ -83,7 +83,7 @@ form {
     flex-direction: column;
 }
 
-input, select, .multi-select {
+input[type="text"], select, .multi-select {
     padding: 10px;
     font-size: 16px;
     border-radius: 8px;
@@ -94,9 +94,11 @@ input, select, .multi-select {
 
 .multi-select {
     min-height: 120px;
+    display: block;
 }
 
-button {
+/* Submit button */
+#tradeForm button {
     background-color: #3b82f6;
     color: white;
     border: none;
@@ -107,7 +109,7 @@ button {
     transition: background-color 0.3s ease;
 }
 
-button:hover {
+#tradeForm button:hover {
     background-color: #2563eb;
 }
 
