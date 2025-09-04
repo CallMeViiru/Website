@@ -2,204 +2,173 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Viiru | Trades</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CatCraft Trades</title>
   <link rel="stylesheet" href="trades.css">
+  <link rel="icon" href="Images/favicon.ico">
 </head>
 <body>
+  <header id="header">
+    <img src="Images/viiru.jpg" alt="Viiru Logo" id="HIcon">
+    <h1 id="HH1">CatCraft Trades</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="store.html">Store</a></li>
+        <li><a href="trades.html" class="active">Trades</a></li>
+      </ul>
+    </nav>
+    <button id="darkModeToggle">🌙</button>
+  </header>
 
-<header id="header">
-  <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon">
-  <h1 id="HH1">Viiru Trades</h1>
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="store.html">Store</a></li>
-      <li><a href="trades.html" class="active">Trades</a></li>
-    </ul>
-  </nav>
-  <button id="darkModeToggle" title="Toggle dark mode">🌙</button>
-</header>
+  <section class="trade-section">
+    <h2>Post a Trade</h2>
 
-<section>
-  <h2>Post Your Trade</h2>
-  <form id="tradeForm">
-    <div class="form-row">
-      <label for="username">In-Game Username:</label>
+    <form id="tradeForm">
+      <label for="username">In-game username:</label>
       <input type="text" id="username" required placeholder="Your username">
-    </div>
 
-    <div class="form-row">
-      <label for="payment">Payment Method:</label>
-      <select id="payment" required>
+      <label for="tradeType">Payment method:</label>
+      <select id="tradeType" required>
+        <option value="">Select...</option>
         <option value="diamonds">Diamonds</option>
-        <option value="items">Trade Items</option>
+        <option value="items">Items</option>
       </select>
-    </div>
 
-    <div class="form-row" id="offerRow">
-      <label>Offer Items / Diamonds:</label>
-      <div id="offerContainer"></div>
-      <button type="button" id="addOffer">Add Offer</button>
-    </div>
+      <div id="diamondsSection">
+        <label for="giveDiamonds">Diamonds you give:</label>
+        <input type="number" id="giveDiamonds" min="0" value="0">
 
-    <div class="form-row" id="wantRow">
-      <label>Want Items / Diamonds:</label>
-      <div id="wantContainer"></div>
-      <button type="button" id="addWant">Add Want</button>
-    </div>
+        <label for="wantDiamonds">Diamonds you want:</label>
+        <input type="number" id="wantDiamonds" min="0" value="0">
+      </div>
 
-    <button type="submit">Post Trade</button>
-  </form>
-</section>
+      <div id="itemsSection">
+        <label for="itemsGive">Items you give:</label>
+        <select id="itemsGive" multiple></select>
 
-<section>
-  <h2>Active Trades</h2>
-  <div class="trade-grid" id="tradeGrid"></div>
-</section>
+        <label for="itemsWant">Items you want:</label>
+        <select id="itemsWant" multiple></select>
+      </div>
 
-<footer id="footer">
-  <p>Copyright &copy; viiru.top 2025</p>
-  <a href="privacypolicy.html">Privacy Policy</a>
-  <a href="tos.html">Terms of Service</a>
-</footer>
+      <button type="submit" id="postTrade">Post Trade</button>
+      <p id="status"></p>
+    </form>
+  </section>
 
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getDatabase, ref, push, get, child } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+  <footer id="footer">
+    <p>&copy; 2025 CatCraft Trades</p>
+  </footer>
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  databaseURL: "https://v11rutop-default-rtdb.firebaseio.com",
-  projectId: "v11rutop",
-  storageBucket: "v11rutop.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+      authDomain: "v11rutop.firebaseapp.com",
+      projectId: "v11rutop",
+      storageBucket: "v11rutop.firebasestorage.app",
+      messagingSenderId: "664984661004",
+      appId: "1:664984661004:web:357ea8a60723b000e55229",
+      measurementId: "G-DMPEGNPVEN"
+    };
 
-const toggleButton = document.getElementById('darkModeToggle');
-toggleButton.addEventListener('click', () => {
-  document.body.classList.toggle('dark-mode');
-  toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-});
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-// Load items
-let itemsList = [];
-fetch('items.json')
-  .then(res => res.json())
-  .then(items => itemsList = items.map(i => i.name))
-  .then(() => initTradeForm());
+    const tradeForm = document.getElementById('tradeForm');
+    const tradeType = document.getElementById('tradeType');
+    const diamondsSection = document.getElementById('diamondsSection');
+    const itemsSection = document.getElementById('itemsSection');
+    const itemsGive = document.getElementById('itemsGive');
+    const itemsWant = document.getElementById('itemsWant');
+    const status = document.getElementById('status');
 
-// Initialize trade form
-function initTradeForm() {
-  const offerContainer = document.getElementById('offerContainer');
-  const wantContainer = document.getElementById('wantContainer');
+    // Load allowed items from JSON
+    fetch('items.json')
+      .then(res => res.json())
+      .then(items => {
+        items.forEach(item => {
+          let option1 = document.createElement('option');
+          option1.value = item.name;
+          option1.textContent = item.name;
+          itemsGive.appendChild(option1);
 
-  function createItemRow(container) {
-    const row = document.createElement('div');
-    row.className = 'form-row';
+          let option2 = document.createElement('option');
+          option2.value = item.name;
+          option2.textContent = item.name;
+          itemsWant.appendChild(option2);
+        });
+      });
 
-    const select = document.createElement('select');
-    itemsList.forEach(item => {
-      const opt = document.createElement('option');
-      opt.value = item;
-      opt.textContent = item;
-      select.appendChild(opt);
+    // Toggle sections
+    tradeType.addEventListener('change', () => {
+      if(tradeType.value === 'diamonds') {
+        diamondsSection.style.display = 'block';
+        itemsSection.style.display = 'none';
+      } else if(tradeType.value === 'items') {
+        diamondsSection.style.display = 'none';
+        itemsSection.style.display = 'block';
+      } else {
+        diamondsSection.style.display = 'none';
+        itemsSection.style.display = 'none';
+      }
     });
 
-    const amount = document.createElement('input');
-    amount.type = 'number';
-    amount.placeholder = 'Amount';
-    amount.min = 1;
+    // Generate simple user identifier (IP + cookie not available in JS without server, so random ID)
+    const userId = 'user_' + Math.random().toString(36).substring(2,10);
 
-    const removeBtn = document.createElement('button');
-    removeBtn.type = 'button';
-    removeBtn.textContent = '❌';
-    removeBtn.style.background = 'red';
-    removeBtn.style.marginLeft = '10px';
-    removeBtn.addEventListener('click', () => row.remove());
+    tradeForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = 'Posting trade...';
 
-    row.appendChild(select);
-    row.appendChild(amount);
-    row.appendChild(removeBtn);
-    container.appendChild(row);
-  }
+      const username = document.getElementById('username').value;
 
-  document.getElementById('addOffer').addEventListener('click', () => createItemRow(offerContainer));
-  document.getElementById('addWant').addEventListener('click', () => createItemRow(wantContainer));
+      let tradeData = {
+        username: username,
+        type: tradeType.value,
+        timestamp: Date.now()
+      };
 
-  // Initial row
-  createItemRow(offerContainer);
-  createItemRow(wantContainer);
-}
+      if(tradeType.value === 'diamonds') {
+        tradeData.give = parseInt(document.getElementById('giveDiamonds').value);
+        tradeData.want = parseInt(document.getElementById('wantDiamonds').value);
+      } else if(tradeType.value === 'items') {
+        tradeData.giveItems = Array.from(itemsGive.selectedOptions).map(o => o.value);
+        tradeData.wantItems = Array.from(itemsWant.selectedOptions).map(o => o.value);
+      }
 
-// Handle posting trades
-const form = document.getElementById('tradeForm');
-const tradeGrid = document.getElementById('tradeGrid');
+      // Check cooldown
+      const tradeRef = ref(db, 'trades/' + userId);
+      const snapshot = await get(tradeRef);
+      if(snapshot.exists()) {
+        const last = snapshot.val().timestamp;
+        if(Date.now() - last < 86400000) {
+          status.textContent = 'You can post again after 24 hours.';
+          return;
+        }
+      }
 
-form.addEventListener('submit', async e => {
-  e.preventDefault();
-  const username = document.getElementById('username').value.trim();
-  if(!username) return;
-
-  const key = 'trade-' + username;
-  const lastTrade = localStorage.getItem(key);
-  if(lastTrade && Date.now() - lastTrade < 86400000){
-    alert('You can only post once every 24h!');
-    return;
-  }
-
-  // Gather offers & wants
-  const offers = Array.from(document.getElementById('offerContainer').children).map(r => {
-    return {item: r.querySelector('select').value, amount: r.querySelector('input').value || 1};
-  });
-
-  const wants = Array.from(document.getElementById('wantContainer').children).map(r => {
-    return {item: r.querySelector('select').value, amount: r.querySelector('input').value || 1};
-  });
-
-  // Push to Firebase
-  const tradesRef = ref(db, 'trades');
-  await push(tradesRef, { username, offers, wants, timestamp: Date.now() });
-
-  localStorage.setItem(key, Date.now());
-
-  alert('Trade posted successfully!');
-
-  form.reset();
-  document.getElementById('offerContainer').innerHTML = '';
-  document.getElementById('wantContainer').innerHTML = '';
-  document.getElementById('addOffer').click();
-  document.getElementById('addWant').click();
-
-  loadTrades();
-});
-
-// Load trades from Firebase
-async function loadTrades(){
-  tradeGrid.innerHTML = '';
-  const tradesRef = ref(db);
-  const snapshot = await get(child(tradesRef, 'trades'));
-  if(snapshot.exists()){
-    snapshot.forEach(snap => {
-      const trade = snap.val();
-      const offers = trade.offers.map(o => `${o.amount}x ${o.item}`).join(', ');
-      const wants = trade.wants.map(o => `${o.amount}x ${o.item}`).join(', ');
-      const card = document.createElement('div');
-      card.classList.add('trade-card');
-      card.innerHTML = `<h3>${trade.username}</h3><p>Offer: ${offers}</p><p>Want: ${wants}</p>`;
-      tradeGrid.appendChild(card);
+      set(tradeRef, tradeData).then(() => {
+        status.textContent = 'Trade posted successfully!';
+        tradeForm.reset();
+        diamondsSection.style.display = 'none';
+        itemsSection.style.display = 'none';
+      }).catch(err => {
+        status.textContent = 'Error posting trade: ' + err;
+      });
     });
-  }
-}
+  </script>
 
-// Load trades on page load
-loadTrades();
-</script>
+  <script>
+    // Dark mode toggle
+    const toggleButton = document.getElementById('darkModeToggle');
+    toggleButton.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+  </script>
 </body>
 </html>
