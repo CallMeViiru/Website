@@ -1,78 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viiru | CatCraft Trades</title>
-    <link rel="stylesheet" href="trades.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Viiru | Trades</title>
+  <link rel="stylesheet" href="trades.css">
 </head>
 <body>
 
 <header id="header">
-    <img src="Images/viiru.jpg" alt="Viiru Logo" id="HIcon">
-    <h1 id="HH1">Viiru</h1>
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="store.html" class="active">Trades</a></li>
-            <li><a href="socials.html">Socials</a></li>
-            <li><a href="about.html">About</a></li>
-        </ul>
-    </nav>
-    <button id="darkModeToggle">🌙</button>
+  <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon">
+  <h1 id="HH1">Viiru Trades</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="store.html">Store</a></li>
+      <li><a href="trades.html" class="active">Trades</a></li>
+    </ul>
+  </nav>
+  <button id="darkModeToggle" title="Toggle dark mode">🌙</button>
 </header>
 
-<section class="trade-section">
-    <h2>Post Your CatCraft Trade</h2>
-    <form id="tradeForm">
-        <div class="form-row">
-            <label for="username">Your In-Game Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter your username" required>
-        </div>
+<section>
+  <h2>Post Your Trade</h2>
+  <form id="tradeForm">
+    <div class="form-row">
+      <label for="username">In-Game Username:</label>
+      <input type="text" id="username" required placeholder="Your username">
+    </div>
 
-        <div class="form-row">
-            <label for="paymentType">Choose Payment Type</label>
-            <select id="paymentType" name="paymentType" required>
-                <option value="diamonds">Diamonds</option>
-                <option value="items">Trade Items</option>
-            </select>
-        </div>
+    <div class="form-row">
+      <label for="payment">Payment Method:</label>
+      <select id="payment" required>
+        <option value="diamonds">Diamonds</option>
+        <option value="items">Trade Items</option>
+      </select>
+    </div>
 
-        <div class="form-row">
-            <label for="offerItems">You Offer (Items)</label>
-            <select id="offerItems" name="offerItems" multiple size="6" class="multi-select"></select>
-        </div>
+    <div class="form-row" id="offerRow">
+      <label for="offerItems">Offer Items:</label>
+      <select id="offerItems" class="multi-select" multiple></select>
+    </div>
 
-        <div class="form-row">
-            <label for="wantItems">You Want (Items / Diamonds)</label>
-            <select id="wantItems" name="wantItems" multiple size="6" class="multi-select"></select>
-        </div>
+    <div class="form-row" id="wantRow">
+      <label for="wantItems">Want Items / Diamonds:</label>
+      <select id="wantItems" class="multi-select" multiple></select>
+    </div>
 
-        <button type="submit">Post Trade</button>
-    </form>
+    <button type="submit">Post Trade</button>
+  </form>
 </section>
 
-<section class="trade-list-section">
-    <h2>Active Trades</h2>
-    <div class="trade-grid" id="tradeList">
-        <!-- Trades will load here dynamically -->
-    </div>
+<section>
+  <h2>Active Trades</h2>
+  <div class="trade-grid" id="tradeGrid">
+    <!-- Trades will appear here -->
+  </div>
 </section>
 
 <footer id="footer">
-    <p>Copyright &copy; viiru.ee 2025</p>
-    <a href="privaatsuspoliitika.html">Privaatsuspoliitika</a>
-    <a href="tos.html">Kasutustingimused</a>
+  <p>Copyright &copy; viiru.top 2025</p>
+  <a href="privacypolicy.html">Privacy Policy</a>
+  <a href="tos.html">Terms of Service</a>
 </footer>
 
-<script src="trades.js" type="module"></script>
+<script type="module" src="trades.js"></script>
 <script>
 const toggleButton = document.getElementById('darkModeToggle');
 toggleButton.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+  document.body.classList.toggle('dark-mode');
+  toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
 });
 </script>
-
 </body>
 </html>
