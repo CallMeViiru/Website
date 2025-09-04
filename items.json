@@ -1,12 +1,8 @@
 [
-  { "id": "mending_book", "name": "Mending Book" },
-  { "id": "silk_touch_book", "name": "Silk Touch Book" },
-  { "id": "efficiency_v_book", "name": "Efficiency V Book" },
-  { "id": "unbreaking_iii_book", "name": "Unbreaking III Book" },
-  { "id": "netherite_axe", "name": "Netherite Axe" },
-  { "id": "diamond_set", "name": "Diamond Armor Set" },
-  { "id": "elytra", "name": "Elytra" },
-  { "id": "beacon", "name": "Beacon" },
-  { "id": "shulker_box", "name": "Shulker Box" },
-  { "id": "totem", "name": "Totem of Undying" }
+  {"name": "Sword"},
+  {"name": "Shield"},
+  {"name": "Potion"},
+  {"name": "Helmet"},
+  {"name": "Armor"},
+  {"name": "Diamonds"}
 ]
