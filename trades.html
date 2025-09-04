@@ -1,137 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CatCraft Trades</title>
-<link rel="stylesheet" href="trades.css">
-<link rel="icon" href="Images/favicon.ico">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CatCraft Trades | Viiru</title>
+  <link rel="stylesheet" href="trade.css" />
+  <link rel="icon" type="image/x-icon" href="/Images/favicon.ico">
 </head>
 <body>
+
 <header id="header">
-    <img src="Images/viiru.jpg" alt="Viiru Logo" id="HIcon">
-    <h1 id="HH1">CatCraft Trades</h1>
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="store.html">Store</a></li>
-            <li><a href="trades.html" class="active">Trades</a></li>
-        </ul>
-    </nav>
-    <button id="darkModeToggle">🌙</button>
+  <img src="Images/viiru.jpg" alt="Viiru Logo" id="HIcon">
+  <h1 id="HH1">Viiru</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="trade.html" class="active">Trade</a></li>
+      <li><a href="social.html">Socials</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+  <button id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
 </header>
 
 <section class="trade-section">
-    <h2>Post a Trade</h2>
+  <h2>Post Your CatCraft Trade</h2>
+  <form class="trade-form" id="tradeForm">
+    <label for="username">Ingame Username</label>
+    <input type="text" id="username" required>
 
-    <form id="tradeForm">
-        <label for="username">In-game username:</label>
-        <input type="text" id="username" required placeholder="Your username">
+    <div class="item-selection">
+      <div>
+        <h3>Items You Offer</h3>
+        <div id="giveItems"></div>
+      </div>
+      <div>
+        <h3>Items You Want</h3>
+        <div id="wantItems"></div>
+      </div>
+    </div>
 
-        <label for="itemsGive">Items you give:</label>
-        <div id="itemsGiveContainer"></div>
+    <button type="submit" id="postTrade">Post Trade</button>
+  </form>
+</section>
 
-        <label for="itemsWant">Items you want:</label>
-        <div id="itemsWantContainer"></div>
-
-        <button type="submit" id="postTrade">Post Trade</button>
-        <p id="status"></p>
-    </form>
+<section class="active-trades">
+  <h2>Active Trades</h2>
+  <div class="recommended-grid" id="tradeList"></div>
 </section>
 
 <footer id="footer">
-    <p>Copyright &copy; viiru.top 2025</p>
+  <p>Copyright &copy; viiru.ee 2025</p>
+  <a href="privacypolicy.html">Privacy Policy</a>
+  <a href="tos.html">Terms of Service</a>
 </footer>
 
+<!-- Firebase JS -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
+// Firebase config
 const firebaseConfig = {
-    apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-    authDomain: "v11rutop.firebaseapp.com",
-    projectId: "v11rutop",
-    storageBucket: "v11rutop.firebasestorage.app",
-    messagingSenderId: "664984661004",
-    appId: "1:664984661004:web:357ea8a60723b000e55229",
-    measurementId: "G-DMPEGNPVEN"
+  apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+  authDomain: "v11rutop.firebaseapp.com",
+  projectId: "v11rutop",
+  storageBucket: "v11rutop.firebasestorage.app",
+  messagingSenderId: "664984661004",
+  appId: "1:664984661004:web:357ea8a60723b000e55229",
+  measurementId: "G-DMPEGNPVEN"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const db = getFirestore(app);
 
-const tradeForm = document.getElementById('tradeForm');
-const itemsGiveContainer = document.getElementById('itemsGiveContainer');
-const itemsWantContainer = document.getElementById('itemsWantContainer');
-const status = document.getElementById('status');
+// Predefined allowed items
+const allowedItems = [
+  {id:"sword", name:"Sword"},
+  {id:"helmet", name:"Helmet"},
+  {id:"shield", name:"Shield"},
+  {id:"pickaxe", name:"Pickaxe"},
+  {id:"axe", name:"Axe"}
+];
 
-fetch('items.json')
-    .then(res => res.json())
-    .then(items => {
-        items.forEach(item => {
-            const giveDiv = document.createElement('div');
-            giveDiv.className = 'item-row';
-            giveDiv.innerHTML = `
-                <input type="checkbox" class="giveItem" value="${item.name}"> ${item.name}
-                <input type="number" class="giveQuantity" min="1" value="1" style="width:60px;">
-            `;
-            itemsGiveContainer.appendChild(giveDiv);
+// Populate item checkboxes
+const giveItemsDiv = document.getElementById('giveItems');
+const wantItemsDiv = document.getElementById('wantItems');
 
-            const wantDiv = document.createElement('div');
-            wantDiv.className = 'item-row';
-            wantDiv.innerHTML = `
-                <input type="checkbox" class="wantItem" value="${item.name}"> ${item.name}
-                <input type="number" class="wantQuantity" min="1" value="1" style="width:60px;">
-            `;
-            itemsWantContainer.appendChild(wantDiv);
-        });
-    });
-
-const userId = 'user_' + Math.random().toString(36).substring(2,10);
-
-tradeForm.addEventListener('submit', async e => {
-    e.preventDefault();
-    status.textContent = 'Posting trade...';
-
-    const username = document.getElementById('username').value;
-
-    const giveItems = Array.from(document.querySelectorAll('.giveItem'))
-        .filter(cb => cb.checked)
-        .map(cb => ({name: cb.value, quantity: parseInt(cb.nextElementSibling.value)}));
-
-    const wantItems = Array.from(document.querySelectorAll('.wantItem'))
-        .filter(cb => cb.checked)
-        .map(cb => ({name: cb.value, quantity: parseInt(cb.nextElementSibling.value)}));
-
-    if(giveItems.length === 0 && wantItems.length === 0){
-        status.textContent = 'Select at least one item to give or receive!';
-        return;
-    }
-
-    const tradeData = { username, giveItems, wantItems, timestamp: Date.now() };
-
-    const tradeRef = ref(db, 'trades/' + userId);
-    const snapshot = await get(tradeRef);
-    if(snapshot.exists() && Date.now() - snapshot.val().timestamp < 86400000){
-        status.textContent = 'You can post again after 24 hours.';
-        return;
-    }
-
-    set(tradeRef, tradeData)
-        .then(() => {
-            status.textContent = 'Trade posted successfully!';
-            tradeForm.reset();
-        })
-        .catch(err => status.textContent = 'Error: ' + err);
+allowedItems.forEach(item => {
+  giveItemsDiv.innerHTML += `
+    <div class="item-box">
+      <input type="checkbox" value="${item.id}" class="giveItem">
+      <span>${item.name}</span>
+      <input type="number" min="1" value="1" class="quantity" placeholder="Qty">
+    </div>
+  `;
+  wantItemsDiv.innerHTML += `
+    <div class="item-box">
+      <input type="checkbox" value="${item.id}" class="wantItem">
+      <span>${item.name}</span>
+      <input type="number" min="1" value="1" class="quantity" placeholder="Qty">
+    </div>
+  `;
 });
-</script>
 
-<script>
+// 24h cooldown using cookie
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if(parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
+
+document.getElementById('tradeForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const username = document.getElementById('username').value.trim();
+  const lastTrade = getCookie('lastTrade');
+
+  if(lastTrade && (Date.now() - Number(lastTrade)) < 86400000) { // 24h
+    alert("You can only post 1 trade per 24h.");
+    return;
+  }
+
+  const give = [];
+  const want = [];
+
+  document.querySelectorAll('.giveItem').forEach((checkbox, i)=>{
+    if(checkbox.checked){
+      give.push({item: checkbox.value, quantity: Number(document.querySelectorAll('.giveItem + span + .quantity')[i].value)});
+    }
+  });
+  document.querySelectorAll('.wantItem').forEach((checkbox, i)=>{
+    if(checkbox.checked){
+      want.push({item: checkbox.value, quantity: Number(document.querySelectorAll('.wantItem + span + .quantity')[i].value)});
+    }
+  });
+
+  if(give.length === 0 || want.length === 0){
+    alert("Select at least one item to give and one to want.");
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "trades"), {
+      username,
+      give,
+      want,
+      timestamp: serverTimestamp()
+    });
+    document.cookie = `lastTrade=${Date.now()}; max-age=86400`; // 24h cookie
+    alert("Trade posted successfully!");
+    document.getElementById('tradeForm').reset();
+    loadTrades();
+  } catch (err) {
+    console.error(err);
+    alert("Error posting trade");
+  }
+});
+
+// Load trades
+async function loadTrades(){
+  const tradeList = document.getElementById('tradeList');
+  tradeList.innerHTML = "";
+  const q = query(collection(db, "trades"), orderBy("timestamp","desc"));
+  const snapshot = await getDocs(q);
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const giveStr = data.give.map(x=>`${x.quantity} x ${allowedItems.find(i=>i.id===x.item).name}`).join(", ");
+    const wantStr = data.want.map(x=>`${x.quantity} x ${allowedItems.find(i=>i.id===x.item).name}`).join(", ");
+    tradeList.innerHTML += `
+      <div class="product-box">
+        <h3>${data.username}</h3>
+        <p><b>Gives:</b> ${giveStr}</p>
+        <p><b>Wants:</b> ${wantStr}</p>
+      </div>
+    `;
+  });
+}
+
+// Initial load
+loadTrades();
+
+// Dark mode toggle
 const toggleButton = document.getElementById('darkModeToggle');
 toggleButton.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+  document.body.classList.toggle('dark-mode');
+  toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
 });
 </script>
+
 </body>
 </html>
