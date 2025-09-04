@@ -1,174 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CatCraft Trades</title>
-  <link rel="stylesheet" href="trades.css">
-  <link rel="icon" href="Images/favicon.ico">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CatCraft Trades</title>
+<link rel="stylesheet" href="trades.css">
+<link rel="icon" href="Images/favicon.ico">
 </head>
 <body>
-  <header id="header">
+<header id="header">
     <img src="Images/viiru.jpg" alt="Viiru Logo" id="HIcon">
     <h1 id="HH1">CatCraft Trades</h1>
     <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="store.html">Store</a></li>
-        <li><a href="trades.html" class="active">Trades</a></li>
-      </ul>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="store.html">Store</a></li>
+            <li><a href="trades.html" class="active">Trades</a></li>
+        </ul>
     </nav>
     <button id="darkModeToggle">🌙</button>
-  </header>
+</header>
 
-  <section class="trade-section">
+<section class="trade-section">
     <h2>Post a Trade</h2>
 
     <form id="tradeForm">
-      <label for="username">In-game username:</label>
-      <input type="text" id="username" required placeholder="Your username">
+        <label for="username">In-game username:</label>
+        <input type="text" id="username" required placeholder="Your username">
 
-      <label for="tradeType">Payment method:</label>
-      <select id="tradeType" required>
-        <option value="">Select...</option>
-        <option value="diamonds">Diamonds</option>
-        <option value="items">Items</option>
-      </select>
-
-      <div id="diamondsSection">
         <label for="giveDiamonds">Diamonds you give:</label>
         <input type="number" id="giveDiamonds" min="0" value="0">
 
         <label for="wantDiamonds">Diamonds you want:</label>
         <input type="number" id="wantDiamonds" min="0" value="0">
-      </div>
 
-      <div id="itemsSection">
         <label for="itemsGive">Items you give:</label>
-        <select id="itemsGive" multiple></select>
+        <div id="itemsGiveContainer"></div>
 
         <label for="itemsWant">Items you want:</label>
-        <select id="itemsWant" multiple></select>
-      </div>
+        <div id="itemsWantContainer"></div>
 
-      <button type="submit" id="postTrade">Post Trade</button>
-      <p id="status"></p>
+        <button type="submit" id="postTrade">Post Trade</button>
+        <p id="status"></p>
     </form>
-  </section>
+</section>
 
-  <footer id="footer">
-    <p>&copy; 2025 CatCraft Trades</p>
-  </footer>
+<footer id="footer">
+    <p>Copyright &copy; viiru.ee 2025</p>
+</footer>
 
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-      authDomain: "v11rutop.firebaseapp.com",
-      projectId: "v11rutop",
-      storageBucket: "v11rutop.firebasestorage.app",
-      messagingSenderId: "664984661004",
-      appId: "1:664984661004:web:357ea8a60723b000e55229",
-      measurementId: "G-DMPEGNPVEN"
+const firebaseConfig = {
+    apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+    authDomain: "v11rutop.firebaseapp.com",
+    projectId: "v11rutop",
+    storageBucket: "v11rutop.firebasestorage.app",
+    messagingSenderId: "664984661004",
+    appId: "1:664984661004:web:357ea8a60723b000e55229",
+    measurementId: "G-DMPEGNPVEN"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const tradeForm = document.getElementById('tradeForm');
+const itemsGiveContainer = document.getElementById('itemsGiveContainer');
+const itemsWantContainer = document.getElementById('itemsWantContainer');
+const status = document.getElementById('status');
+
+// Load allowed items from JSON
+fetch('items.json')
+    .then(res => res.json())
+    .then(items => {
+        items.forEach(item => {
+            // Give items
+            let divGive = document.createElement('div');
+            divGive.className = "item-row";
+            divGive.innerHTML = `
+                <input type="checkbox" class="giveItem" value="${item.name}"> ${item.name} 
+                <input type="number" class="giveQuantity" min="1" value="1" style="width:60px;">
+            `;
+            itemsGiveContainer.appendChild(divGive);
+
+            // Want items
+            let divWant = document.createElement('div');
+            divWant.className = "item-row";
+            divWant.innerHTML = `
+                <input type="checkbox" class="wantItem" value="${item.name}"> ${item.name} 
+                <input type="number" class="wantQuantity" min="1" value="1" style="width:60px;">
+            `;
+            itemsWantContainer.appendChild(divWant);
+        });
+    });
+
+// Generate a simple user ID
+const userId = 'user_' + Math.random().toString(36).substring(2,10);
+
+tradeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    status.textContent = 'Posting trade...';
+
+    const username = document.getElementById('username').value;
+    const giveDiamonds = parseInt(document.getElementById('giveDiamonds').value);
+    const wantDiamonds = parseInt(document.getElementById('wantDiamonds').value);
+
+    const giveItems = Array.from(document.querySelectorAll('.giveItem'))
+        .filter(cb => cb.checked)
+        .map(cb => ({name: cb.value, quantity: parseInt(cb.nextElementSibling.value)}));
+
+    const wantItems = Array.from(document.querySelectorAll('.wantItem'))
+        .filter(cb => cb.checked)
+        .map(cb => ({name: cb.value, quantity: parseInt(cb.nextElementSibling.value)}));
+
+    const tradeData = {
+        username,
+        giveDiamonds,
+        wantDiamonds,
+        giveItems,
+        wantItems,
+        timestamp: Date.now()
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    const tradeForm = document.getElementById('tradeForm');
-    const tradeType = document.getElementById('tradeType');
-    const diamondsSection = document.getElementById('diamondsSection');
-    const itemsSection = document.getElementById('itemsSection');
-    const itemsGive = document.getElementById('itemsGive');
-    const itemsWant = document.getElementById('itemsWant');
-    const status = document.getElementById('status');
-
-    // Load allowed items from JSON
-    fetch('items.json')
-      .then(res => res.json())
-      .then(items => {
-        items.forEach(item => {
-          let option1 = document.createElement('option');
-          option1.value = item.name;
-          option1.textContent = item.name;
-          itemsGive.appendChild(option1);
-
-          let option2 = document.createElement('option');
-          option2.value = item.name;
-          option2.textContent = item.name;
-          itemsWant.appendChild(option2);
-        });
-      });
-
-    // Toggle sections
-    tradeType.addEventListener('change', () => {
-      if(tradeType.value === 'diamonds') {
-        diamondsSection.style.display = 'block';
-        itemsSection.style.display = 'none';
-      } else if(tradeType.value === 'items') {
-        diamondsSection.style.display = 'none';
-        itemsSection.style.display = 'block';
-      } else {
-        diamondsSection.style.display = 'none';
-        itemsSection.style.display = 'none';
-      }
-    });
-
-    // Generate simple user identifier (IP + cookie not available in JS without server, so random ID)
-    const userId = 'user_' + Math.random().toString(36).substring(2,10);
-
-    tradeForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      status.textContent = 'Posting trade...';
-
-      const username = document.getElementById('username').value;
-
-      let tradeData = {
-        username: username,
-        type: tradeType.value,
-        timestamp: Date.now()
-      };
-
-      if(tradeType.value === 'diamonds') {
-        tradeData.give = parseInt(document.getElementById('giveDiamonds').value);
-        tradeData.want = parseInt(document.getElementById('wantDiamonds').value);
-      } else if(tradeType.value === 'items') {
-        tradeData.giveItems = Array.from(itemsGive.selectedOptions).map(o => o.value);
-        tradeData.wantItems = Array.from(itemsWant.selectedOptions).map(o => o.value);
-      }
-
-      // Check cooldown
-      const tradeRef = ref(db, 'trades/' + userId);
-      const snapshot = await get(tradeRef);
-      if(snapshot.exists()) {
+    // Check cooldown
+    const tradeRef = ref(db, 'trades/' + userId);
+    const snapshot = await get(tradeRef);
+    if(snapshot.exists()) {
         const last = snapshot.val().timestamp;
         if(Date.now() - last < 86400000) {
-          status.textContent = 'You can post again after 24 hours.';
-          return;
+            status.textContent = 'You can post again after 24 hours.';
+            return;
         }
-      }
+    }
 
-      set(tradeRef, tradeData).then(() => {
-        status.textContent = 'Trade posted successfully!';
-        tradeForm.reset();
-        diamondsSection.style.display = 'none';
-        itemsSection.style.display = 'none';
-      }).catch(err => {
-        status.textContent = 'Error posting trade: ' + err;
-      });
-    });
-  </script>
+    set(tradeRef, tradeData)
+        .then(() => {
+            status.textContent = 'Trade posted successfully!';
+            tradeForm.reset();
+        })
+        .catch(err => {
+            status.textContent = 'Error posting trade: ' + err;
+        });
+});
+</script>
 
-  <script>
-    // Dark mode toggle
-    const toggleButton = document.getElementById('darkModeToggle');
-    toggleButton.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-    });
-  </script>
+<script>
+const toggleButton = document.getElementById('darkModeToggle');
+toggleButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+});
+</script>
 </body>
 </html>
