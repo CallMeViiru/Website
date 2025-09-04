@@ -28,12 +28,6 @@
         <label for="username">In-game username:</label>
         <input type="text" id="username" required placeholder="Your username">
 
-        <label for="giveDiamonds">Diamonds you give:</label>
-        <input type="number" id="giveDiamonds" min="0" value="0">
-
-        <label for="wantDiamonds">Diamonds you want:</label>
-        <input type="number" id="wantDiamonds" min="0" value="0">
-
         <label for="itemsGive">Items you give:</label>
         <div id="itemsGiveContainer"></div>
 
@@ -46,10 +40,9 @@
 </section>
 
 <footer id="footer">
-    <p>Copyright &copy; viiru.ee 2025</p>
+    <p>Copyright &copy; viiru.top 2025</p>
 </footer>
 
-<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
@@ -72,41 +65,35 @@ const itemsGiveContainer = document.getElementById('itemsGiveContainer');
 const itemsWantContainer = document.getElementById('itemsWantContainer');
 const status = document.getElementById('status');
 
-// Load allowed items from JSON
 fetch('items.json')
     .then(res => res.json())
     .then(items => {
         items.forEach(item => {
-            // Give items
-            let divGive = document.createElement('div');
-            divGive.className = "item-row";
-            divGive.innerHTML = `
-                <input type="checkbox" class="giveItem" value="${item.name}"> ${item.name} 
+            const giveDiv = document.createElement('div');
+            giveDiv.className = 'item-row';
+            giveDiv.innerHTML = `
+                <input type="checkbox" class="giveItem" value="${item.name}"> ${item.name}
                 <input type="number" class="giveQuantity" min="1" value="1" style="width:60px;">
             `;
-            itemsGiveContainer.appendChild(divGive);
+            itemsGiveContainer.appendChild(giveDiv);
 
-            // Want items
-            let divWant = document.createElement('div');
-            divWant.className = "item-row";
-            divWant.innerHTML = `
-                <input type="checkbox" class="wantItem" value="${item.name}"> ${item.name} 
+            const wantDiv = document.createElement('div');
+            wantDiv.className = 'item-row';
+            wantDiv.innerHTML = `
+                <input type="checkbox" class="wantItem" value="${item.name}"> ${item.name}
                 <input type="number" class="wantQuantity" min="1" value="1" style="width:60px;">
             `;
-            itemsWantContainer.appendChild(divWant);
+            itemsWantContainer.appendChild(wantDiv);
         });
     });
 
-// Generate a simple user ID
 const userId = 'user_' + Math.random().toString(36).substring(2,10);
 
-tradeForm.addEventListener('submit', async (e) => {
+tradeForm.addEventListener('submit', async e => {
     e.preventDefault();
     status.textContent = 'Posting trade...';
 
     const username = document.getElementById('username').value;
-    const giveDiamonds = parseInt(document.getElementById('giveDiamonds').value);
-    const wantDiamonds = parseInt(document.getElementById('wantDiamonds').value);
 
     const giveItems = Array.from(document.querySelectorAll('.giveItem'))
         .filter(cb => cb.checked)
@@ -116,24 +103,18 @@ tradeForm.addEventListener('submit', async (e) => {
         .filter(cb => cb.checked)
         .map(cb => ({name: cb.value, quantity: parseInt(cb.nextElementSibling.value)}));
 
-    const tradeData = {
-        username,
-        giveDiamonds,
-        wantDiamonds,
-        giveItems,
-        wantItems,
-        timestamp: Date.now()
-    };
+    if(giveItems.length === 0 && wantItems.length === 0){
+        status.textContent = 'Select at least one item to give or receive!';
+        return;
+    }
 
-    // Check cooldown
+    const tradeData = { username, giveItems, wantItems, timestamp: Date.now() };
+
     const tradeRef = ref(db, 'trades/' + userId);
     const snapshot = await get(tradeRef);
-    if(snapshot.exists()) {
-        const last = snapshot.val().timestamp;
-        if(Date.now() - last < 86400000) {
-            status.textContent = 'You can post again after 24 hours.';
-            return;
-        }
+    if(snapshot.exists() && Date.now() - snapshot.val().timestamp < 86400000){
+        status.textContent = 'You can post again after 24 hours.';
+        return;
     }
 
     set(tradeRef, tradeData)
@@ -141,9 +122,7 @@ tradeForm.addEventListener('submit', async (e) => {
             status.textContent = 'Trade posted successfully!';
             tradeForm.reset();
         })
-        .catch(err => {
-            status.textContent = 'Error posting trade: ' + err;
-        });
+        .catch(err => status.textContent = 'Error: ' + err);
 });
 </script>
 
