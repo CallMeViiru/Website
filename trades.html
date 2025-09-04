@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CatCraft Trades</title>
+  <link rel="stylesheet" href="trades.css">
+</head>
+<body>
+  <!-- Header -->
+  <header id="header">
+    <img id="HIcon" src="logo.png" alt="Logo">
+    <h1 id="HH1">CatCraft Trades</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="store.html">Store</a></li>
+        <li><a href="trades.html" class="active">Trades</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Trade Form -->
+  <section class="textsection">
+    <h2>Post Your Trade</h2>
+    <form id="tradeForm">
+      <label>In-Game Username:</label><br>
+      <input type="text" id="username" required><br><br>
+
+      <label>What do you offer?</label><br>
+      <select id="offer" required></select><br><br>
+
+      <label>What do you want in return?</label><br>
+      <select id="want" multiple required></select><br><br>
+
+      <button type="submit" class="add-to-cart">Post Trade</button>
+    </form>
+  </section>
+
+  <!-- Trade List -->
+  <section class="textsection">
+    <h2>Latest Trades</h2>
+    <div id="tradesList"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer">
+    <p>CatCraft © 2025 | <a href="social.html">Social Links</a></p>
+  </footer>
+
+  <!-- Firebase + App Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+      authDomain: "v11rutop.firebaseapp.com",
+      projectId: "v11rutop",
+      storageBucket: "v11rutop.firebasestorage.app",
+      messagingSenderId: "664984661004",
+      appId: "1:664984661004:web:357ea8a60723b000e55229",
+      measurementId: "G-DMPEGNPVEN"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Load items from JSON
+    fetch("items.json")
+      .then(res => res.json())
+      .then(items => {
+        const offerSelect = document.getElementById("offer");
+        const wantSelect = document.getElementById("want");
+
+        items.forEach(item => {
+          let opt1 = document.createElement("option");
+          opt1.value = item;
+          opt1.textContent = item;
+          offerSelect.appendChild(opt1);
+
+          let opt2 = document.createElement("option");
+          opt2.value = item;
+          opt2.textContent = item;
+          wantSelect.appendChild(opt2);
+        });
+      });
+
+    // Submit Trade
+    document.getElementById("tradeForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const offer = document.getElementById("offer").value;
+      const wantOptions = Array.from(document.getElementById("want").selectedOptions).map(opt => opt.value);
+
+      try {
+        await addDoc(collection(db, "trades"), {
+          username: username,
+          offer: offer,
+          want: wantOptions,
+          createdAt: new Date()
+        });
+        alert("✅ Trade posted!");
+        loadTrades();
+      } catch (err) {
+        console.error("Error posting trade:", err);
+        alert("❌ Failed to post trade.");
+      }
+    });
+
+    // Load Trades
+    async function loadTrades() {
+      const querySnapshot = await getDocs(collection(db, "trades"));
+      const tradesList = document.getElementById("tradesList");
+      tradesList.innerHTML = "";
+
+      querySnapshot.forEach((doc) => {
+        const trade = doc.data();
+        tradesList.innerHTML += `
+          <div class="trade-box">
+            <h3>${trade.username}</h3>
+            <p>Offers: <strong>${trade.offer}</strong></p>
+            <p>Wants: ${trade.want.join(", ")}</p>
+          </div>
+        `;
+      });
+    }
+
+    loadTrades();
+  </script>
+</body>
+</html>
