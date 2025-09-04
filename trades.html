@@ -1,322 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CatCraft Trades | Viiru</title>
-  <link rel="icon" type="image/x-icon" href="/Images/favicon.ico" />
-  <link rel="stylesheet" href="trades.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viiru | CatCraft Trades</title>
+    <link rel="stylesheet" href="trades.css">
 </head>
 <body>
-  <!-- Header (same look/feel as your site) -->
-  <header id="header">
-    <div class="brand">
-      <img src="Images/Viiru.png" alt="Logo" id="HIcon" />
-      <h1 id="HH1">Viiru</h1>
-    </div>
+
+<header id="header">
+    <img src="Images/viiru.jpg" alt="Viiru Logo" id="HIcon">
+    <h1 id="HH1">Viiru</h1>
     <nav>
-      <ul>
-        <li><a href="https://www.viiru.top/">Home</a></li>
-        <li><a href="https://www.viiru.top/Store">Store</a></li>
-        <li><a href="https://www.viiru.top/Socials">Socials</a></li>
-        <li><a href="https://www.viiru.top/about">About</a></li>
-        <li><a class="active" href="./trades.html">Trades</a></li>
-      </ul>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="store.html" class="active">Trades</a></li>
+            <li><a href="socials.html">Socials</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
     </nav>
-    <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
-  </header>
+    <button id="darkModeToggle">🌙</button>
+</header>
 
-  <!-- Trade Submit Section -->
-  <section class="card">
-    <h2>Post a CatCraft Trade</h2>
-    <p class="muted">1 post per 24 hours (cooldown enforced on your device).</p>
-
+<section class="trade-section">
+    <h2>Post Your CatCraft Trade</h2>
     <form id="tradeForm">
-      <div class="grid-2">
-        <div>
-          <label for="username">In-game Username</label>
-          <input id="username" name="username" type="text" placeholder="Your IGN" required />
+        <div class="form-row">
+            <label for="username">Your In-Game Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
         </div>
 
-        <div>
-          <label for="contact">Optional contact (Discord, etc.)</label>
-          <input id="contact" name="contact" type="text" placeholder="e.g. Viiru#1234" />
-        </div>
-      </div>
-
-      <hr />
-
-      <div class="grid-2">
-        <div>
-          <label for="offerDiamonds">You offer (Diamonds)</label>
-          <input id="offerDiamonds" name="offerDiamonds" type="number" min="0" step="1" placeholder="0" />
-          <label for="offerItems">You offer (Items)</label>
-          <select id="offerItems" name="offerItems" multiple size="6"></select>
-          <small class="muted">Hold Ctrl/Cmd to select multiple items.</small>
+        <div class="form-row">
+            <label for="paymentType">Choose Payment Type</label>
+            <select id="paymentType" name="paymentType" required>
+                <option value="diamonds">Diamonds</option>
+                <option value="items">Trade Items</option>
+            </select>
         </div>
 
-        <div>
-          <label for="wantDiamonds">You want (Diamonds)</label>
-          <input id="wantDiamonds" name="wantDiamonds" type="number" min="0" step="1" placeholder="0" />
-          <label for="wantItems">You want (Items)</label>
-          <select id="wantItems" name="wantItems" multiple size="6"></select>
-          <small class="muted">Hold Ctrl/Cmd to select multiple items.</small>
+        <div class="form-row">
+            <label for="offerItems">You Offer (Items)</label>
+            <select id="offerItems" name="offerItems" multiple size="6" class="multi-select"></select>
         </div>
-      </div>
 
-      <label for="notes">Notes (optional)</label>
-      <textarea id="notes" name="notes" rows="3" placeholder="Any extra details…"></textarea>
+        <div class="form-row">
+            <label for="wantItems">You Want (Items / Diamonds)</label>
+            <select id="wantItems" name="wantItems" multiple size="6" class="multi-select"></select>
+        </div>
 
-      <button type="submit" class="primary-btn">Post Trade</button>
-      <p id="cooldownMsg" class="warning" hidden></p>
+        <button type="submit">Post Trade</button>
     </form>
-  </section>
+</section>
 
-  <!-- Trades List -->
-  <section class="card">
-    <h2>Recent Trades</h2>
-    <div id="tradesList" class="trades-grid"></div>
-  </section>
+<section class="trade-list-section">
+    <h2>Active Trades</h2>
+    <div class="trade-grid" id="tradeList">
+        <!-- Trades will load here dynamically -->
+    </div>
+</section>
 
-  <!-- Footer -->
-  <footer id="footer">
-    <p>&copy; 2025 viiru.top &amp; viiru.ee</p>
-    <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a> |
-    <a href="https://www.viiru.top/tos">Terms Of Service</a>
-  </footer>
+<footer id="footer">
+    <p>Copyright &copy; viiru.ee 2025</p>
+    <a href="privaatsuspoliitika.html">Privaatsuspoliitika</a>
+    <a href="tos.html">Kasutustingimused</a>
+</footer>
 
-  <!-- Firebase + App Script -->
-  <script type="module">
-    /* =========================
-       Firebase App (v12 modules)
-       ========================= */
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import {
-      getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, getDocs
-    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-
-    // Your config (from your earlier message)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-      authDomain: "v11rutop.firebaseapp.com",
-      projectId: "v11rutop",
-      storageBucket: "v11rutop.firebasestorage.app",
-      messagingSenderId: "664984661004",
-      appId: "1:664984661004:web:357ea8a60723b000e55229",
-      measurementId: "G-DMPEGNPVEN"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db  = getFirestore(app);
-
-    /* ==============
-       Dark Mode (UI)
-       ============== */
-    const toggleButton = document.getElementById('darkModeToggle');
-    const prefersDark  = localStorage.getItem('prefersDark') === 'true';
-    if (prefersDark) document.body.classList.add('dark-mode');
+<script src="trades.js" type="module"></script>
+<script>
+const toggleButton = document.getElementById('darkModeToggle');
+toggleButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
     toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-    toggleButton.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      const dark = document.body.classList.contains('dark-mode');
-      localStorage.setItem('prefersDark', dark ? 'true' : 'false');
-      toggleButton.textContent = dark ? '☀️' : '🌙';
-    });
+});
+</script>
 
-    /* ==========================
-       Load allowed items (JSON)
-       ========================== */
-    async function loadItems() {
-      const res = await fetch('allowed-items.json'); // place this file next to trades.html
-      const items = await res.json();
-      const offerSel = document.getElementById('offerItems');
-      const wantSel  = document.getElementById('wantItems');
-
-      items.forEach((it) => {
-        const o = document.createElement('option');
-        o.value = it.id; o.textContent = it.name;
-        offerSel.appendChild(o.cloneNode(true));
-        wantSel.appendChild(o);
-      });
-    }
-    loadItems().catch(console.error);
-
-    /* =================
-       24h Cooldown (UI)
-       ================= */
-    const COOLDOWN_KEY = "lastTradeTime";
-    const COOLDOWN_HRS = 24;
-    const cooldownMsg = document.getElementById('cooldownMsg');
-
-    function setCookie(name, value, hours) {
-      const d = new Date();
-      d.setTime(d.getTime() + hours * 60 * 60 * 1000);
-      document.cookie = `${name}=${encodeURIComponent(value)}; expires=${d.toUTCString()}; path=/; SameSite=Lax`;
-    }
-    function getCookie(name) {
-      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-      return match ? decodeURIComponent(match[2]) : null;
-    }
-    function hoursSince(iso) {
-      const past = new Date(iso).getTime();
-      const now  = Date.now();
-      return (now - past) / (1000 * 60 * 60);
-    }
-    function getLastTradeTime() {
-      return localStorage.getItem(COOLDOWN_KEY) || getCookie(COOLDOWN_KEY);
-    }
-    function setLastTradeTime() {
-      const nowIso = new Date().toISOString();
-      localStorage.setItem(COOLDOWN_KEY, nowIso);
-      setCookie(COOLDOWN_KEY, nowIso, COOLDOWN_HRS);
-    }
-    function checkCooldown() {
-      const last = getLastTradeTime();
-      if (!last) return { ok: true };
-      const hrs = hoursSince(last);
-      if (hrs >= COOLDOWN_HRS) return { ok: true };
-      const remaining = Math.ceil((COOLDOWN_HRS - hrs) * 60); // minutes
-      return { ok: false, remaining };
-    }
-    function showCooldownIfAny() {
-      const c = checkCooldown();
-      if (c.ok) {
-        cooldownMsg.hidden = true;
-      } else {
-        cooldownMsg.hidden = false;
-        const mins = c.remaining;
-        const hrs  = Math.floor(mins / 60);
-        const mm   = mins % 60;
-        cooldownMsg.textContent = `⏳ You can post again in ${hrs}h ${mm}m.`;
-      }
-    }
-    showCooldownIfAny();
-
-    /* =========================
-       Helpers: form & sanitize
-       ========================= */
-    function getMultiSelectValues(selectEl) {
-      return Array.from(selectEl.selectedOptions).map(o => o.value);
-    }
-    function sanitizeInt(val) {
-      const n = parseInt(val, 10);
-      return Number.isFinite(n) && n > 0 ? n : 0;
-    }
-
-    /* =======================
-       Submit Trade to Firestore
-       ======================= */
-    const form = document.getElementById('tradeForm');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const cd = checkCooldown();
-      if (!cd.ok) {
-        alert("❌ Cooldown active. Please wait before posting another trade.");
-        return;
-      }
-
-      const username      = document.getElementById('username').value.trim();
-      const contact       = document.getElementById('contact').value.trim();
-      const offerDiamonds = sanitizeInt(document.getElementById('offerDiamonds').value);
-      const wantDiamonds  = sanitizeInt(document.getElementById('wantDiamonds').value);
-      const offerItems    = getMultiSelectValues(document.getElementById('offerItems'));
-      const wantItems     = getMultiSelectValues(document.getElementById('wantItems'));
-      const notes         = document.getElementById('notes').value.trim();
-
-      if (!username) {
-        alert("Please enter your in-game username.");
-        return;
-      }
-      if (offerDiamonds === 0 && offerItems.length === 0) {
-        alert("Please offer at least diamonds or one item.");
-        return;
-      }
-      if (wantDiamonds === 0 && wantItems.length === 0) {
-        alert("Please specify what you want: diamonds or items.");
-        return;
-      }
-
-      const trade = {
-        username,
-        contact: contact || null,
-        offer: { diamonds: offerDiamonds, items: offerItems },
-        want:  { diamonds: wantDiamonds,  items: wantItems  },
-        notes: notes || null,
-        createdAt: new Date().toISOString(),  // for rules
-        serverCreatedAt: serverTimestamp()     // for sorting
-      };
-
-      try {
-        await addDoc(collection(db, "trades"), trade);
-        setLastTradeTime();
-        alert("✅ Trade posted!");
-        form.reset();
-        showCooldownIfAny();
-        await loadRecentTrades();
-      } catch (err) {
-        console.error(err);
-        alert("Failed to post trade. Please try again.");
-      }
-    });
-
-    /* ====================
-       Load Recent Trades
-       ==================== */
-    async function loadRecentTrades() {
-      const list = document.getElementById('tradesList');
-      list.innerHTML = '<div class="muted">Loading…</div>';
-      try {
-        const q = query(
-          collection(db, "trades"),
-          orderBy("serverCreatedAt", "desc"),
-          limit(30)
-        );
-        const snap = await getDocs(q);
-        list.innerHTML = "";
-        if (snap.empty) {
-          list.innerHTML = '<div class="muted">No trades yet.</div>';
-          return;
-        }
-        snap.forEach((doc) => {
-          const t = doc.data();
-          list.appendChild(renderTradeCard(t));
-        });
-      } catch (e) {
-        console.error(e);
-        list.innerHTML = '<div class="warning">Could not load trades.</div>';
-      }
-    }
-
-    function humanList(items) {
-      return items && items.length ? items.join(", ") : "—";
-    }
-    function renderTradeCard(t) {
-      const el = document.createElement('div');
-      el.className = 'trade-card';
-      el.innerHTML = `
-        <div class="trade-top">
-          <strong>${t.username}</strong>
-          ${t.contact ? `<span class="contact">${t.contact}</span>` : ""}
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="label">Offers</div>
-            <div>💎 ${t.offer?.diamonds || 0}</div>
-            <div>📦 ${humanList(t.offer?.items || [])}</div>
-          </div>
-          <div class="col wants">
-            <div class="label">Wants</div>
-            <div>💎 ${t.want?.diamonds || 0}</div>
-            <div>📦 ${humanList(t.want?.items || [])}</div>
-          </div>
-        </div>
-        ${t.notes ? `<div class="notes">📝 ${t.notes}</div>` : ""}
-      `;
-      return el;
-    }
-
-    // initial list
-    loadRecentTrades();
-  </script>
 </body>
 </html>
