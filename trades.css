@@ -1,102 +1,171 @@
-/* Same layout/colors as your site */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f9fc;
-  color: #333;
-  margin: 0;
-  padding: 0;
+/* ==== Base / Body ==== */
+:root {
+  --bg: #f7f9fc;
+  --card: #ffffff;
+  --text: #333;
+  --header: #1e293b;
+  --header-border: #0f172a;
+  --brand: #93c5fd;
+  --link: #f1f5f9;
+  --link-hover-bg: #0f172a;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --muted: #64748b;
 }
 
-/* Header */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+}
+
+/* ==== Header (match site) ==== */
 #header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 30px;
-  background-color: #1e293b;
-  border-bottom: 5px solid #0f172a;
+  background: var(--header);
+  border-bottom: 5px solid var(--header-border);
+  padding: 12px 20px;
 }
-
-#HIcon {
-  max-width: 60px;
-  margin-right: 10px;
+#header .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-
-#HH1 {
-  color: #93c5fd;
-}
+#HIcon { max-width: 60px; height: auto; }
+#HH1 { color: var(--brand); font-size: 1.6rem; margin: 0; }
 
 nav ul {
   list-style: none;
   display: flex;
-  gap: 20px;
+  gap: 16px;
   margin: 0;
   padding: 0;
 }
-
-nav li a {
-  color: #f1f5f9;
+nav a {
+  color: var(--link);
   text-decoration: none;
   font-weight: bold;
-  padding: 10px 15px;
-  border-radius: 5px;
+  padding: 8px 12px;
+  border-radius: 6px;
 }
+nav a:hover, nav a.active { background: var(--link-hover-bg); }
 
-nav li a:hover,
-nav li a.active {
-  background-color: #0f172a;
-}
-
-/* Sections */
-.textsection {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-/* Form */
-input, select, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-button {
-  background-color: #3b82f6;
-  color: #fff;
+#darkModeToggle {
+  margin-left: 8px;
+  background: transparent;
+  border: none;
+  color: var(--brand);
+  font-size: 1.4rem;
   cursor: pointer;
-  font-weight: bold;
 }
 
-button:hover {
-  background-color: #2563eb;
+/* ==== Sections / Cards ==== */
+.card {
+  max-width: 1000px;
+  margin: 32px auto;
+  background: var(--card);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  padding: 24px;
 }
+.card h2 { margin: 0 0 12px; }
+.muted { color: var(--muted); font-size: 0.95rem; }
+.warning { color: #b45309; background: #fff7ed; border: 1px solid #fed7aa; padding: 8px 10px; border-radius: 6px; }
 
-/* Trade listings */
-.trade-box {
-  background: #f1f5f9;
-  border: 1px solid #ddd;
+/* ==== Form ==== */
+label { display: block; margin: 10px 0 6px; }
+input[type="text"], input[type="number"], textarea, select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
-  padding: 15px;
-  margin: 10px 0;
+  outline: none;
+}
+textarea { resize: vertical; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 780px) {
+  .grid-2 { grid-template-columns: 1fr; }
 }
 
-/* Footer */
+.primary-btn {
+  display: inline-block;
+  margin-top: 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.primary-btn:hover { background: var(--accent-hover); }
+
+/* ==== Trades list ==== */
+.trades-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.trade-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px;
+  background: #fff;
+}
+.trade-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.trade-top .contact {
+  color: var(--muted);
+  font-size: .95rem;
+}
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.label {
+  font-size: .85rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.wants { background: #f8fafc; border-radius: 6px; padding: 8px; }
+.notes { margin-top: 8px; font-size: .95rem; }
+
+/* ==== Footer (match site) ==== */
 #footer {
   text-align: center;
-  background-color: #1e293b;
-  color: #93c5fd;
+  background: var(--header);
+  color: var(--brand);
   padding: 20px;
   margin: 40px 20px 20px;
   border-radius: 10px;
 }
-
 #footer a {
   color: #60a5fa;
   text-decoration: underline;
+  margin: 0 10px;
 }
+#footer a:hover { text-decoration: none; }
+
+/* ==== Dark mode ==== */
+body.dark-mode {
+  --bg:#0f172a; --card:#1e293b; --text:#e2e8f0;
+  --header:#0b1220; --header-border:#060a12;
+  --brand:#93c5fd; --link:#f1f5f9; --link-hover-bg:#334155;
+  --accent:#3b82f6; --accent-hover:#2563eb; --muted:#94a3b8;
+}
+.trade-card { background: var(--card); }
