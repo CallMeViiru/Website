@@ -2,189 +2,163 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Viiru | Trades</title>
-    <link rel="stylesheet" href="trades.css">
+    <link rel="stylesheet" href="style.css" />
+    <title>Terms of Service | CallMeViiru's Site</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9235877052315560"
+     crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: lavender;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: dimgray;
+            color: white;
+            border-bottom: 6px solid black;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #HIcon {
+            max-width: 75px;
+            vertical-align: middle;
+        }
+
+        #HH1 {
+            display: inline-block;
+            font-size: 2em;
+            color: rgb(124, 176, 243);
+            margin-left: 15px;
+            vertical-align: middle;
+        }
+
+        nav {
+            background-color: #333;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav li {
+            margin: 0;
+        }
+
+        nav li a {
+            display: block;
+            padding: 14px 20px;
+            color: white;
+            text-decoration: none;
+        }
+
+        nav li a:hover {
+            background-color: #111;
+        }
+
+        main {
+            margin: 20px;
+            padding: 25px;
+            background-color: cornsilk;
+            border: 5px solid dimgray;
+            border-radius: 12px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: black;
+        }
+
+        p {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        ul {
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+
+        footer {
+            background-color: dimgray;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+        }
+
+        footer a {
+            color: rgb(124, 176, 243);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                flex-direction: column;
+            }
+
+            #HH1 {
+                display: block;
+                margin-top: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- HEADER -->
-    <header id="header">
-        <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
-        <h1 id="HH1">Viiru</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="Store.html">Store</a></li>
-                <li><a href="Socials.html">Socials</a></li>
-                <li><a href="about.html">About</a></li>
-            </ul>
-        </nav>
-        <div id="user-info"></div>
-        <button id="darkModeToggle" title="Toggle dark mode">🌙</button>
+
+    <header>
+        <img src="Images/Viiru.png" id="HIcon" alt="Viiru Logo">
+        <span id="HH1">CallMeViiru's Site</span>
     </header>
 
-    <!-- TRADE FORM SECTION -->
-    <section class="trade-section">
-        <h2>Post a Trade</h2>
-        <p id="login-message">Please log in to post a trade.</p>
-        
-        <form id="trade-form">
-            <label>Your Username:</label>
-            <input type="text" id="username" placeholder="In-game username" required>
+    <nav>
+        <ul>
+            <li><a href="https://www.viiru.top/">Home</a></li>
+            <li><a href="https://www.viiru.top/Socials">Socials</a></li>
+            <li><a href="https://www.viiru.top/about">About</a></li>
+        </ul>
+    </nav>
 
-            <label>Items You Offer:</label>
-            <select id="offer-items" multiple required></select>
-            <input type="number" id="offer-amounts" placeholder="Amounts separated by commas" required>
+    <main>
+        <h1>Terms of Service</h1>
+        <p>By using this website (viiru.top or viiru.ee), you agree to the following terms:</p>
 
-            <label>Items You Want:</label>
-            <select id="want-items" multiple required></select>
-            <input type="number" id="want-amounts" placeholder="Amounts separated by commas" required>
+        <h2>1. Use at Your Own Risk</h2>
+        <p>This site is provided “as is” without warranties of any kind. The owner (CallMeViiru) is not responsible for any misuse or damage caused by the site or links shared.</p>
 
-            <button type="submit">Post Trade</button>
-        </form>
-    </section>
+        <h2>2. No User Accounts</h2>
+        <p>We do not collect or require any user information (Unless it is for customer service or when the user contacts us themselves but not limited to this). You do not need to register or sign up to use this website.</p>
 
-    <!-- TRADE LIST -->
-    <section class="trade-list">
-        <h2>Active Trades</h2>
-        <div id="trade-container"></div>
-    </section>
+        <h2>3. External Links</h2>
+        <p>This site may contain links to external websites (like Twitch, YouTube, etc.). We are not responsible for the content or privacy policies of those sites.</p>
 
-    <!-- FOOTER -->
-    <footer id="footer">
-        <p>Copyright &copy; viiru.top 2025</p>
-        <a href="privacypolicy.html">Privacy Policy</a>
-        <a href="tos.html">Terms of Service</a>
+        <h2>4. No Data Collection</h2>
+        <p>We do not collect emails, passwords, phone numbers, or any personal data (We collect email addresses or other user data if the user contacts us and / or provides us their data but not limited to this). If you are asked for such info through a site (Official sites: viiru.top & viiru.ee) claiming to be us, report it and avoid interaction.</p>
+
+        <h2>5. Changes to Terms</h2>
+        <p>We may update these terms at any time. Continued use of the website means you accept the latest version.</p>
+    </main>
+
+    <footer>
+        <h3>&copy; 2025 viiru.top & viiru.ee</h3>
+        <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a> |
+        <a href="https://www.viiru.top/tos">Terms Of Service</a>
     </footer>
 
-    <!-- SCRIPTS -->
-    <script type="module">
-        // Firebase setup
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-            authDomain: "v11rutop.firebaseapp.com",
-            projectId: "v11rutop",
-            storageBucket: "v11rutop.firebasestorage.app",
-            messagingSenderId: "664984661004",
-            appId: "1:664984661004:web:357ea8a60723b000e55229",
-            measurementId: "G-DMPEGNPVEN"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        const tradeForm = document.getElementById("trade-form");
-        const tradeContainer = document.getElementById("trade-container");
-        const userInfoDiv = document.getElementById("user-info");
-        const loginMessage = document.getElementById("login-message");
-        const offerSelect = document.getElementById("offer-items");
-        const wantSelect = document.getElementById("want-items");
-        const usernameInput = document.getElementById("username");
-
-        // PREMADE ITEMS
-        const items = ["Sword", "Helmet", "Shield", "Potion", "Bow", "Armor"];
-
-        function populateItems() {
-            items.forEach(item => {
-                const option1 = document.createElement("option");
-                option1.value = item;
-                option1.textContent = item;
-                offerSelect.appendChild(option1);
-
-                const option2 = document.createElement("option");
-                option2.value = item;
-                option2.textContent = item;
-                wantSelect.appendChild(option2);
-            });
-        }
-        populateItems();
-
-        let currentUser = null;
-
-        // AUTH STATE
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                userInfoDiv.innerHTML = `Logged in as: <span>${user.displayName}</span> <button id="logout">Logout</button>`;
-                loginMessage.style.display = "none";
-
-                document.getElementById("logout").addEventListener("click", () => {
-                    auth.signOut().then(() => location.reload());
-                });
-            } else {
-                loginMessage.style.display = "block";
-            }
-        });
-
-        // POST TRADE
-        tradeForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            if (!currentUser) return alert("Please log in first.");
-
-            const username = usernameInput.value.trim();
-            const offerItems = Array.from(offerSelect.selectedOptions).map(o => o.value);
-            const offerAmounts = document.getElementById("offer-amounts").value.split(",").map(a => parseInt(a.trim()));
-            const wantItems = Array.from(wantSelect.selectedOptions).map(o => o.value);
-            const wantAmounts = document.getElementById("want-amounts").value.split(",").map(a => parseInt(a.trim()));
-
-            if (offerItems.length !== offerAmounts.length || wantItems.length !== wantAmounts.length) {
-                return alert("Please provide amounts for each selected item.");
-            }
-
-            try {
-                await addDoc(collection(db, "trades"), {
-                    username,
-                    userId: currentUser.uid,
-                    offerItems,
-                    offerAmounts,
-                    wantItems,
-                    wantAmounts,
-                    timestamp: Timestamp.now()
-                });
-                alert("Trade posted!");
-                tradeForm.reset();
-                loadTrades();
-            } catch (err) {
-                console.error(err);
-                alert("Error posting trade");
-            }
-        });
-
-        // LOAD TRADES
-        async function loadTrades() {
-            tradeContainer.innerHTML = "";
-            const querySnapshot = await getDocs(collection(db, "trades"));
-            querySnapshot.forEach(doc => {
-                const trade = doc.data();
-                const tradeDiv = document.createElement("div");
-                tradeDiv.classList.add("trade-box");
-                tradeDiv.innerHTML = `
-                    <h3>${trade.username}'s Trade</h3>
-                    <p><strong>Offers:</strong> ${trade.offerItems.map((i, idx) => `${i} x${trade.offerAmounts[idx]}`).join(", ")}</p>
-                    <p><strong>Wants:</strong> ${trade.wantItems.map((i, idx) => `${i} x${trade.wantAmounts[idx]}`).join(", ")}</p>
-                `;
-                tradeContainer.appendChild(tradeDiv);
-            });
-        }
-
-        loadTrades();
-
-        // DARK MODE TOGGLE
-        const toggleButton = document.getElementById('darkModeToggle');
-        toggleButton.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        });
-    </script>
 </body>
 </html>
-
-
-
 
