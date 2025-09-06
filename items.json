@@ -1,8 +1,10 @@
 [
-  {"name": "Sword"},
-  {"name": "Shield"},
-  {"name": "Potion"},
-  {"name": "Helmet"},
-  {"name": "Armor"},
-  {"name": "Diamonds"}
+  "Diamond Sword",
+  "Iron Sword",
+  "Diamond Pickaxe",
+  "Iron Pickaxe",
+  "Helmet",
+  "Chestplate",
+  "Leggings",
+  "Boots"
 ]
