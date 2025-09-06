@@ -168,6 +168,25 @@
 
         loadTrades();
     </script>
+    <script>
+  // Make multi-select checkboxes toggle when clicking the selectBox
+  document.querySelectorAll('.selectBox').forEach(selectBox => {
+    selectBox.addEventListener('click', () => {
+      const checkboxes = selectBox.nextElementSibling;
+      checkboxes.style.display = (checkboxes.style.display === 'block') ? 'none' : 'block';
+    });
+  });
+
+  // Optional: close the dropdown if clicked outside
+  document.addEventListener('click', function(e) {
+    document.querySelectorAll('.checkboxes').forEach(box => {
+      if (!box.previousElementSibling.contains(e.target) && !box.contains(e.target)) {
+        box.style.display = 'none';
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
 
