@@ -2,185 +2,187 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viiru | Trades</title>
     <link rel="stylesheet" href="trades.css">
 </head>
 <body>
-    <!-- HEADER -->
-    <header id="header">
-        <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
-        <h1 id="HH1">Viiru</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html" class="active">Home</a></li>
-                <li><a href="Store.html">Store</a></li>
-                <li><a href="Socials.html">Socials</a></li>
-                <li><a href="about.html">About</a></li>
-            </ul>
-        </nav>
-        <div id="user-info"></div>
-        <button id="darkModeToggle" title="Toggle dark mode">🌙</button>
-    </header>
 
-    <!-- TRADE FORM SECTION -->
-    <section class="trade-section">
-        <h2>Post a Trade</h2>
-        <p id="login-message">Please log in to post a trade.</p>
-        
-        <form id="trade-form">
-            <label>Your Username:</label>
-            <input type="text" id="username" placeholder="In-game username" required>
+<!-- HEADER -->
+<header id="header">
+    <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon">
+    <h1 id="HH1">Viiru</h1>
+    <nav>
+        <ul>
+            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="Store.html">Store</a></li>
+            <li><a href="Socials.html">Socials</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+    <button id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
+</header>
 
-            <label>Items You Offer:</label>
-            <select id="offer-items" multiple required></select>
-            <input type="number" id="offer-amounts" placeholder="Amounts separated by commas" required>
+<!-- TRADE FORM -->
+<section class="trade-section">
+    <h2>Post a Trade</h2>
+    <form id="tradeForm">
+        <label for="username">In-Game Username</label>
+        <input type="text" id="username" placeholder="Your username" required>
 
-            <label>Items You Want:</label>
-            <select id="want-items" multiple required></select>
-            <input type="number" id="want-amounts" placeholder="Amounts separated by commas" required>
+        <label for="giveItems">Select items you give</label>
+        <div class="multi-select">
+            <div class="selectBox" onclick="toggleCheckboxes('giveItemsBox')">Select items</div>
+            <div class="checkboxes" id="giveItemsBox"></div>
+        </div>
+        <label for="giveDiamonds">Diamonds you give</label>
+        <input type="number" id="giveDiamonds" placeholder="Amount" min="0">
 
-            <button type="submit">Post Trade</button>
-        </form>
-    </section>
+        <label for="wantItems">Select items you want</label>
+        <div class="multi-select">
+            <div class="selectBox" onclick="toggleCheckboxes('wantItemsBox')">Select items</div>
+            <div class="checkboxes" id="wantItemsBox"></div>
+        </div>
+        <label for="wantDiamonds">Diamonds you want</label>
+        <input type="number" id="wantDiamonds" placeholder="Amount" min="0">
 
-    <!-- TRADE LIST -->
-    <section class="trade-list">
-        <h2>Active Trades</h2>
-        <div id="trade-container"></div>
-    </section>
+        <button type="submit">Post Trade</button>
+    </form>
+</section>
 
-    <!-- FOOTER -->
-    <footer id="footer">
-        <p>Copyright &copy; viiru.top 2025</p>
-        <a href="privacypolicy.html">Privacy Policy</a>
-        <a href="tos.html">Terms of Service</a>
-    </footer>
+<!-- TRADE LIST -->
+<section class="trade-list" id="tradeList">
+    <h2>Available Trades</h2>
+</section>
 
-    <!-- SCRIPTS -->
-    <script type="module">
-        // Firebase setup
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+<!-- FOOTER -->
+<footer id="footer">
+    <p>Copyright &copy; viiru.top 2025</p>
+    <a href="privacypolicy.html">Privacy Policy</a>
+    <a href="tos.html">Terms of Service</a>
+</footer>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-            authDomain: "v11rutop.firebaseapp.com",
-            projectId: "v11rutop",
-            storageBucket: "v11rutop.firebasestorage.app",
-            messagingSenderId: "664984661004",
-            appId: "1:664984661004:web:357ea8a60723b000e55229",
-            measurementId: "G-DMPEGNPVEN"
-        };
+<!-- DARK MODE -->
+<script>
+const toggleButton = document.getElementById('darkModeToggle');
+toggleButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+});
+</script>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
+<!-- MULTI-SELECT CHECKBOX LOGIC -->
+<script>
+function toggleCheckboxes(boxId) {
+    const box = document.getElementById(boxId);
+    box.style.display = box.style.display === "block" ? "none" : "block";
+}
+</script>
 
-        const tradeForm = document.getElementById("trade-form");
-        const tradeContainer = document.getElementById("trade-container");
-        const userInfoDiv = document.getElementById("user-info");
-        const loginMessage = document.getElementById("login-message");
-        const offerSelect = document.getElementById("offer-items");
-        const wantSelect = document.getElementById("want-items");
-        const usernameInput = document.getElementById("username");
+<!-- FIREBASE SETUP -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-        // PREMADE ITEMS
-        const items = ["Sword", "Helmet", "Shield", "Potion", "Bow", "Armor"];
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+  authDomain: "v11rutop.firebaseapp.com",
+  projectId: "v11rutop",
+  storageBucket: "v11rutop.firebasestorage.app",
+  messagingSenderId: "664984661004",
+  appId: "1:664984661004:web:357ea8a60723b000e55229",
+  measurementId: "G-DMPEGNPVEN"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-        function populateItems() {
-            items.forEach(item => {
-                const option1 = document.createElement("option");
-                option1.value = item;
-                option1.textContent = item;
-                offerSelect.appendChild(option1);
+// Allowed items (imported from JSON or hardcoded)
+const allowedItems = ["Sword", "Helmet", "Shield", "Potion", "Bow", "Armor"];
 
-                const option2 = document.createElement("option");
-                option2.value = item;
-                option2.textContent = item;
-                wantSelect.appendChild(option2);
-            });
-        }
-        populateItems();
+// Populate multi-select boxes
+function populateItems() {
+  const giveBox = document.getElementById("giveItemsBox");
+  const wantBox = document.getElementById("wantItemsBox");
+  allowedItems.forEach(item => {
+    giveBox.innerHTML += `<label><input type="checkbox" value="${item}"> ${item}</label>`;
+    wantBox.innerHTML += `<label><input type="checkbox" value="${item}"> ${item}</label>`;
+  });
+}
+populateItems();
 
-        let currentUser = null;
+// Check login status
+let currentUser = null;
+onAuthStateChanged(auth, user => {
+  if(user) {
+    currentUser = user;
+    console.log("Logged in as:", user.email);
+  } else {
+    currentUser = null;
+    alert("Please login to post trades");
+  }
+});
 
-        // AUTH STATE
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                userInfoDiv.innerHTML = `Logged in as: <span>${user.displayName}</span> <button id="logout">Logout</button>`;
-                loginMessage.style.display = "none";
+// Handle form submission
+document.getElementById("tradeForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    if(!currentUser) return alert("Login required!");
 
-                document.getElementById("logout").addEventListener("click", () => {
-                    auth.signOut().then(() => location.reload());
-                });
-            } else {
-                loginMessage.style.display = "block";
-            }
-        });
+    const username = document.getElementById("username").value;
+    const giveItems = Array.from(document.querySelectorAll("#giveItemsBox input:checked")).map(i=>i.value);
+    const wantItems = Array.from(document.querySelectorAll("#wantItemsBox input:checked")).map(i=>i.value);
+    const giveDiamonds = parseInt(document.getElementById("giveDiamonds").value)||0;
+    const wantDiamonds = parseInt(document.getElementById("wantDiamonds").value)||0;
 
-        // POST TRADE
-        tradeForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            if (!currentUser) return alert("Please log in first.");
+    if(giveItems.length === 0 && giveDiamonds===0) return alert("You must offer something");
+    if(wantItems.length === 0 && wantDiamonds===0) return alert("You must request something");
 
-            const username = usernameInput.value.trim();
-            const offerItems = Array.from(offerSelect.selectedOptions).map(o => o.value);
-            const offerAmounts = document.getElementById("offer-amounts").value.split(",").map(a => parseInt(a.trim()));
-            const wantItems = Array.from(wantSelect.selectedOptions).map(o => o.value);
-            const wantAmounts = document.getElementById("want-amounts").value.split(",").map(a => parseInt(a.trim()));
+    // 24h cooldown check
+    const tradesRef = collection(db, "trades");
+    const now = new Date();
+    const q = query(tradesRef, where("userId", "==", currentUser.uid), orderBy("timestamp", "desc"));
+    const pastTrades = await getDocs(q);
+    if(!pastTrades.empty){
+        const lastTrade = pastTrades.docs[0].data().timestamp.toDate();
+        const diff = now - lastTrade;
+        if(diff < 24*60*60*1000) return alert("You can only post one trade every 24h!");
+    }
 
-            if (offerItems.length !== offerAmounts.length || wantItems.length !== wantAmounts.length) {
-                return alert("Please provide amounts for each selected item.");
-            }
+    // Save trade
+    await addDoc(tradesRef,{
+        userId: currentUser.uid,
+        username,
+        giveItems,
+        wantItems,
+        giveDiamonds,
+        wantDiamonds,
+        timestamp: serverTimestamp()
+    });
+    alert("Trade posted!");
+    loadTrades();
+});
 
-            try {
-                await addDoc(collection(db, "trades"), {
-                    username,
-                    userId: currentUser.uid,
-                    offerItems,
-                    offerAmounts,
-                    wantItems,
-                    wantAmounts,
-                    timestamp: Timestamp.now()
-                });
-                alert("Trade posted!");
-                tradeForm.reset();
-                loadTrades();
-            } catch (err) {
-                console.error(err);
-                alert("Error posting trade");
-            }
-        });
+// Display trades
+async function loadTrades(){
+    const tradeList = document.getElementById("tradeList");
+    tradeList.innerHTML = "<h2>Available Trades</h2>";
+    const tradesRef = collection(db, "trades");
+    const tradeSnapshot = await getDocs(tradesRef);
+    tradeSnapshot.forEach(doc=>{
+        const t = doc.data();
+        const html = `
+            <div class="trade-box">
+                <strong>${t.username}</strong><br>
+                <em>Offers:</em> ${t.giveItems.join(", ")} ${t.giveDiamonds>0? `+ ${t.giveDiamonds} diamonds`: ""}<br>
+                <em>Wants:</em> ${t.wantItems.join(", ")} ${t.wantDiamonds>0? `+ ${t.wantDiamonds} diamonds`: ""}
+            </div>`;
+        tradeList.innerHTML += html;
+    });
+}
+loadTrades();
+</script>
 
-        // LOAD TRADES
-        async function loadTrades() {
-            tradeContainer.innerHTML = "";
-            const querySnapshot = await getDocs(collection(db, "trades"));
-            querySnapshot.forEach(doc => {
-                const trade = doc.data();
-                const tradeDiv = document.createElement("div");
-                tradeDiv.classList.add("trade-box");
-                tradeDiv.innerHTML = `
-                    <h3>${trade.username}'s Trade</h3>
-                    <p><strong>Offers:</strong> ${trade.offerItems.map((i, idx) => `${i} x${trade.offerAmounts[idx]}`).join(", ")}</p>
-                    <p><strong>Wants:</strong> ${trade.wantItems.map((i, idx) => `${i} x${trade.wantAmounts[idx]}`).join(", ")}</p>
-                `;
-                tradeContainer.appendChild(tradeDiv);
-            });
-        }
-
-        loadTrades();
-
-        // DARK MODE TOGGLE
-        const toggleButton = document.getElementById('darkModeToggle');
-        toggleButton.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        });
-    </script>
 </body>
 </html>
