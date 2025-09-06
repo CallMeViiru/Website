@@ -8,6 +8,24 @@ body {
   text-align: center;
 }
 
+section, .trade-section, .trade-list {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+  color: #000;
+  margin: 0 0 15px 0;
+}
+
+p {
+  line-height: 1.6;
+}
+
 /* === HEADER === */
 #header {
   display: flex;
@@ -60,71 +78,69 @@ nav li a.active {
   color: #93c5fd;
   font-size: 1.5rem;
   cursor: pointer;
+  margin-left: 15px;
 }
 
 #darkModeToggle:hover {
   color: #60a5fa;
 }
 
-#user-info span {
+/* === TRADE FORM === */
+.trade-section h2 {
+  margin-bottom: 20px;
+}
+
+.trade-section form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.trade-section label {
+  margin: 10px 0 5px 0;
   font-weight: bold;
 }
 
-/* === TRADE SECTION === */
-.trade-section {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  text-align: left;
-}
-
-.trade-section h2 {
-  margin-top: 0;
-  color: #000;
-}
-
-.trade-section input,
-.trade-section select {
-  width: 100%;
+.trade-section input, .trade-section select {
+  width: 80%;
   padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ddd;
+  margin-bottom: 10px;
   border-radius: 5px;
-  box-sizing: border-box;
+  border: 1px solid #ddd;
+}
+
+.trade-section select[multiple] {
+  height: 120px;
 }
 
 .trade-section button {
   background-color: #3b82f6;
-  color: #fff;
+  color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
   margin-top: 10px;
-  transition: background-color 0.3s;
 }
 
 .trade-section button:hover {
   background-color: #2563eb;
 }
 
-/* === TRADES LIST === */
-.trade-list {
-  max-width: 1000px;
-  margin: 40px auto;
-  text-align: left;
+/* === TRADE LIST === */
+.trade-list h2 {
+  margin-bottom: 20px;
 }
 
 .trade-box {
-  background: #ffffff;
+  background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 20px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: left;
 }
 
 .trade-box h3 {
@@ -133,6 +149,8 @@ nav li a.active {
 
 .trade-box p {
   margin: 5px 0;
+  font-size: 14px;
+  color: #555;
 }
 
 /* === FOOTER === */
@@ -141,7 +159,7 @@ nav li a.active {
   background-color: #1e293b;
   color: #93c5fd;
   padding: 20px;
-  margin: 40px 20px 20px;
+  margin-top: 40px;
   border-radius: 10px;
 }
 
@@ -161,8 +179,15 @@ body.dark-mode {
   color: #e2e8f0;
 }
 
-body.dark-mode #header {
+body.dark-mode section,
+body.dark-mode .trade-section,
+body.dark-mode .trade-list,
+body.dark-mode .trade-box {
   background-color: #1e293b;
+}
+
+body.dark-mode nav li a {
+  color: #f1f5f9;
 }
 
 body.dark-mode nav li a:hover,
@@ -170,28 +195,16 @@ body.dark-mode nav li a.active {
   background-color: #334155;
 }
 
-body.dark-mode .trade-section,
-body.dark-mode .trade-box {
-  background-color: #1e293b;
+body.dark-mode #footer {
+  background-color: #0f172a;
 }
 
-body.dark-mode input,
-body.dark-mode select {
-  background-color: #334155;
-  color: #f1f5f9;
-  border: 1px solid #555;
-}
-
-body.dark-mode button {
+body.dark-mode .trade-section button {
   background-color: #3b82f6;
 }
 
-body.dark-mode button:hover {
+body.dark-mode .trade-section button:hover {
   background-color: #2563eb;
-}
-
-body.dark-mode #footer {
-  background-color: #0f172a;
 }
 
 /* === RESPONSIVE === */
@@ -200,11 +213,7 @@ body.dark-mode #footer {
     flex-direction: column;
     gap: 10px;
   }
-  .trade-section {
-    padding: 20px;
-  }
-  .trade-box {
-    padding: 15px;
+  .trade-section input, .trade-section select {
+    width: 95%;
   }
 }
-
