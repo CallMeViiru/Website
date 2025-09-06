@@ -4,29 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login | Viiru</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="login.css" />
 </head>
 <body>
+  <!-- Header -->
   <header id="header">
     <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
     <h1 id="HH1">Viiru</h1>
   </header>
 
-  <section class="textsection">
+  <!-- Login Box -->
+  <section class="login-section">
     <h2>Login</h2>
-    <button id="googleLogin" class="see-more-btn">Login with Google</button>
+
+    <button id="googleLogin">Login with Google</button>
 
     <h3 style="margin-top:20px;">Or use Email</h3>
-    <input type="email" id="email" placeholder="Email" style="display:block;margin:10px 0;padding:8px;width:250px;">
-    <input type="password" id="password" placeholder="Password" style="display:block;margin:10px 0;padding:8px;width:250px;">
-    <button id="emailLogin" class="see-more-btn">Login with Email</button>
-    <button id="signup" class="see-more-btn" style="background-color:#22c55e;">Sign Up</button>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+
+    <button id="emailLogin">Login with Email</button>
+    <button id="signup" style="background-color:#22c55e;">Sign Up</button>
   </section>
 
+  <!-- Footer -->
   <footer id="footer">
     <p>Copyright &copy; viiru.top 2025</p>
   </footer>
 
+  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
@@ -45,26 +51,29 @@
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
+    // Google login
     document.getElementById("googleLogin").addEventListener("click", () => {
-      signInWithPopup(auth, provider).then(() => {
-        window.location.href = "index.html";
-      }).catch(err => alert(err.message));
+      signInWithPopup(auth, provider)
+        .then(() => window.location.href = "index.html")
+        .catch(err => alert(err.message));
     });
 
+    // Email login
     document.getElementById("emailLogin").addEventListener("click", () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
-      signInWithEmailAndPassword(auth, email, password).then(() => {
-        window.location.href = "index.html";
-      }).catch(err => alert(err.message));
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => window.location.href = "index.html")
+        .catch(err => alert(err.message));
     });
 
+    // Signup
     document.getElementById("signup").addEventListener("click", () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
-      createUserWithEmailAndPassword(auth, email, password).then(() => {
-        window.location.href = "index.html";
-      }).catch(err => alert(err.message));
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => window.location.href = "index.html")
+        .catch(err => alert(err.message));
     });
   </script>
 </body>
