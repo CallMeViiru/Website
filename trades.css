@@ -5,25 +5,6 @@ body {
   color: #333;
   margin: 0;
   padding: 0;
-  text-align: center;
-}
-
-section, .trade-section, .trade-list {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-h1, h2 {
-  color: #000;
-  margin: 0 0 15px 0;
-}
-
-p {
-  line-height: 1.6;
 }
 
 /* === HEADER === */
@@ -31,10 +12,10 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
   padding: 15px 30px;
   background-color: #1e293b;
   border-bottom: 5px solid #0f172a;
+  flex-wrap: wrap;
 }
 
 #HIcon {
@@ -78,59 +59,116 @@ nav li a.active {
   color: #93c5fd;
   font-size: 1.5rem;
   cursor: pointer;
-  margin-left: 15px;
 }
 
 #darkModeToggle:hover {
   color: #60a5fa;
 }
 
-/* === TRADE FORM === */
+/* === TRADE FORM SECTION === */
+.trade-section {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
 .trade-section h2 {
+  color: #000;
   margin-bottom: 20px;
 }
 
 .trade-section form {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 15px;
 }
 
 .trade-section label {
-  margin: 10px 0 5px 0;
   font-weight: bold;
 }
 
-.trade-section input, .trade-section select {
-  width: 80%;
+.trade-section input[type="text"],
+.trade-section input[type="number"] {
   padding: 10px;
-  margin-bottom: 10px;
   border-radius: 5px;
   border: 1px solid #ddd;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.trade-section select[multiple] {
-  height: 120px;
+.trade-section select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
-.trade-section button {
+/* Multi-select checkbox dropdown */
+.multi-select {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.multi-select .selectBox {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.multi-select .overSelect {
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+}
+
+.multi-select .checkboxes {
+  display: none;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.multi-select .checkboxes label {
+  display: block;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.multi-select .checkboxes label:hover {
+  background-color: #f0f0f0;
+}
+
+/* === BUTTONS === */
+button {
   background-color: #3b82f6;
-  color: white;
+  color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 10px;
+  transition: background-color 0.3s;
 }
 
-.trade-section button:hover {
+button:hover {
   background-color: #2563eb;
 }
 
 /* === TRADE LIST === */
-.trade-list h2 {
-  margin-bottom: 20px;
+.trade-list {
+  max-width: 1000px;
+  margin: 40px auto;
 }
 
 .trade-box {
@@ -143,23 +181,13 @@ nav li a.active {
   text-align: left;
 }
 
-.trade-box h3 {
-  margin: 0 0 10px 0;
-}
-
-.trade-box p {
-  margin: 5px 0;
-  font-size: 14px;
-  color: #555;
-}
-
 /* === FOOTER === */
 #footer {
   text-align: center;
   background-color: #1e293b;
   color: #93c5fd;
   padding: 20px;
-  margin-top: 40px;
+  margin: 40px 20px 20px;
   border-radius: 10px;
 }
 
@@ -179,9 +207,7 @@ body.dark-mode {
   color: #e2e8f0;
 }
 
-body.dark-mode section,
 body.dark-mode .trade-section,
-body.dark-mode .trade-list,
 body.dark-mode .trade-box {
   background-color: #1e293b;
 }
@@ -197,23 +223,4 @@ body.dark-mode nav li a.active {
 
 body.dark-mode #footer {
   background-color: #0f172a;
-}
-
-body.dark-mode .trade-section button {
-  background-color: #3b82f6;
-}
-
-body.dark-mode .trade-section button:hover {
-  background-color: #2563eb;
-}
-
-/* === RESPONSIVE === */
-@media (max-width: 700px) {
-  nav ul {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .trade-section input, .trade-section select {
-    width: 95%;
-  }
 }
