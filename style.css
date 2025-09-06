@@ -297,3 +297,29 @@ body.dark-mode .add-to-cart:hover {
   font-size: 14px;
   color: #555;
 }
+
+/* Style logout button like nav links */
+#navMenu button {
+  background: none;
+  border: none;
+  color: rgb(124, 176, 243);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: color 0.3s ease;
+}
+
+#navMenu button:hover {
+  color: #60a5fa;
+}
+
+#userStatus a {
+  color: rgb(124, 176, 243);
+  text-decoration: none;
+  padding: 8px 12px;
+  transition: color 0.3s ease;
+}
+
+#userStatus a:hover {
+  color: #60a5fa;
+}
