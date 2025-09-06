@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Viiru | Trades</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="trades.css" />
 </head>
 <body>
     <header id="header">
@@ -12,43 +12,42 @@
         <h1 id="HH1">Viiru</h1>
         <nav>
             <ul>
-                <li><a href="https://www.viiru.top/" >Home</a></li>
-                <li><a href="https://www.viiru.top/Store" >Store</a></li>
+                <li><a href="https://www.viiru.top/">Home</a></li>
+                <li><a href="https://www.viiru.top/Store">Store</a></li>
                 <li><a href="https://www.viiru.top/Socials">Socials</a></li>
                 <li><a href="https://www.viiru.top/about">About</a></li>
             </ul>
         </nav>
-        <button id="darkModeToggle">🌙</button>
+        <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+        <button id="login-btn">Login</button>
     </header>
 
-    <section class="login-section" id="login-section">
-        <h2>Login to post trades</h2>
-        <button id="google-login">Login with Google</button>
-        <p>or</p>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button id="email-login">Login with Email</button>
-    </section>
+    <section class="trade-section">
+        <h2>Post a Trade</h2>
+        <div id="trade-form">
+            <label>Your Username:</label><br>
+            <input type="text" id="username" placeholder="Enter your username" /><br>
 
-    <section class="trade-section" id="trade-section" style="display:none;">
-        <h2>Post Your Trade</h2>
-        <div class="multi-select">
-            <div class="selectBox" id="giveSelect" onclick="toggleCheckboxes('giveBox')">Select items you give</div>
-            <div class="checkboxes" id="giveBox"></div>
+            <div class="multi-select">
+                <div class="selectBox" id="selectGive">Select items you give</div>
+                <div class="checkboxes" id="checkboxesGive"></div>
+            </div>
+
+            <input type="number" id="diamondsGive" placeholder="Diamonds you give" /><br>
+
+            <div class="multi-select">
+                <div class="selectBox" id="selectGet">Select items you want</div>
+                <div class="checkboxes" id="checkboxesGet"></div>
+            </div>
+
+            <input type="number" id="diamondsGet" placeholder="Diamonds you want" /><br>
+
+            <button id="post-trade">Post Trade</button>
         </div>
-        <input type="number" id="giveDiamonds" placeholder="Diamonds you give" min="0">
-
-        <div class="multi-select">
-            <div class="selectBox" id="wantSelect" onclick="toggleCheckboxes('wantBox')">Select items you want</div>
-            <div class="checkboxes" id="wantBox"></div>
-        </div>
-        <input type="number" id="wantDiamonds" placeholder="Diamonds you want" min="0">
-
-        <button id="post-trade">Post Trade</button>
     </section>
 
     <section class="trade-list-section">
-        <h2>Active Trades</h2>
+        <h2>Current Trades</h2>
         <div id="trade-list"></div>
     </section>
 
@@ -58,133 +57,117 @@
         <a href="https://www.viiru.top/tos">Terms of Service</a>
     </footer>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-// Firebase config
-const firebaseConfig = {
-    apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-    authDomain: "v11rutop.firebaseapp.com",
-    projectId: "v11rutop",
-    storageBucket: "v11rutop.firebasestorage.app",
-    messagingSenderId: "664984661004",
-    appId: "1:664984661004:web:357ea8a60723b000e55229",
-    measurementId: "G-DMPEGNPVEN"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+            authDomain: "v11rutop.firebaseapp.com",
+            projectId: "v11rutop",
+            storageBucket: "v11rutop.firebasestorage.app",
+            messagingSenderId: "664984661004",
+            appId: "1:664984661004:web:357ea8a60723b000e55229",
+            measurementId: "G-DMPEGNPVEN"
+        };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
-const auth = getAuth(app);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-// Example items JSON
-const items = ["Sword","Helmet","Shield","Bow","Arrow"];
-const giveBox = document.getElementById("giveBox");
-const wantBox = document.getElementById("wantBox");
-const tradeList = document.getElementById("trade-list");
+        const loginBtn = document.getElementById('login-btn');
+        const postBtn = document.getElementById('post-trade');
+        const tradeList = document.getElementById('trade-list');
+        const usernameInput = document.getElementById('username');
 
-// Populate checkboxes
-function populateItems(box){
-    items.forEach(item => {
-        const label = document.createElement("label");
-        const input = document.createElement("input");
-        input.type = "checkbox";
-        input.value = item;
-        label.appendChild(input);
-        label.append(item);
-        box.appendChild(label);
-    });
-}
-populateItems(giveBox);
-populateItems(wantBox);
+        const items = ["Sword", "Helmet", "Armor", "Bow", "Shield"]; // premade items
 
-// Multi-select dropdown logic
-function toggleCheckboxes(boxId){
-    const box = document.getElementById(boxId);
-    box.style.display = box.style.display==="block"?"none":"block";
-}
+        function populateCheckboxes(containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            items.forEach(item => {
+                const label = document.createElement("label");
+                label.innerHTML = `<input type="checkbox" value="${item}" /> ${item}`;
+                container.appendChild(label);
+            });
+        }
+        populateCheckboxes("checkboxesGive");
+        populateCheckboxes("checkboxesGet");
 
-function updateSelectBox(boxId, selectBoxId){
-    const checked = Array.from(document.querySelectorAll(`#${boxId} input:checked`)).map(i=>i.value);
-    const selectBox = document.getElementById(selectBoxId);
-    selectBox.textContent = checked.length>0 ? checked.join(", ") : (selectBoxId==="giveSelect"?"Select items you give":"Select items you want");
-}
-["giveBox","wantBox"].forEach(boxId=>{
-    document.getElementById(boxId).addEventListener("change", e=>{
-        updateSelectBox(boxId, boxId==="giveBox"?"giveSelect":"wantSelect");
-    });
-});
+        function getCheckedItems(containerId) {
+            return Array.from(document.getElementById(containerId).querySelectorAll('input:checked')).map(i => i.value);
+        }
 
-// Login system
-document.getElementById("google-login").addEventListener("click", async ()=>{
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
-});
+        loginBtn.addEventListener('click', () => {
+            if (auth.currentUser) {
+                signOut(auth);
+            } else {
+                const provider = new GoogleAuthProvider();
+                signInWithPopup(auth, provider);
+            }
+        });
 
-document.getElementById("email-login").addEventListener("click", async ()=>{
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    await signInWithEmailAndPassword(auth,email,password);
-});
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                loginBtn.textContent = "Logout";
+                usernameInput.value = user.displayName || "";
+            } else {
+                loginBtn.textContent = "Login";
+            }
+        });
 
-// Show logged in state and trade form
-onAuthStateChanged(auth, user=>{
-    if(user){
-        document.getElementById("login-section").style.display="none";
-        document.getElementById("trade-section").style.display="block";
-    } else {
-        document.getElementById("login-section").style.display="block";
-        document.getElementById("trade-section").style.display="none";
-    }
-});
+        async function postTrade() {
+            if (!auth.currentUser) {
+                alert("You must log in to post trades.");
+                return;
+            }
 
-// Post a trade
-document.getElementById("post-trade").addEventListener("click", async ()=>{
-    const giveItems = Array.from(document.querySelectorAll("#giveBox input:checked")).map(i=>i.value);
-    const wantItems = Array.from(document.querySelectorAll("#wantBox input:checked")).map(i=>i.value);
-    const giveDiamonds = parseInt(document.getElementById("giveDiamonds").value)||0;
-    const wantDiamonds = parseInt(document.getElementById("wantDiamonds").value)||0;
+            const give = getCheckedItems("checkboxesGive");
+            const get = getCheckedItems("checkboxesGet");
+            const diamondsGive = parseInt(document.getElementById("diamondsGive").value) || 0;
+            const diamondsGet = parseInt(document.getElementById("diamondsGet").value) || 0;
+            const username = usernameInput.value;
 
-    if(!auth.currentUser){
-        alert("Please log in to post a trade.");
-        return;
-    }
+            if (give.length === 0 && diamondsGive === 0) { alert("Select what you give."); return; }
+            if (get.length === 0 && diamondsGet === 0) { alert("Select what you want."); return; }
 
-    await addDoc(collection(db,"trades"),{
-        uid: auth.currentUser.uid,
-        username: auth.currentUser.displayName||auth.currentUser.email,
-        giveItems,
-        wantItems,
-        giveDiamonds,
-        wantDiamonds,
-        timestamp: serverTimestamp()
-    });
-    alert("Trade posted!");
-    loadTrades();
-});
+            try {
+                await addDoc(collection(db, "trades"), {
+                    uid: auth.currentUser.uid,
+                    username,
+                    give,
+                    get,
+                    diamondsGive,
+                    diamondsGet,
+                    timestamp: serverTimestamp()
+                });
+                alert("Trade posted!");
+                loadTrades();
+            } catch(e) { console.error(e); }
+        }
 
-// Load trades
-async function loadTrades(){
-    tradeList.innerHTML="";
-    const q = query(collection(db,"trades"), orderBy("timestamp","desc"));
-    const snapshot = await getDocs(q);
-    snapshot.forEach(doc=>{
-        const data = doc.data();
-        const div = document.createElement("div");
-        div.className="product-box";
-        div.innerHTML=`<h3>${data.username}</h3>
-                       <p>Gives: ${data.giveItems.join(", ")} + ${data.giveDiamonds} diamonds</p>
-                       <p>Wants: ${data.wantItems.join(", ")} + ${data.wantDiamonds} diamonds</p>`;
-        tradeList.appendChild(div);
-    });
-}
-loadTrades();
-</script>
+        postBtn.addEventListener("click", postTrade);
+
+        async function loadTrades() {
+            tradeList.innerHTML = "";
+            const q = query(collection(db, "trades"), orderBy("timestamp", "desc"));
+            const snapshot = await getDocs(q);
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const box = document.createElement("div");
+                box.className = "product-box";
+                box.innerHTML = `
+                    <h3>${data.username}</h3>
+                    <p>Gives: ${data.give.join(", ")} + ${data.diamondsGive} Diamonds</p>
+                    <p>Wants: ${data.get.join(", ")} + ${data.diamondsGet} Diamonds</p>
+                `;
+                tradeList.appendChild(box);
+            });
+        }
+
+        loadTrades();
+    </script>
 </body>
 </html>
-
 
