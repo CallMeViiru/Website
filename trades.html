@@ -1,192 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viiru | Trades</title>
-    <link rel="stylesheet" href="trades.css" />
+    <link rel="stylesheet" href="trades.css">
 </head>
 <body>
-    <header id="header">
-        <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
-        <h1 id="HH1">Viiru</h1>
-        <nav>
-            <ul>
-                <li><a href="https://www.viiru.top/">Home</a></li>
-                <li><a href="https://www.viiru.top/Store">Store</a></li>
-                <li><a href="https://www.viiru.top/Socials">Socials</a></li>
-                <li><a href="https://www.viiru.top/about">About</a></li>
-            </ul>
-        </nav>
-        <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
-        <button id="login-btn">Login</button>
-    </header>
 
-    <section class="trade-section">
-        <h2>Post a Trade</h2>
-        <div id="trade-form">
-            <label>Your Username:</label><br>
-            <input type="text" id="username" placeholder="Enter your username" /><br>
+<header id="header">
+    <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
+    <h1 id="HH1">Viiru</h1>
+    <nav>
+        <ul>
+            <li><a href="https://www.viiru.top/" >Home</a></li>
+            <li><a href="https://www.viiru.top/Store">Store</a></li>
+            <li><a href="https://www.viiru.top/Socials">Socials</a></li>
+            <li><a href="https://www.viiru.top/about">About</a></li>
+        </ul>
+    </nav>
+    <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+</header>
 
-            <div class="multi-select">
-                <div class="selectBox" id="selectGive">Select items you give</div>
-                <div class="checkboxes" id="checkboxesGive"></div>
+<section class="textsection">
+    <h2>Post a Trade</h2>
+    <form id="tradeForm">
+        <div>
+            <label>Items you offer:</label>
+            <div class="checkboxes" id="offerItems">
+                <label><input type="checkbox" value="Sword"> Sword</label>
+                <label><input type="checkbox" value="Shield"> Shield</label>
+                <label><input type="checkbox" value="Helmet"> Helmet</label>
             </div>
-
-            <input type="number" id="diamondsGive" placeholder="Diamonds you give" /><br>
-
-            <div class="multi-select">
-                <div class="selectBox" id="selectGet">Select items you want</div>
-                <div class="checkboxes" id="checkboxesGet"></div>
-            </div>
-
-            <input type="number" id="diamondsGet" placeholder="Diamonds you want" /><br>
-
-            <button id="post-trade">Post Trade</button>
         </div>
-    </section>
+        <input type="number" id="offerDiamonds" placeholder="Diamonds you give">
+        
+        <div>
+            <label>Items you want:</label>
+            <div class="checkboxes" id="requestItems">
+                <label><input type="checkbox" value="Sword"> Sword</label>
+                <label><input type="checkbox" value="Shield"> Shield</label>
+                <label><input type="checkbox" value="Helmet"> Helmet</label>
+            </div>
+        </div>
+        <input type="number" id="requestDiamonds" placeholder="Diamonds you want">
+        <button type="submit">Post Trade</button>
+    </form>
+    <button id="loginBtn"></button>
+</section>
 
-    <section class="trade-list-section">
-        <h2>Current Trades</h2>
-        <div id="trade-list"></div>
-    </section>
+<section class="textsection">
+    <h2>Live Trades</h2>
+    <div id="tradesList"></div>
+</section>
 
-    <footer id="footer">
-        <p>Copyright &copy; viiru.top 2025</p>
-        <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a>
-        <a href="https://www.viiru.top/tos">Terms of Service</a>
-    </footer>
+<footer id="footer">
+    <p>Copyright &copy; viiru.top 2025</p>
+    <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a>
+    <a href="https://www.viiru.top/tos">Terms of Service</a>
+</footer>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-            authDomain: "v11rutop.firebaseapp.com",
-            projectId: "v11rutop",
-            storageBucket: "v11rutop.firebasestorage.app",
-            messagingSenderId: "664984661004",
-            appId: "1:664984661004:web:357ea8a60723b000e55229",
-            measurementId: "G-DMPEGNPVEN"
-        };
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+  authDomain: "v11rutop.firebaseapp.com",
+  projectId: "v11rutop",
+  storageBucket: "v11rutop.firebasestorage.app",
+  messagingSenderId: "664984661004",
+  appId: "1:664984661004:web:357ea8a60723b000e55229",
+  measurementId: "G-DMPEGNPVEN"
+};
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-        const loginBtn = document.getElementById('login-btn');
-        const postBtn = document.getElementById('post-trade');
-        const tradeList = document.getElementById('trade-list');
-        const usernameInput = document.getElementById('username');
+const tradeForm = document.getElementById('tradeForm');
+const tradesList = document.getElementById('tradesList');
+const loginBtn = document.getElementById('loginBtn');
 
-        const items = ["Sword", "Helmet", "Armor", "Bow", "Shield"]; // premade items
+// Dark mode toggle
+const toggleButton = document.getElementById('darkModeToggle');
+toggleButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+});
 
-        function populateCheckboxes(containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = "";
-            items.forEach(item => {
-                const label = document.createElement("label");
-                label.innerHTML = `<input type="checkbox" value="${item}" /> ${item}`;
-                container.appendChild(label);
-            });
-        }
-        populateCheckboxes("checkboxesGive");
-        populateCheckboxes("checkboxesGet");
+// Handle login/logout
+onAuthStateChanged(auth, user => {
+    if(user){
+        loginBtn.textContent = 'Logout';
+        loginBtn.onclick = () => signOut(auth);
+    } else {
+        loginBtn.textContent = 'Login';
+        loginBtn.onclick = () => signInWithPopup(auth, provider);
+    }
+});
 
-        function getCheckedItems(containerId) {
-            return Array.from(document.getElementById(containerId).querySelectorAll('input:checked')).map(i => i.value);
-        }
+// Post trade
+tradeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        loginBtn.addEventListener('click', () => {
-            if (auth.currentUser) {
-                signOut(auth);
-            } else {
-                const provider = new GoogleAuthProvider();
-                signInWithPopup(auth, provider);
-            }
+    const offeredItems = Array.from(document.querySelectorAll('#offerItems input:checked')).map(i => i.value);
+    const requestedItems = Array.from(document.querySelectorAll('#requestItems input:checked')).map(i => i.value);
+    const offeredDiamonds = parseInt(document.getElementById('offerDiamonds').value) || 0;
+    const requestedDiamonds = parseInt(document.getElementById('requestDiamonds').value) || 0;
+
+    const user = auth.currentUser;
+    if(!user){
+        alert('You must be logged in to post a trade!');
+        return;
+    }
+
+    try{
+        await addDoc(collection(db, 'trades'), {
+            userId: user.uid,
+            username: user.displayName || user.email,
+            offeredItems,
+            requestedItems,
+            offeredDiamonds,
+            requestedDiamonds,
+            timestamp: serverTimestamp()
         });
+        tradeForm.reset();
+    } catch(err){
+        console.error(err);
+        alert('Error posting trade.');
+    }
+});
 
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                loginBtn.textContent = "Logout";
-                usernameInput.value = user.displayName || "";
-            } else {
-                loginBtn.textContent = "Login";
-            }
-        });
-
-        async function postTrade() {
-            if (!auth.currentUser) {
-                alert("You must log in to post trades.");
-                return;
-            }
-
-            const give = getCheckedItems("checkboxesGive");
-            const get = getCheckedItems("checkboxesGet");
-            const diamondsGive = parseInt(document.getElementById("diamondsGive").value) || 0;
-            const diamondsGet = parseInt(document.getElementById("diamondsGet").value) || 0;
-            const username = usernameInput.value;
-
-            if (give.length === 0 && diamondsGive === 0) { alert("Select what you give."); return; }
-            if (get.length === 0 && diamondsGet === 0) { alert("Select what you want."); return; }
-
-            try {
-                await addDoc(collection(db, "trades"), {
-                    uid: auth.currentUser.uid,
-                    username,
-                    give,
-                    get,
-                    diamondsGive,
-                    diamondsGet,
-                    timestamp: serverTimestamp()
-                });
-                alert("Trade posted!");
-                loadTrades();
-            } catch(e) { console.error(e); }
-        }
-
-        postBtn.addEventListener("click", postTrade);
-
-        async function loadTrades() {
-            tradeList.innerHTML = "";
-            const q = query(collection(db, "trades"), orderBy("timestamp", "desc"));
-            const snapshot = await getDocs(q);
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                const box = document.createElement("div");
-                box.className = "product-box";
-                box.innerHTML = `
-                    <h3>${data.username}</h3>
-                    <p>Gives: ${data.give.join(", ")} + ${data.diamondsGive} Diamonds</p>
-                    <p>Wants: ${data.get.join(", ")} + ${data.diamondsGet} Diamonds</p>
-                `;
-                tradeList.appendChild(box);
-            });
-        }
-
-        loadTrades();
-    </script>
-    <script>
-  // Make multi-select checkboxes toggle when clicking the selectBox
-  document.querySelectorAll('.selectBox').forEach(selectBox => {
-    selectBox.addEventListener('click', () => {
-      const checkboxes = selectBox.nextElementSibling;
-      checkboxes.style.display = (checkboxes.style.display === 'block') ? 'none' : 'block';
+// Listen for live trades
+const q = query(collection(db, 'trades'), orderBy('timestamp', 'desc'));
+onSnapshot(q, snapshot => {
+    tradesList.innerHTML = '';
+    snapshot.forEach(doc => {
+        const data = doc.data();
+        const tradeHTML = `
+            <div class="product-box">
+                <p><strong>${data.username}</strong></p>
+                <p>Offer: ${data.offeredItems.join(', ')}${data.offeredDiamonds > 0 ? ' + ' + data.offeredDiamonds + ' diamonds' : ''}</p>
+                <p>Want: ${data.requestedItems.join(', ')}${data.requestedDiamonds > 0 ? ' + ' + data.requestedDiamonds + ' diamonds' : ''}</p>
+            </div>
+        `;
+        tradesList.innerHTML += tradeHTML;
     });
-  });
-
-  // Optional: close the dropdown if clicked outside
-  document.addEventListener('click', function(e) {
-    document.querySelectorAll('.checkboxes').forEach(box => {
-      if (!box.previousElementSibling.contains(e.target) && !box.contains(e.target)) {
-        box.style.display = 'none';
-      }
-    });
-  });
+});
 </script>
-
 </body>
 </html>
-
