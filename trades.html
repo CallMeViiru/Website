@@ -4,13 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CatCraft Trades | Viiru</title>
-  <link rel="stylesheet" href="trade.css">
+  <link rel="stylesheet" href="trades.css">
 </head>
 <body>
   <!-- Header -->
   <header id="header">
     <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon">
-    <h1 id="HH1">CatCraft Trades</h1>
+    <h1 id="HH1">Viiru</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="store.html">Store</a></li>
+        <li><a class="active" href="trades.html">Trades</a></li>
+        <li><a href="Socials.html">Socials</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+    <button id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
   </header>
 
   <!-- Trade Section -->
@@ -19,23 +29,18 @@
 
     <div id="login-warning" class="warning">
       You must be logged in to post trades.
-      <br>
-      <a href="login.html">Go to Login</a>
+      <br><a href="login.html">Go to Login</a>
     </div>
 
     <div id="trade-form" style="display:none;">
       <input type="text" id="username" placeholder="Your in-game name" required>
 
       <label for="offer">Items you are offering:</label>
-      <select id="offer" multiple>
-        <!-- Items will load from JSON -->
-      </select>
+      <select id="offer" multiple></select>
       <input type="number" id="offerAmount" placeholder="Amount" min="1">
 
       <label for="want">Items you want in return:</label>
-      <select id="want" multiple>
-        <!-- Items will load from JSON -->
-      </select>
+      <select id="want" multiple></select>
       <input type="number" id="wantAmount" placeholder="Amount" min="1">
 
       <button id="postTrade">Post Trade</button>
@@ -51,6 +56,8 @@
   <!-- Footer -->
   <footer id="footer">
     <p>Copyright &copy; viiru.top 2025</p>
+    <a href="privacypolicy.html">Privacy Policy</a>
+    <a href="tos.html">Terms of Service</a>
   </footer>
 
   <!-- Firebase -->
@@ -77,7 +84,6 @@
     const tradeForm = document.getElementById("trade-form");
     const tradesDiv = document.getElementById("trades");
 
-    // Check login status
     onAuthStateChanged(auth, (user) => {
       if (user) {
         loginWarning.style.display = "none";
@@ -88,7 +94,7 @@
       }
     });
 
-    // Load items from JSON
+    // Load items
     fetch("items.json")
       .then(res => res.json())
       .then(items => {
@@ -134,7 +140,6 @@
       loadTrades();
     });
 
-    // Load trades
     async function loadTrades() {
       tradesDiv.innerHTML = "";
       const q = query(collection(db, "trades"), orderBy("timestamp", "desc"));
@@ -154,6 +159,13 @@
     }
 
     loadTrades();
+
+    // Dark mode toggle
+    const toggleButton = document.getElementById('darkModeToggle');
+    toggleButton.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
   </script>
 </body>
 </html>
