@@ -48,6 +48,14 @@ button:hover {
   background-color: #2563eb;
 }
 
+input {
+  margin: 8px 0;
+  padding: 10px;
+  width: 80%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
 #footer {
   background-color: #1e293b;
   color: #93c5fd;
