@@ -1,154 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <link rel="icon" type="image/x-icon" href="/Images/favicon.ico">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Viiru | Home</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Viiru | Home</title>
+  <link rel="icon" type="image/x-icon" href="/Images/favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <header id="header">
-  <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
-  <h1 id="HH1">Viiru</h1>
+  <!-- Header -->
+  <header id="header">
+    <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
+    <h1 id="HH1">Viiru</h1>
+    <nav>
+      <ul>
+        <li><a href="https://www.viiru.top/" class="active">Home</a></li>
+        <li><a href="https://www.viiru.top/Store">Store</a></li>
+        <li><a href="https://www.viiru.top/Socials">Socials</a></li>
+        <li><a href="https://www.viiru.top/about">About</a></li>
+        <li id="authLinks">
+          <!-- Will be replaced by JS with Login/Logout -->
+        </li>
+      </ul>
+    </nav>
+    <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+  </header>
 
-  <nav>
-    <ul id="navMenu">
-      <li><a href="https://www.viiru.top/" class="active">Home</a></li>
-      <li><a href="https://www.viiru.top/Store">Store</a></li>
-      <li><a href="https://www.viiru.top/Socials">Socials</a></li>
-      <li><a href="https://www.viiru.top/about">About</a></li>
-      <!-- 🔹 USER STATUS AREA -->
-      <li id="userStatus"></li>
-      <li><button id="logoutBtn" style="display:none;">Logout</button></li>
-    </ul>
-  </nav>
+  <!-- Intro Section -->
+  <section id="intro">
+    <h2>About the site</h2>
+    <p>Text coming soon</p>
+  </section>
 
-  <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
-</header>
-
-
-    <section id="intro">
-        <h2 style="color: rgb(0, 0, 0);">About the site</h2>
-        <p>Text coming soon</p>
-    </section>
-
-    <!-- Article section -->
-    <section class="article-section">
-        <h2>Article - Coming soon</h2>
-        <div class="article-content">
-            <img src="Images/IMAGE" alt="Image Preview" class="article-thumb">
-            <p>Text coming soon</p>
-            <a href="https://viiru.top/" class="see-more-btn">Read the whole article</a>
-        </div>
-    </section>
-
-    <!-- ✅ NEW SQUARE AD BETWEEN CONTENT -->
-    <div class="in-content-ad">
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-9235877052315560"
-           data-ad-slot="2756235205"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>
-           (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
+  <!-- Article Section -->
+  <section class="article-section">
+    <h2>Article - Coming soon</h2>
+    <div class="article-content">
+      <img src="Images/IMAGE" alt="Image Preview" class="article-thumb">
+      <p>Text coming soon</p>
+      <a href="https://viiru.top/" class="see-more-btn">Read the whole article</a>
     </div>
+  </section>
 
-    <section class="recommended-products">
-      <h2>I recommend these products</h2>
-      <div class="recommended-grid" id="product-list">
+  <!-- Recommended Products -->
+  <section class="recommended-products">
+    <h2>I recommend these products</h2>
+    <div class="recommended-grid" id="product-list">
       <!-- Products will load here from JSON -->
-      </div>
+    </div>
+    <div class="see-more-container">
+      <a href="https://www.viiru.top/Store" class="see-more-btn">Read more</a>
+    </div>
+  </section>
 
-      <div class="see-more-container">
-        <a href="https://www.viiru.top/Store" class="see-more-btn">Read more</a>
-      </div>
-    </section>
+  <!-- Website version -->
+  <section class="textsection">
+    <h2>Website version</h2>
+    <p>Website version: 1.1.0</p>
+  </section>
 
-    <script src="products.js"></script>
+  <!-- Footer -->
+  <footer id="footer">
+    <p>Copyright &copy; viiru.top 2025</p>
+    <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a>
+    <a href="https://www.viiru.top/tos">Terms of Service</a>
+  </footer>
 
-    <section class="textsection">
-        <h2 style="color: rgb(0, 0, 0);">Website version</h2>
-        <p>Website version: 1.1.0</p>
-    </section>
+  <!-- Dark Mode Script -->
+  <script>
+    const toggleButton = document.getElementById('darkModeToggle');
+    toggleButton.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+  </script>
 
-    <footer id="footer">
-        <p>Copyright &copy; viiru.top 2025</p>
-        <a href="https://www.viiru.top/privacypolicy" style="color: rgb(124, 176, 243); margin-right: 15px;">Privacy Policy</a>
-        <a href="https://www.viiru.top/tos" style="color: rgb(124, 176, 243);">Terms of Service</a>
-    </footer>
+  <!-- Load Products -->
+  <script src="products.js"></script>
 
-    <!-- DARK MODE TOGGLE -->
-    <script>
-      const toggleButton = document.getElementById('darkModeToggle');
-      toggleButton.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-      });
-    </script>
+  <!-- Firebase + Auth -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-    <!-- LOAD PRODUCTS -->
-    <script>
-      fetch('products.json')
-        .then(response => response.json())
-        .then(products => {
-          const container = document.getElementById('product-list');
-          products.forEach(product => {
-            const productHTML = `
-              <div class="product-box">
-                <img src="${product.image}" alt="${product.name}">
-                <h3>${product.name}</h3>
-                <h3>${product.price}</h3>
-                <p>${product.description}</p>
-                <button onclick="window.location.href='https://www.viiru.top/Store'">Buy Now</button>
-              </div>
-            `;
-            container.innerHTML += productHTML;
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+      authDomain: "v11rutop.firebaseapp.com",
+      projectId: "v11rutop",
+      storageBucket: "v11rutop.firebasestorage.app",
+      messagingSenderId: "664984661004",
+      appId: "1:664984661004:web:357ea8a60723b000e55229",
+      measurementId: "G-DMPEGNPVEN"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const authLinks = document.getElementById("authLinks");
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        authLinks.innerHTML = `
+          <span style="color:#93c5fd;">Hi, ${user.email}</span>
+          <button id="logoutBtn" class="see-more-btn" style="margin-left:10px;">Logout</button>
+        `;
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+          signOut(auth).then(() => {
+            window.location.reload();
           });
-        })
-        .catch(error => console.error('Error loading products:', error));
-    </script>
-
-    <!-- FIREBASE AUTH (SHOW USER + LOGOUT) -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-        authDomain: "v11rutop.firebaseapp.com",
-        projectId: "v11rutop",
-        storageBucket: "v11rutop.firebasestorage.app",
-        messagingSenderId: "664984661004",
-        appId: "1:664984661004:web:357ea8a60723b000e55229",
-        measurementId: "G-DMPEGNPVEN"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-
-      const userStatus = document.getElementById("userStatus");
-      const logoutBtn = document.getElementById("logoutBtn");
-
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          userStatus.textContent = `Logged in as ${user.displayName || user.email}`;
-          logoutBtn.style.display = "inline-block";
-        } else {
-          userStatus.innerHTML = `<a href="login.html" style="color:#60a5fa;">Login</a>`;
-          logoutBtn.style.display = "none";
-        }
-      });
-
-      logoutBtn.addEventListener("click", async () => {
-        await signOut(auth);
-        window.location.reload();
-      });
-    </script>
-
+        });
+      } else {
+        authLinks.innerHTML = `<a href="login.html">Login</a>`;
+      }
+    });
+  </script>
 </body>
 </html>
+
