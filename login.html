@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login with Google</title>
+  <title>Login</title>
   <link rel="stylesheet" href="login.css">
   <script type="module" src="login.js"></script>
 </head>
@@ -16,9 +16,18 @@
 
   <section class="login-section">
     <h2>Sign in</h2>
+
+    <!-- Google Login -->
     <button id="googleLogin">Sign in with Google</button>
-    <p id="userInfo"></p>
-    <button id="logoutBtn" style="display:none;">Logout</button>
+
+    <hr>
+
+    <!-- Email Login -->
+    <h3>Or use Email</h3>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button id="emailLogin">Login with Email</button>
+    <button id="emailRegister">Register</button>
   </section>
 
   <footer id="footer">
