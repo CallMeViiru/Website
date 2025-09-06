@@ -1,8 +1,15 @@
-// Import Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { 
+  getAuth, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  signOut, 
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-// Your Firebase config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
   authDomain: "v11rutop.firebaseapp.com",
@@ -19,40 +26,41 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 // UI elements
-const loginBtn = document.getElementById("googleLogin");
-const logoutBtn = document.getElementById("logoutBtn");
-const userInfo = document.getElementById("userInfo");
+const googleLoginBtn = document.getElementById("googleLogin");
+const emailLoginBtn = document.getElementById("emailLogin");
+const emailRegisterBtn = document.getElementById("emailRegister");
 
-// Login with Google
-loginBtn.addEventListener("click", async () => {
+// Google Login
+googleLoginBtn.addEventListener("click", async () => {
   try {
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-    userInfo.textContent = `Welcome, ${user.displayName} (${user.email})`;
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "block";
+    await signInWithPopup(auth, provider);
+    window.location.href = "index.html"; // Redirect after login
   } catch (error) {
-    console.error(error);
+    alert(error.message);
   }
 });
 
-// Logout
-logoutBtn.addEventListener("click", async () => {
-  await signOut(auth);
-  userInfo.textContent = "";
-  loginBtn.style.display = "block";
-  logoutBtn.style.display = "none";
-});
-
-// Track auth state
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    userInfo.textContent = `Welcome, ${user.displayName} (${user.email})`;
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "block";
-  } else {
-    userInfo.textContent = "";
-    loginBtn.style.display = "block";
-    logoutBtn.style.display = "none";
+// Email Login
+emailLoginBtn.addEventListener("click", async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    window.location.href = "index.html"; // Redirect after login
+  } catch (error) {
+    alert(error.message);
   }
 });
+
+// Email Register
+emailRegisterBtn.addEventListener("click", async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    alert("Account created! You can now login.");
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
