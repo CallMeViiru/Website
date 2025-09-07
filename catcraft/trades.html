@@ -26,10 +26,10 @@
         <h2>Post Your Trade</h2>
         <form id="tradeForm">
             <input type="text" id="username" placeholder="In-game Username" required>
-            
+
             <div class="trade-group">
                 <label>Offer Items:</label>
-                <select id="offerItems" multiple required></select>
+                <div id="offerCheckboxes" class="checkbox-container"></div>
             </div>
 
             <div class="trade-group">
@@ -39,7 +39,7 @@
 
             <div class="trade-group">
                 <label>Request Items:</label>
-                <select id="requestItems" multiple required></select>
+                <div id="requestCheckboxes" class="checkbox-container"></div>
             </div>
 
             <div class="trade-group">
@@ -63,111 +63,113 @@
         <a href="tos.html">Terms of Service</a>
     </footer>
 
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where, getDocs } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-            authDomain: "v11rutop.firebaseapp.com",
-            projectId: "v11rutop",
-            storageBucket: "v11rutop.firebasestorage.app",
-            messagingSenderId: "664984661004",
-            appId: "1:664984661004:web:357ea8a60723b000e55229",
-            measurementId: "G-DMPEGNPVEN"
-        };
+const firebaseConfig = {
+  apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+  authDomain: "v11rutop.firebaseapp.com",
+  projectId: "v11rutop",
+  storageBucket: "v11rutop.firebasestorage.app",
+  messagingSenderId: "664984661004",
+  appId: "1:664984661004:web:357ea8a60723b000e55229",
+  measurementId: "G-DMPEGNPVEN"
+};
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-        const offerItems = ["Sword","Helmet","Shield","Bow","Armor"];
-        const requestItems = ["Sword","Helmet","Shield","Bow","Armor"];
-        const offerSelect = document.getElementById("offerItems");
-        const requestSelect = document.getElementById("requestItems");
+// Items list
+const items = ["Sword","Helmet","Shield","Bow","Armor"];
 
-        offerItems.forEach(item => {
-            const opt = document.createElement("option");
-            opt.value = item; opt.textContent = item;
-            offerSelect.appendChild(opt);
-        });
+function createCheckboxes(containerId, items){
+    const container = document.getElementById(containerId);
+    items.forEach(item=>{
+        const div = document.createElement("div");
+        div.className="checkbox-item";
+        div.innerHTML=`<label><input type="checkbox" value="${item}"> ${item}</label>`;
+        container.appendChild(div);
+    });
+}
 
-        requestItems.forEach(item => {
-            const opt = document.createElement("option");
-            opt.value = item; opt.textContent = item;
-            requestSelect.appendChild(opt);
-        });
+createCheckboxes("offerCheckboxes", items);
+createCheckboxes("requestCheckboxes", items);
 
-        const loginBtn = document.getElementById("loginBtn");
-        let currentUser = null;
+// Auth
+let currentUser = null;
+const loginBtn = document.getElementById("loginBtn");
 
-        loginBtn.addEventListener("click", () => {
-            if(currentUser){
-                signOut(auth);
-            } else {
-                const provider = new GoogleAuthProvider();
-                signInWithPopup(auth, provider).catch(err => alert(err.message));
-            }
-        });
+loginBtn.addEventListener("click", ()=>{
+    if(currentUser){
+        signOut(auth);
+    } else {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider).catch(err=>alert(err.message));
+    }
+});
 
-        onAuthStateChanged(auth, user => {
-            currentUser = user;
-            loginBtn.textContent = user ? "Logout" : "Login";
-            document.getElementById("username").value = user ? user.displayName : "";
-        });
+onAuthStateChanged(auth, user=>{
+    currentUser = user;
+    loginBtn.textContent = user ? "Logout" : "Login";
+    document.getElementById("username").value = user ? user.displayName : "";
+});
 
-        const tradeForm = document.getElementById("tradeForm");
-        const status = document.getElementById("status");
-        tradeForm.addEventListener("submit", async e => {
-            e.preventDefault();
-            if(!currentUser) { status.textContent="You must log in!"; return; }
+// Post trade
+const tradeForm = document.getElementById("tradeForm");
+const status = document.getElementById("status");
 
-            const username = document.getElementById("username").value;
-            const offerSelected = Array.from(offerSelect.selectedOptions).map(o => o.value);
-            const requestSelected = Array.from(requestSelect.selectedOptions).map(o => o.value);
-            const offerDiamonds = parseInt(document.getElementById("offerDiamonds").value) || 0;
-            const requestDiamonds = parseInt(document.getElementById("requestDiamonds").value) || 0;
+tradeForm.addEventListener("submit", async e=>{
+    e.preventDefault();
+    if(!currentUser){ status.textContent="You must log in!"; return; }
 
-            const tradesRef = collection(db,"trades");
-            const now = new Date();
-            const last24 = new Date(now.getTime() - 24*60*60*1000);
-            
-            const q = query(tradesRef, where("uid","==",currentUser.uid), where("timestamp",">",last24));
-            const recent = await getDocs(q);
-            if(!recent.empty){ status.textContent="You can post once every 24h."; return; }
+    const username = document.getElementById("username").value;
+    const offerSelected = Array.from(document.querySelectorAll("#offerCheckboxes input:checked")).map(i=>i.value);
+    const requestSelected = Array.from(document.querySelectorAll("#requestCheckboxes input:checked")).map(i=>i.value);
+    const offerDiamonds = parseInt(document.getElementById("offerDiamonds").value) || 0;
+    const requestDiamonds = parseInt(document.getElementById("requestDiamonds").value) || 0;
 
-            await addDoc(tradesRef, {
-                uid: currentUser.uid,
-                username,
-                offerItems: offerSelected,
-                offerDiamonds,
-                requestItems: requestSelected,
-                requestDiamonds,
-                timestamp: serverTimestamp()
-            });
-            status.textContent="Trade posted!";
-            tradeForm.reset();
-        });
+    const tradesRef = collection(db,"trades");
+    const now = new Date();
+    const last24 = new Date(now.getTime()-24*60*60*1000);
 
-        // Live trades
-        const tradesList = document.getElementById("tradesList");
-        const tradesRef = collection(db,"trades");
-        const tradesQuery = query(tradesRef, orderBy("timestamp","desc"));
-        onSnapshot(tradesQuery, snapshot => {
-            tradesList.innerHTML="";
-            snapshot.forEach(doc => {
-                const t = doc.data();
-                const div = document.createElement("div");
-                div.className="trade-box";
-                div.innerHTML=`<strong>${t.username}</strong><br>
-                               Offer: ${t.offerItems.join(", ")} + 💎${t.offerDiamonds}<br>
-                               Request: ${t.requestItems.join(", ")} + 💎${t.requestDiamonds}`;
-                tradesList.appendChild(div);
-            });
-        });
+    const q = query(tradesRef, where("uid","==",currentUser.uid), where("timestamp",">",last24));
+    const recent = await getDocs(q);
+    if(!recent.empty){ status.textContent="You can post once every 24h."; return; }
 
-    </script>
+    await addDoc(tradesRef,{
+        uid: currentUser.uid,
+        username,
+        offerItems: offerSelected,
+        offerDiamonds,
+        requestItems: requestSelected,
+        requestDiamonds,
+        timestamp: serverTimestamp()
+    });
+    status.textContent="Trade posted!";
+    tradeForm.reset();
+});
+
+// Live trades
+const tradesList = document.getElementById("tradesList");
+const tradesRef = collection(db,"trades");
+const tradesQuery = query(tradesRef, orderBy("timestamp","desc"));
+
+onSnapshot(tradesQuery, snapshot=>{
+    tradesList.innerHTML="";
+    snapshot.forEach(doc=>{
+        const t=doc.data();
+        const div = document.createElement("div");
+        div.className="trade-box";
+        div.innerHTML=`<strong>${t.username}</strong><br>
+                       Offer: ${t.offerItems.join(", ")} + 💎${t.offerDiamonds}<br>
+                       Request: ${t.requestItems.join(", ")} + 💎${t.requestDiamonds}`;
+        tradesList.appendChild(div);
+    });
+});
+</script>
 </body>
 </html>
+
