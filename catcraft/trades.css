@@ -5,26 +5,22 @@ body {
   text-align: center;
 }
 
-/* Header & Navbar */
 #header {
+  background-color: #1e293b;
+  padding: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 15px 30px;
-  background-color: #1e293b;
   border-bottom: 5px solid #0f172a;
-  flex-wrap: wrap;
 }
 
 #HIcon {
-  max-width: 60px;
-  height: auto;
+  height: 50px;
   margin-right: 10px;
 }
 
 #HH1 {
   color: #93c5fd;
-  font-size: 1.6rem;
   margin: 0;
 }
 
@@ -32,140 +28,95 @@ nav ul {
   list-style: none;
   display: flex;
   gap: 20px;
-  padding: 0;
-  margin: 0;
+  margin-left: 20px;
 }
 
 nav li a {
-  text-decoration: none;
   color: #f1f5f9;
-  padding: 8px 12px;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px;
   border-radius: 5px;
 }
 
-nav li a.active, nav li a:hover {
-  background-color: #0f172a;
+#authBtn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-/* Trade Section */
+#authBtn:hover {
+  background-color: #2563eb;
+}
+
 .trade-section {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 40px auto;
   padding: 30px;
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   text-align: left;
 }
 
-.trade-section input[type="text"], .trade-section input[type="number"] {
+input {
   margin: 8px 0;
   padding: 10px;
   width: 100%;
   border: 1px solid #ddd;
   border-radius: 5px;
-  box-sizing: border-box;
 }
 
-.trade-section label {
+button#postTradeBtn {
   margin-top: 10px;
-  display: block;
 }
 
-/* Dropdowns */
 .dropdown {
   position: relative;
-  display: block;
-  margin: 10px 0;
+  display: inline-block;
+  margin-bottom: 10px;
 }
 
 .dropbtn {
-  background-color: #fff;
-  color: #333;
-  padding: 10px;
-  width: 100%;
-  border: 1px solid #ddd;
+  background-color: #3b82f6;
+  color: white;
+  padding: 10px 15px;
+  border: none;
   border-radius: 5px;
-  text-align: left;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
+
+.dropbtn:hover { background-color: #2563eb; }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #fff;
-  width: 100%;
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  z-index: 1;
-}
-
-.dropdown-content label {
-  display: block;
-  padding: 8px;
-  cursor: pointer;
-}
-
-.dropdown-content label:hover {
-  background-color: #f0f0f0;
-}
-
-.dropdown.active .dropdown-content {
-  display: block;
-}
-
-/* Post Button */
-#postTradeBtn {
-  background-color: #3b82f6;
-  color: #fff;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 15px;
-}
-
-#postTradeBtn:hover {
-  background-color: #2563eb;
-}
-
-/* Trade Box Display */
-.trade-box {
   background-color: #f1f5f9;
+  min-width: 160px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 1;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.dropdown.active .dropdown-content { display: block; }
+
+.trade-box {
   border: 1px solid #ddd;
   padding: 15px;
-  margin-top: 10px;
-  border-radius: 8px;
+  border-radius: 10px;
+  margin: 10px 0;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* Footer */
 #footer {
-  text-align: center;
   background-color: #1e293b;
   color: #93c5fd;
   padding: 20px;
   margin-top: 40px;
-  border-radius: 10px;
-}
-
-#footer a {
-  color: #60a5fa;
-  text-decoration: underline;
-  margin: 0 10px;
-}
-
-/* Responsive */
-@media (max-width: 700px) {
-  .trade-section {
-    padding: 20px;
-  }
-  nav ul {
-    flex-direction: column;
-    gap: 10px;
-  }
+  border-radius: 10px 10px 0 0;
 }
