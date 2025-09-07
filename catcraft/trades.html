@@ -1,41 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Viiru | Trades</title>
-  <link rel="stylesheet" href="trades.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Viiru | Trades</title>
+    <link rel="stylesheet" href="trades.css">
 </head>
 <body>
 
 <header id="header">
-    <img src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
+    <img src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Viiru Logo" id="HIcon">
     <h1 id="HH1">Viiru</h1>
+    <nav>
+        <ul>
+            <li><a href="https://www.viiru.top/" >Home</a></li>
+            <li><a href="https://www.viiru.top/Store" class="active">Store</a></li>
+            <li><a href="https://www.viiru.top/Socials">Socials</a></li>
+            <li><a href="https://www.viiru.top/about">About</a></li>
+        </ul>
+    </nav>
 </header>
 
 <section class="trade-section">
     <h2>Post a Trade</h2>
+
     <input type="text" id="username" placeholder="Your in-game username">
 
-    <!-- Offer items multi-select -->
+    <label>Offer Items:</label>
     <div class="dropdown">
-      <button class="dropbtn">Select Offer Items</button>
-      <div class="dropdown-content" id="offerItemsDropdown"></div>
+        <button class="dropbtn">Select Offer Items</button>
+        <div class="dropdown-content" id="offerItemsDropdown"></div>
     </div>
 
     <label>Offer Diamonds 💎:</label>
     <input type="number" id="offerDiamonds" placeholder="Amount of diamonds">
 
-    <!-- Request items multi-select -->
+    <label>Request Items:</label>
     <div class="dropdown">
-      <button class="dropbtn">Select Request Items</button>
-      <div class="dropdown-content" id="requestItemsDropdown"></div>
+        <button class="dropbtn">Select Request Items</button>
+        <div class="dropdown-content" id="requestItemsDropdown"></div>
     </div>
 
     <label>Request Diamonds 💎:</label>
     <input type="number" id="requestDiamonds" placeholder="Amount of diamonds">
 
     <button id="postTradeBtn">Post Trade</button>
+
+    <h3>Live Trades:</h3>
+    <div id="tradeList"></div>
 </section>
 
 <footer id="footer">
@@ -47,6 +59,7 @@
 <script>
 const items = ["Sword", "Helmet", "Shield", "Potion", "Bow"];
 
+// Populate dropdowns
 function createDropdown(dropdownId){
   const container = document.getElementById(dropdownId);
   items.forEach(item => {
@@ -56,7 +69,6 @@ function createDropdown(dropdownId){
   });
 }
 
-// Initialize dropdowns
 createDropdown("offerItemsDropdown");
 createDropdown("requestItemsDropdown");
 
@@ -74,7 +86,7 @@ function getSelectedItems(dropdownId){
   return Array.from(container.querySelectorAll('input:checked')).map(i => i.value);
 }
 
-// Post trade button (logs selections for now)
+// Example trade posting
 document.getElementById("postTradeBtn").addEventListener("click", () => {
   const offerItems = getSelectedItems("offerItemsDropdown");
   const requestItems = getSelectedItems("requestItemsDropdown");
@@ -82,9 +94,19 @@ document.getElementById("postTradeBtn").addEventListener("click", () => {
   const requestDiamonds = document.getElementById("requestDiamonds").value;
   const username = document.getElementById("username").value;
 
-  console.log("Username:", username);
-  console.log("Offer Items:", offerItems, "Offer Diamonds:", offerDiamonds);
-  console.log("Request Items:", requestItems, "Request Diamonds:", requestDiamonds);
+  if(!username){
+    alert("Please enter your in-game username");
+    return;
+  }
+
+  const tradeHTML = `
+    <div class="trade-box">
+      <h4>${username}</h4>
+      <p>Offer: ${offerItems.join(", ")} ${offerDiamonds ? "💎" + offerDiamonds : ""}</p>
+      <p>Request: ${requestItems.join(", ")} ${requestDiamonds ? "💎" + requestDiamonds : ""}</p>
+    </div>
+  `;
+  document.getElementById("tradeList").innerHTML += tradeHTML;
 });
 </script>
 
