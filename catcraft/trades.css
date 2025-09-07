@@ -1,14 +1,11 @@
-/* === GLOBAL BODY === */
 body {
   font-family: Arial, sans-serif;
   background-color: #f7f9fc;
-  color: #333;
   margin: 0;
-  padding: 0;
   text-align: center;
 }
 
-/* === HEADER === */
+/* Header & Navbar */
 #header {
   display: flex;
   align-items: center;
@@ -16,6 +13,7 @@ body {
   padding: 15px 30px;
   background-color: #1e293b;
   border-bottom: 5px solid #0f172a;
+  flex-wrap: wrap;
 }
 
 #HIcon {
@@ -25,13 +23,31 @@ body {
 }
 
 #HH1 {
-  display: inline-block;
   color: #93c5fd;
   font-size: 1.6rem;
   margin: 0;
 }
 
-/* === TRADE SECTION === */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+nav li a {
+  text-decoration: none;
+  color: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+
+nav li a.active, nav li a:hover {
+  background-color: #0f172a;
+}
+
+/* Trade Section */
 .trade-section {
   max-width: 800px;
   margin: 40px auto;
@@ -42,13 +58,7 @@ body {
   text-align: left;
 }
 
-.trade-section h2 {
-  text-align: center;
-  color: #000;
-}
-
-.trade-section input[type="text"],
-.trade-section input[type="number"] {
+.trade-section input[type="text"], .trade-section input[type="number"] {
   margin: 8px 0;
   padding: 10px;
   width: 100%;
@@ -58,11 +68,11 @@ body {
 }
 
 .trade-section label {
-  display: block;
   margin-top: 10px;
+  display: block;
 }
 
-/* === DROPDOWN MULTI-SELECT === */
+/* Dropdowns */
 .dropdown {
   position: relative;
   display: block;
@@ -70,7 +80,7 @@ body {
 }
 
 .dropbtn {
-  background-color: #ffffff;
+  background-color: #fff;
   color: #333;
   padding: 10px;
   width: 100%;
@@ -108,7 +118,7 @@ body {
   display: block;
 }
 
-/* === POST BUTTON === */
+/* Post Button */
 #postTradeBtn {
   background-color: #3b82f6;
   color: #fff;
@@ -118,14 +128,22 @@ body {
   cursor: pointer;
   width: 100%;
   margin-top: 15px;
-  transition: background 0.3s;
 }
 
 #postTradeBtn:hover {
   background-color: #2563eb;
 }
 
-/* === FOOTER === */
+/* Trade Box Display */
+.trade-box {
+  background-color: #f1f5f9;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+/* Footer */
 #footer {
   text-align: center;
   background-color: #1e293b;
@@ -141,14 +159,13 @@ body {
   margin: 0 10px;
 }
 
-#footer a:hover {
-  text-decoration: none;
-}
-
-/* === RESPONSIVE === */
+/* Responsive */
 @media (max-width: 700px) {
   .trade-section {
     padding: 20px;
   }
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
-
