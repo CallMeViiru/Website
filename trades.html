@@ -10,8 +10,10 @@
 
   <!-- HEADER -->
   <header id="header">
-    <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon">
-    <h1 id="HH1">Viiru Trades</h1>
+    <div class="header-left">
+      <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon">
+      <h1 id="HH1">Viiru</h1>
+    </div>
     <nav>
       <ul>
         <li><a href="https://www.viiru.top/">Home</a></li>
@@ -34,7 +36,7 @@
 
       <div class="form-group">
         <label>Items you offer:</label>
-        <div class="dropdown">
+        <div class="dropdown" id="offerDropdown">
           <button type="button" class="dropdown-btn">Select items ▼</button>
           <div class="dropdown-content" id="offerItems">
             <label><input type="checkbox" value="Sword"> Sword</label>
@@ -47,7 +49,7 @@
 
       <div class="form-group">
         <label>Items you want:</label>
-        <div class="dropdown">
+        <div class="dropdown" id="wantDropdown">
           <button type="button" class="dropdown-btn">Select items ▼</button>
           <div class="dropdown-content" id="wantItems">
             <label><input type="checkbox" value="Sword"> Sword</label>
@@ -140,7 +142,7 @@
       return [...document.querySelectorAll(`#${containerId} input:checked`)].map(cb => cb.value);
     }
 
-    // Check cooldown
+    // Cooldown check
     async function canPostTrade(uid) {
       const q = query(
         collection(db, "trades"),
@@ -190,7 +192,6 @@
           diamondsWant,
           createdAt: serverTimestamp()
         });
-        alert("Trade posted!");
         form.reset();
         loadTrades();
         cooldownMsg.style.display = "none";
@@ -199,7 +200,7 @@
       }
     });
 
-    // Load recent trades
+    // Load trades
     async function loadTrades() {
       tradesContainer.innerHTML = "";
       const q = query(collection(db, "trades"), orderBy("createdAt", "desc"), limit(10));
@@ -219,6 +220,23 @@
     }
 
     loadTrades();
+
+    // Dropdown toggle logic
+    document.querySelectorAll(".dropdown").forEach(dropdown => {
+      const btn = dropdown.querySelector(".dropdown-btn");
+      btn.addEventListener("click", () => {
+        dropdown.classList.toggle("show");
+      });
+    });
+
+    // Close dropdown if clicked outside
+    window.addEventListener("click", (e) => {
+      document.querySelectorAll(".dropdown").forEach(dropdown => {
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove("show");
+        }
+      });
+    });
   </script>
 </body>
 </html>
