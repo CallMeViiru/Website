@@ -1,187 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Viiru | Trades</title>
-  <link rel="stylesheet" href="trades.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viiru | Trades</title>
+    <link rel="stylesheet" href="trades.css">
+    <link rel="icon" href="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png">
 </head>
 <body>
-  <header id="header">
-    <img src="https://github.com/CallMeViiru/Website/raw/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" id="HIcon" alt="Viiru Logo">
+
+<header id="header">
+    <img src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Viiru Logo" id="HIcon">
     <h1 id="HH1">Viiru</h1>
     <nav>
-      <ul>
-        <li><a href="https://www.viiru.top/">Home</a></li>
-        <li><a href="https://www.viiru.top/Store">Store</a></li>
-        <li><a href="https://www.viiru.top/Socials">Socials</a></li>
-        <li><a href="https://www.viiru.top/about">About</a></li>
-      </ul>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="Store.html">Store</a></li>
+            <li><a href="Socials.html">Socials</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
     </nav>
     <button id="loginBtn">Login</button>
-    <button id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
-  </header>
+</header>
 
-  <section class="login-section" id="loginSection">
+<section class="login-section">
     <h2>Post a Trade</h2>
     <p id="loginMessage">You must log in to post trades</p>
     <input type="text" id="username" placeholder="Ingame Username">
 
     <h3>Offer Items</h3>
-    <select id="offerItems" multiple></select>
+    <div class="dropdown" id="offerDropdown">
+        <button class="dropbtn">Select items</button>
+        <div class="dropdown-content" id="offerContent"></div>
+    </div>
     <label>💎 Diamonds Offered:</label>
     <input type="number" id="offerDiamonds" min="0" value="0">
 
     <h3>Request Items</h3>
-    <select id="requestItems" multiple></select>
+    <div class="dropdown" id="requestDropdown">
+        <button class="dropbtn">Select items</button>
+        <div class="dropdown-content" id="requestContent"></div>
+    </div>
     <label>💎 Diamonds Requested:</label>
     <input type="number" id="requestDiamonds" min="0" value="0">
 
     <button id="postTradeBtn">Post Trade</button>
     <p id="tradeMessage"></p>
-  </section>
+</section>
 
-  <section class="trades-section">
-    <h2>Active Trades</h2>
-    <div id="tradesList"></div>
-  </section>
+<section class="live-trades">
+    <h2>Live Trades</h2>
+    <div id="tradesContainer"></div>
+</section>
 
-  <footer id="footer">
+<footer id="footer">
     <p>Copyright &copy; viiru.top 2025</p>
-    <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a>
-    <a href="https://www.viiru.top/tos">Terms of Service</a>
-  </footer>
+    <a href="privacypolicy.html">Privacy Policy</a>
+    <a href="tos.html">Terms of Service</a>
+</footer>
 
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, where, getDocs } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+    // Firebase config
     const firebaseConfig = {
-      apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-      authDomain: "v11rutop.firebaseapp.com",
-      projectId: "v11rutop",
-      storageBucket: "v11rutop.firebasestorage.app",
-      messagingSenderId: "664984661004",
-      appId: "1:664984661004:web:357ea8a60723b000e55229",
-      measurementId: "G-DMPEGNPVEN"
+        apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+        authDomain: "v11rutop.firebaseapp.com",
+        projectId: "v11rutop",
+        storageBucket: "v11rutop.firebasestorage.app",
+        messagingSenderId: "664984661004",
+        appId: "1:664984661004:web:357ea8a60723b000e55229",
+        measurementId: "G-DMPEGNPVEN"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth();
 
-    const loginBtn = document.getElementById('loginBtn');
-    const postTradeBtn = document.getElementById('postTradeBtn');
-    const loginMessage = document.getElementById('loginMessage');
-    const tradesList = document.getElementById('tradesList');
-    const usernameInput = document.getElementById('username');
-    const offerItemsSelect = document.getElementById('offerItems');
-    const requestItemsSelect = document.getElementById('requestItems');
-    const offerDiamonds = document.getElementById('offerDiamonds');
-    const requestDiamonds = document.getElementById('requestDiamonds');
-
-    const itemsList = ["Sword","Helmet","Shield","Bow","Armor"];
-
-    function populateSelect(select) {
-      select.innerHTML="";
-      itemsList.forEach(item=>{
-        const option = document.createElement("option");
-        option.value = item;
-        option.textContent = item;
-        select.appendChild(option);
-      });
-    }
-    populateSelect(offerItemsSelect);
-    populateSelect(requestItemsSelect);
-
-    // Dark mode toggle
-    const darkModeBtn = document.getElementById('darkModeToggle');
-    darkModeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      darkModeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-    });
-
-    // Login/logout
-    loginBtn.addEventListener('click', ()=>{
-      if(auth.currentUser) signOut(auth);
-      else signInWithPopup(auth,new GoogleAuthProvider());
-    });
+    const loginBtn = document.getElementById("loginBtn");
+    const loginMessage = document.getElementById("loginMessage");
 
     let currentUser = null;
-    onAuthStateChanged(auth,user=>{
-      currentUser=user;
-      if(user){
-        loginBtn.textContent="Logout";
-        loginMessage.textContent="Logged in as: "+user.displayName;
-      }else{
-        loginBtn.textContent="Login";
-        loginMessage.textContent="You must log in to post trades";
-      }
+    let cooldowns = {};
+
+    // Login/logout
+    loginBtn.addEventListener("click", async () => {
+        if (!currentUser) {
+            const provider = new GoogleAuthProvider();
+            await signInWithPopup(auth, provider);
+        } else {
+            await signOut(auth);
+        }
     });
 
-    function getSelected(select){
-      return Array.from(select.selectedOptions).map(o=>({item:o.value, amount:1}));
+    onAuthStateChanged(auth, user => {
+        currentUser = user;
+        if (user) {
+            loginMessage.textContent = "Logged in as " + user.displayName;
+            loginBtn.textContent = "Logout";
+        } else {
+            loginMessage.textContent = "You must log in to post trades";
+            loginBtn.textContent = "Login";
+        }
+    });
+
+    // Dropdown setup
+    const itemsList = ["Sword","Helmet","Shield","Bow","Armor"];
+    function createDropdown(dropdownId, contentId){
+        const contentDiv = document.getElementById(contentId);
+        itemsList.forEach(item=>{
+            const label = document.createElement("label");
+            label.innerHTML = `<input type="checkbox" value="${item}"> ${item}`;
+            contentDiv.appendChild(label);
+        });
+        const dropdown = document.getElementById(dropdownId);
+        const button = dropdown.querySelector(".dropbtn");
+        button.addEventListener("click", ()=>dropdown.classList.toggle("show"));
+    }
+    createDropdown("offerDropdown","offerContent");
+    createDropdown("requestDropdown","requestContent");
+
+    function getSelectedItems(contentId){
+        const contentDiv = document.getElementById(contentId);
+        const selected = [];
+        contentDiv.querySelectorAll("input[type=checkbox]").forEach(cb=>{
+            if(cb.checked) selected.push({item:cb.value, amount:1});
+        });
+        return selected;
     }
 
-    postTradeBtn.addEventListener('click', async ()=>{
-      if(!currentUser){ alert("Login first!"); return; }
-      const username=usernameInput.value.trim();
-      if(!username){ alert("Enter ingame username"); return; }
+    // 24h cooldown in ms
+    const COOLDOWN = 24*60*60*1000;
 
-      const offer=getSelected(offerItemsSelect);
-      const request=getSelected(requestItemsSelect);
+    document.getElementById("postTradeBtn").addEventListener("click", async ()=>{
+        if(!currentUser) { alert("You must log in!"); return; }
 
-      if(offer.length===0 && parseInt(offerDiamonds.value)===0){ alert("Select or add at least one item or diamonds to offer"); return; }
-      if(request.length===0 && parseInt(requestDiamonds.value)===0){ alert("Select or add at least one item or diamonds to request"); return; }
+        const username = document.getElementById("username").value.trim();
+        const offerItems = getSelectedItems("offerContent");
+        const requestItems = getSelectedItems("requestContent");
+        const offerDiamonds = parseInt(document.getElementById("offerDiamonds").value) || 0;
+        const requestDiamonds = parseInt(document.getElementById("requestDiamonds").value) || 0;
 
-      if(parseInt(offerDiamonds.value)>0) offer.push({item:"💎 Diamonds",amount:parseInt(offerDiamonds.value)});
-      if(parseInt(requestDiamonds.value)>0) request.push({item:"💎 Diamonds",amount:parseInt(requestDiamonds.value)});
+        if(!username || (offerItems.length===0 && offerDiamonds===0) || (requestItems.length===0 && requestDiamonds===0)){
+            alert("Fill in all required fields.");
+            return;
+        }
 
-      // 24h cooldown check
-      const userTradesQ=query(collection(db,"trades"), where("userId","==",currentUser.uid));
-      let canPost=true;
-      onSnapshot(userTradesQ, snapshot=>{
+        // cooldown check
+        const tradesRef = collection(db,"trades");
+        const q = query(tradesRef, where("uid","==",currentUser.uid), orderBy("timestamp","desc"));
+        const userTrades = await getDocs(q);
+        if(!userTrades.empty){
+            const lastTrade = userTrades.docs[0].data();
+            const now = Date.now();
+            if(now - lastTrade.timestamp.toMillis() < COOLDOWN){
+                alert("You must wait 24h before posting another trade.");
+                return;
+            }
+        }
+
+        await addDoc(tradesRef,{
+            uid: currentUser.uid,
+            username: username,
+            offerItems: offerItems,
+            requestItems: requestItems,
+            offerDiamonds: offerDiamonds,
+            requestDiamonds: requestDiamonds,
+            timestamp: serverTimestamp()
+        });
+
+        document.getElementById("tradeMessage").textContent = "Trade posted successfully!";
+    });
+
+    // Live updates
+    const tradesContainer = document.getElementById("tradesContainer");
+    const tradesRef = collection(db,"trades");
+    const tradesQuery = query(tradesRef, orderBy("timestamp","desc"));
+    onSnapshot(tradesQuery, snapshot=>{
+        tradesContainer.innerHTML = "";
         snapshot.forEach(doc=>{
-          const last=doc.data().createdAt?.toDate();
-          if(last && (Date.now()-last.getTime())<24*60*60*1000) canPost=false;
+            const t = doc.data();
+            const div = document.createElement("div");
+            div.classList.add("trade-item");
+            div.innerHTML = `
+                <strong>${t.username}</strong><br>
+                Offer: ${t.offerItems.map(i=>i.item).join(", ")} 💎${t.offerDiamonds}<br>
+                Wants: ${t.requestItems.map(i=>i.item).join(", ")} 💎${t.requestDiamonds}
+            `;
+            tradesContainer.appendChild(div);
         });
-      });
-      if(!canPost){ alert("You can only post once per 24 hours."); return; }
-
-      try{
-        await addDoc(collection(db,"trades"),{
-          userId: currentUser.uid,
-          username,
-          offer,
-          request,
-          createdAt:serverTimestamp()
-        });
-        alert("Trade posted!");
-        usernameInput.value="";
-        offerDiamonds.value=0;
-        requestDiamonds.value=0;
-        offerItemsSelect.selectedIndex=-1;
-        requestItemsSelect.selectedIndex=-1;
-      }catch(e){console.error(e); alert("Error posting trade");}
     });
+</script>
 
-    // Live trades
-    const tradesQ=query(collection(db,"trades"), orderBy("createdAt","desc"));
-    onSnapshot(tradesQ,snapshot=>{
-      tradesList.innerHTML="";
-      snapshot.forEach(doc=>{
-        const data=doc.data();
-        const div=document.createElement('div');
-        div.className="trade-box";
-        div.innerHTML=`<strong>${data.username}</strong>
-        <div class="trade-container">
-          <div class="trade-offer"><h4>Offer:</h4> ${data.offer.map(i=>i.item+" x"+i.amount).join(", ")}</div>
-          <div class="trade-request"><h4>Request:</h4> ${data.request.map(i=>i.item+" x"+i.amount).join(", ")}</div>
-        </div>`;
-        tradesList.appendChild(div);
-      });
-    });
-  </script>
 </body>
 </html>
