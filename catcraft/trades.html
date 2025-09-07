@@ -1,31 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viiru | Trades</title>
-    <link rel="stylesheet" href="trades.css">
-    <link rel="icon" type="image/x-icon" href="Images/Viiru.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Viiru | Trades</title>
+  <link rel="stylesheet" href="trades.css">
 </head>
 <body>
 
 <header id="header">
-    <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon">
+    <img src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
     <h1 id="HH1">Viiru</h1>
-    <nav>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="Store.html">Store</a></li>
-            <li><a href="Socials.html">Socials</a></li>
-            <li><a href="about.html">About</a></li>
-        </ul>
-    </nav>
-    <button id="loginBtn">Login</button>
 </header>
-
-<section class="login-warning">
-    <p id="loginMessage">You must be logged in to post trades.</p>
-</section>
 
 <section class="trade-section">
     <h2>Post a Trade</h2>
@@ -52,151 +38,55 @@
     <button id="postTradeBtn">Post Trade</button>
 </section>
 
-
-<section class="live-trades">
-    <h2>Live Trades</h2>
-    <div id="tradeList"></div>
-</section>
-
 <footer id="footer">
     <p>Copyright &copy; viiru.top 2025</p>
-    <a href="privacypolicy.html">Privacy Policy</a>
-    <a href="tos.html">Terms of Service</a>
+    <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a>
+    <a href="https://www.viiru.top/tos">Terms of Service</a>
 </footer>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, where } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-
-// Firebase config
-const firebaseConfig = {
-    apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-    authDomain: "v11rutop.firebaseapp.com",
-    projectId: "v11rutop",
-    storageBucket: "v11rutop.firebasestorage.app",
-    messagingSenderId: "664984661004",
-    appId: "1:664984661004:web:357ea8a60723b000e55229",
-    measurementId: "G-DMPEGNPVEN"
-};
-
-// Initialize
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-// Elements
-const loginBtn = document.getElementById('loginBtn');
-const postTradeBtn = document.getElementById('postTradeBtn');
-const tradeList = document.getElementById('tradeList');
-const usernameInput = document.getElementById('username');
-const offerItemsSelect = document.getElementById('offerItems');
-const requestItemsSelect = document.getElementById('requestItems');
-const offerDiamondsInput = document.getElementById('offerDiamonds');
-const requestDiamondsInput = document.getElementById('requestDiamonds');
-const loginMessage = document.getElementById('loginMessage');
-
-let currentUser = null;
-let cooldowns = {}; // local cache
-
-// Example items JSON
+<script>
 const items = ["Sword", "Helmet", "Shield", "Potion", "Bow"];
-items.forEach(item => {
-    const option1 = document.createElement("option");
-    option1.value = item;
-    option1.textContent = item;
-    offerItemsSelect.appendChild(option1);
 
-    const option2 = document.createElement("option");
-    option2.value = item;
-    option2.textContent = item;
-    requestItemsSelect.appendChild(option2);
+function createDropdown(dropdownId){
+  const container = document.getElementById(dropdownId);
+  items.forEach(item => {
+    const label = document.createElement("label");
+    label.innerHTML = `<input type="checkbox" value="${item}"> ${item}`;
+    container.appendChild(label);
+  });
+}
+
+// Initialize dropdowns
+createDropdown("offerItemsDropdown");
+createDropdown("requestItemsDropdown");
+
+// Dropdown toggle
+document.querySelectorAll('.dropbtn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const parent = btn.parentElement;
+    parent.classList.toggle('active');
+  });
 });
 
-// Login/logout
-loginBtn.addEventListener('click', async () => {
-    if(currentUser){
-        await signOut(auth);
-    } else {
-        await signInWithPopup(auth, provider);
-    }
-});
+// Get selected items
+function getSelectedItems(dropdownId){
+  const container = document.getElementById(dropdownId);
+  return Array.from(container.querySelectorAll('input:checked')).map(i => i.value);
+}
 
-// Auth state change
-onAuthStateChanged(auth, user => {
-    currentUser = user;
-    if(user){
-        loginBtn.textContent = "Logout";
-        loginMessage.style.display = "none";
-    } else {
-        loginBtn.textContent = "Login";
-        loginMessage.style.display = "block";
-    }
-});
+// Post trade button (logs selections for now)
+document.getElementById("postTradeBtn").addEventListener("click", () => {
+  const offerItems = getSelectedItems("offerItemsDropdown");
+  const requestItems = getSelectedItems("requestItemsDropdown");
+  const offerDiamonds = document.getElementById("offerDiamonds").value;
+  const requestDiamonds = document.getElementById("requestDiamonds").value;
+  const username = document.getElementById("username").value;
 
-// Post trade
-postTradeBtn.addEventListener('click', async () => {
-    if(!currentUser){
-        alert("You must be logged in!");
-        return;
-    }
-
-    const username = usernameInput.value.trim();
-    if(!username){
-        alert("Enter your in-game username.");
-        return;
-    }
-
-    const offerItems = Array.from(offerItemsSelect.selectedOptions).map(o=>o.value);
-    const requestItems = Array.from(requestItemsSelect.selectedOptions).map(o=>o.value);
-    const offerDiamonds = Number(offerDiamondsInput.value || 0);
-    const requestDiamonds = Number(requestDiamondsInput.value || 0);
-
-    const now = Date.now();
-    const lastTrade = cooldowns[currentUser.uid] || 0;
-    if(now - lastTrade < 24*60*60*1000){
-        alert("You can post only once every 24 hours.");
-        return;
-    }
-
-    try {
-        await addDoc(collection(db, "trades"), {
-            uid: currentUser.uid,
-            username,
-            offerItems,
-            requestItems,
-            offerDiamonds,
-            requestDiamonds,
-            timestamp: serverTimestamp()
-        });
-        cooldowns[currentUser.uid] = now;
-        alert("Trade posted!");
-    } catch(e) {
-        console.error(e);
-        alert("Failed to post trade.");
-    }
-});
-
-// Live trades listener
-const q = query(collection(db, "trades"), orderBy("timestamp", "desc"));
-onSnapshot(q, snapshot => {
-    tradeList.innerHTML = "";
-    snapshot.forEach(doc => {
-        const data = doc.data();
-        const tradeDiv = document.createElement("div");
-        tradeDiv.className = "trade-box";
-        tradeDiv.innerHTML = `
-            <strong>${data.username}</strong><br>
-            Offers: ${data.offerItems.join(", ")} ${data.offerDiamonds>0? `💎${data.offerDiamonds}` : ''}<br>
-            Wants: ${data.requestItems.join(", ")} ${data.requestDiamonds>0? `💎${data.requestDiamonds}` : ''}<br>
-            <em>${data.timestamp?.toDate().toLocaleString() || ''}</em>
-        `;
-        tradeList.appendChild(tradeDiv);
-    });
+  console.log("Username:", username);
+  console.log("Offer Items:", offerItems, "Offer Diamonds:", offerDiamonds);
+  console.log("Request Items:", requestItems, "Request Diamonds:", requestDiamonds);
 });
 </script>
 
 </body>
 </html>
-
