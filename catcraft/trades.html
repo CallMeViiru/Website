@@ -11,7 +11,7 @@
   <!-- HEADER -->
   <header id="header">
     <div class="header-left">
-      <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon">
+      <img src="https://raw.githubusercontent.com/CallMeViiru/Website/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Viiru Logo" id="HIcon">
       <h1 id="HH1">Viiru</h1>
     </div>
     <nav>
@@ -91,7 +91,7 @@
   <!-- FIREBASE -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, getDocs, where } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, where, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -193,33 +193,32 @@
           createdAt: serverTimestamp()
         });
         form.reset();
-        loadTrades();
         cooldownMsg.style.display = "none";
       } catch (err) {
         console.error("Error posting trade:", err);
       }
     });
 
-    // Load trades
-    async function loadTrades() {
-      tradesContainer.innerHTML = "";
+    // Live trade updates
+    function listenTrades() {
       const q = query(collection(db, "trades"), orderBy("createdAt", "desc"), limit(10));
-      const querySnapshot = await getDocs(q);
-
-      querySnapshot.forEach((doc) => {
-        const trade = doc.data();
-        const div = document.createElement("div");
-        div.className = "trade-card";
-        div.innerHTML = `
-          <h3>${trade.username}</h3>
-          <p><strong>Offers:</strong> ${trade.offerItems.join(", ") || "None"} + ${trade.diamondsGive} 💎</p>
-          <p><strong>Wants:</strong> ${trade.wantItems.join(", ") || "None"} + ${trade.diamondsWant} 💎</p>
-        `;
-        tradesContainer.appendChild(div);
+      onSnapshot(q, (snapshot) => {
+        tradesContainer.innerHTML = "";
+        snapshot.forEach((doc) => {
+          const trade = doc.data();
+          const div = document.createElement("div");
+          div.className = "trade-card";
+          div.innerHTML = `
+            <h3>${trade.username}</h3>
+            <p><strong>Offers:</strong> ${trade.offerItems.join(", ") || "None"} + ${trade.diamondsGive} 💎</p>
+            <p><strong>Wants:</strong> ${trade.wantItems.join(", ") || "None"} + ${trade.diamondsWant} 💎</p>
+          `;
+          tradesContainer.appendChild(div);
+        });
       });
     }
 
-    loadTrades();
+    listenTrades();
 
     // Dropdown toggle logic
     document.querySelectorAll(".dropdown").forEach(dropdown => {
@@ -240,3 +239,4 @@
   </script>
 </body>
 </html>
+
