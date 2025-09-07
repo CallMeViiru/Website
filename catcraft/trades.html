@@ -1,184 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viiru | Trades</title>
-    <link rel="stylesheet" href="trades.css" />
+    <link rel="icon" href="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png">
+    <link rel="stylesheet" href="trades.css">
 </head>
 <body>
-    <header id="header">
-        <img src="https://github.com/CallMeViiru/Website/raw/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
-        <h1 id="HH1">Viiru</h1>
-        <nav>
-            <ul>
-                <li><a href="https://www.viiru.top/" class="active">Home</a></li>
-                <li><a href="https://www.viiru.top/Store">Store</a></li>
-                <li><a href="https://www.viiru.top/Socials">Socials</a></li>
-                <li><a href="https://www.viiru.top/about">About</a></li>
-            </ul>
-        </nav>
-        <button id="loginBtn">Login</button>
-        <button id="darkModeToggle">🌙</button>
-    </header>
 
-    <section id="trades-section">
-        <h2>Post a Trade</h2>
-        <form class="trade-form" id="tradeForm">
-            <label for="username">Ingame Username:</label>
-            <input type="text" id="username" placeholder="Enter your username" required />
+<header id="header">
+    <img src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Viiru Logo" id="HIcon" />
+    <h1 id="HH1">Viiru</h1>
+    <nav>
+        <ul>
+            <li><a href="https://www.viiru.top/" class="active">Home</a></li>
+            <li><a href="https://www.viiru.top/Store">Store</a></li>
+            <li><a href="https://www.viiru.top/Socials">Socials</a></li>
+            <li><a href="https://www.viiru.top/about">About</a></li>
+        </ul>
+    </nav>
+    <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+    <button id="loginBtn">Login</button>
+</header>
 
-            <label for="giveItems">Give Items:</label>
-            <select id="giveItems" multiple required></select>
+<section class="trade-section">
+    <h2>Post a Trade</h2>
+    <form id="tradeForm">
+        <input type="text" id="usernameInput" placeholder="Your in-game username" required><br><br>
 
-            <label for="giveDiamonds">Give Diamonds:</label>
-            <input type="number" id="giveDiamonds" placeholder="0" min="0" required />
+        <label>Give Items:</label>
+        <div class="dropdown-checkbox">
+            <button type="button" class="dropbtn">Select Give Items</button>
+            <div class="dropdown-content" id="giveItems"></div>
+        </div><br>
 
-            <label for="receiveItems">Receive Items:</label>
-            <select id="receiveItems" multiple required></select>
+        <label>Receive Items:</label>
+        <div class="dropdown-checkbox">
+            <button type="button" class="dropbtn">Select Receive Items</button>
+            <div class="dropdown-content" id="receiveItems"></div>
+        </div><br>
 
-            <label for="receiveDiamonds">Receive Diamonds:</label>
-            <input type="number" id="receiveDiamonds" placeholder="0" min="0" required />
+        <input type="number" id="giveDiamonds" placeholder="Diamonds you give">
+        <input type="number" id="receiveDiamonds" placeholder="Diamonds you want"><br><br>
 
-            <button type="submit">Post Trade</button>
-        </form>
+        <button type="submit">Post Trade</button>
+    </form>
+</section>
 
-        <h2>Live Trades</h2>
-        <div id="live-trades"></div>
-    </section>
+<section class="trade-listing">
+    <h2>Live Trades</h2>
+    <div id="tradesContainer"></div>
+</section>
 
-    <footer id="footer">
-        <p>Copyright &copy; viiru.top 2025</p>
-        <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a>
-        <a href="https://www.viiru.top/tos">Terms of Service</a>
-    </footer>
+<footer id="footer">
+    <p>Copyright &copy; viiru.top 2025</p>
+    <a href="https://www.viiru.top/privacypolicy">Privacy Policy</a>
+    <a href="https://www.viiru.top/tos">Terms of Service</a>
+</footer>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getDatabase, ref, push, set, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getDatabase, ref, push, set, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-            authDomain: "v11rutop.firebaseapp.com",
-            projectId: "v11rutop",
-            storageBucket: "v11rutop.firebasestorage.app",
-            messagingSenderId: "664984661004",
-            appId: "1:664984661004:web:357ea8a60723b000e55229",
-            measurementId: "G-DMPEGNPVEN",
-            databaseURL: "https://v11rutop-default-rtdb.firebaseio.com"
-        };
+const firebaseConfig = {
+    apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+    authDomain: "v11rutop.firebaseapp.com",
+    projectId: "v11rutop",
+    storageBucket: "v11rutop.firebasestorage.app",
+    messagingSenderId: "664984661004",
+    appId: "1:664984661004:web:357ea8a60723b000e55229",
+    measurementId: "G-DMPEGNPVEN"
+};
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const db = getDatabase();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const auth = getAuth(app);
 
-        const loginBtn = document.getElementById("loginBtn");
-        const tradeForm = document.getElementById("tradeForm");
-        const liveTrades = document.getElementById("live-trades");
-        const usernameInput = document.getElementById("username");
+const loginBtn = document.getElementById('loginBtn');
+loginBtn.addEventListener('click', async () => {
+    if (auth.currentUser) {
+        await signOut(auth);
+    } else {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+    }
+});
 
-        // Sample items JSON (replace with your own)
-        const items = ["Sword", "Helmet", "Shield", "Bow", "Armor"];
+onAuthStateChanged(auth, user => {
+    if (user) loginBtn.textContent = "Logout"; 
+    else loginBtn.textContent = "Login";
+});
 
-        const giveItemsSelect = document.getElementById("giveItems");
-        const receiveItemsSelect = document.getElementById("receiveItems");
-        items.forEach(item => {
-            const option1 = document.createElement("option");
-            option1.value = item;
-            option1.textContent = item;
-            giveItemsSelect.appendChild(option1);
+// Dropdown checkboxes
+const items = ["Sword", "Helmet", "Shield", "Bow", "Armor"];
+function createCheckboxDropdown(containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    items.forEach(item => {
+        const label = document.createElement("label");
+        label.style.display = "block";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = item;
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(item));
+        container.appendChild(label);
+    });
+}
+createCheckboxDropdown("giveItems");
+createCheckboxDropdown("receiveItems");
 
-            const option2 = document.createElement("option");
-            option2.value = item;
-            option2.textContent = item;
-            receiveItemsSelect.appendChild(option2);
-        });
+function getSelectedItems(containerId) {
+    const container = document.getElementById(containerId);
+    return Array.from(container.querySelectorAll("input[type='checkbox']"))
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+}
 
-        // Login / Logout
-        loginBtn.addEventListener("click", () => {
-            if (auth.currentUser) {
-                signOut(auth);
-            } else {
-                const provider = new GoogleAuthProvider();
-                signInWithPopup(auth, provider);
-            }
-        });
+// Post trade
+const tradeForm = document.getElementById("tradeForm");
+const usernameInput = document.getElementById("usernameInput");
 
-        onAuthStateChanged(auth, user => {
-            if (user) {
-                loginBtn.textContent = "Logout";
-                usernameInput.value = user.displayName;
-            } else {
-                loginBtn.textContent = "Login";
-                usernameInput.value = "";
-            }
-        });
+tradeForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) { alert("You must log in to post a trade."); return; }
 
-        // Post trade
-        tradeForm.addEventListener("submit", e => {
-            e.preventDefault();
-            const user = auth.currentUser;
-            if (!user) { alert("You must log in to post a trade."); return; }
+    const giveItems = getSelectedItems("giveItems");
+    const receiveItems = getSelectedItems("receiveItems");
+    const giveDiamonds = parseInt(document.getElementById("giveDiamonds").value) || 0;
+    const receiveDiamonds = parseInt(document.getElementById("receiveDiamonds").value) || 0;
+    const username = usernameInput.value;
 
-            const giveItems = Array.from(giveItemsSelect.selectedOptions).map(o => o.value);
-            const receiveItems = Array.from(receiveItemsSelect.selectedOptions).map(o => o.value);
-            const giveDiamonds = parseInt(document.getElementById("giveDiamonds").value);
-            const receiveDiamonds = parseInt(document.getElementById("receiveDiamonds").value);
-            const username = usernameInput.value;
-
-            // 24h cooldown check
-            const userRef = ref(db, "users/" + user.uid);
-            onValue(userRef, snapshot => {
-                const data = snapshot.val();
-                const lastTime = data ? data.lastTrade : 0;
-                const now = Date.now();
-                if (now - lastTime < 24 * 60 * 60 * 1000) {
-                    alert("You can only post a trade every 24 hours!");
-                    return;
-                }
-
-                // Push trade
-                const tradesRef = ref(db, "trades");
-                push(tradesRef, {
-                    user: user.uid,
-                    username,
-                    giveItems,
-                    receiveItems,
-                    giveDiamonds,
-                    receiveDiamonds,
-                    timestamp: serverTimestamp()
-                });
-
-                // Update last trade time
-                set(userRef, { lastTrade: now });
-
-                tradeForm.reset();
-            }, { onlyOnce: true });
-        });
-
-        // Live trades
+    const userRef = ref(db, "users/" + user.uid);
+    onValue(userRef, snapshot => {
+        const data = snapshot.val();
+        const lastTime = data ? data.lastTrade : 0;
+        const now = Date.now();
+        if (now - lastTime < 24*60*60*1000) {
+            alert("You can only post a trade every 24 hours!");
+            return;
+        }
         const tradesRef = ref(db, "trades");
-        onValue(tradesRef, snapshot => {
-            liveTrades.innerHTML = "";
-            snapshot.forEach(child => {
-                const trade = child.val();
-                const card = document.createElement("div");
-                card.className = "trade-card";
-                card.innerHTML = `<strong>${trade.username}</strong> offers: ${trade.giveItems.join(", ")} 💎 ${trade.giveDiamonds} <br> Wants: ${trade.receiveItems.join(", ")} 💎 ${trade.receiveDiamonds}`;
-                liveTrades.appendChild(card);
-            });
+        push(tradesRef, {
+            user: user.uid,
+            username,
+            giveItems,
+            receiveItems,
+            giveDiamonds,
+            receiveDiamonds,
+            timestamp: serverTimestamp()
         });
-    </script>
+        set(userRef, { lastTrade: now });
+        tradeForm.reset();
+    }, { onlyOnce:true });
+});
 
-    <script>
-        const toggleButton = document.getElementById('darkModeToggle');
-        toggleButton.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        });
-    </script>
+// Live trade display
+const tradesContainer = document.getElementById("tradesContainer");
+const tradesRef = ref(db, "trades");
+onValue(tradesRef, snapshot => {
+    tradesContainer.innerHTML = '';
+    snapshot.forEach(child => {
+        const trade = child.val();
+        const div = document.createElement("div");
+        div.className = "trade-box";
+        div.innerHTML = `
+            <p><strong>${trade.username}</strong></p>
+            <p>Gives: ${trade.giveItems.join(", ")} ${trade.giveDiamonds} 💎</p>
+            <p>Wants: ${trade.receiveItems.join(", ")} ${trade.receiveDiamonds} 💎</p>
+        `;
+        tradesContainer.appendChild(div);
+    });
+});
+
+// Dark mode toggle
+const toggleButton = document.getElementById('darkModeToggle');
+toggleButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+});
+</script>
+
 </body>
 </html>
-
