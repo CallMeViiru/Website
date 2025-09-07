@@ -29,25 +29,29 @@
 
 <section class="trade-section">
     <h2>Post a Trade</h2>
-
     <input type="text" id="username" placeholder="Your in-game username">
 
-    <div class="trade-inputs">
-        <label>Offer Items:</label>
-        <select id="offerItems" multiple></select>
-
-        <label>Offer Diamonds 💎:</label>
-        <input type="number" id="offerDiamonds" placeholder="Amount of diamonds">
-
-        <label>Request Items:</label>
-        <select id="requestItems" multiple></select>
-
-        <label>Request Diamonds 💎:</label>
-        <input type="number" id="requestDiamonds" placeholder="Amount of diamonds">
+    <!-- Offer items multi-select -->
+    <div class="dropdown">
+      <button class="dropbtn">Select Offer Items</button>
+      <div class="dropdown-content" id="offerItemsDropdown"></div>
     </div>
+
+    <label>Offer Diamonds 💎:</label>
+    <input type="number" id="offerDiamonds" placeholder="Amount of diamonds">
+
+    <!-- Request items multi-select -->
+    <div class="dropdown">
+      <button class="dropbtn">Select Request Items</button>
+      <div class="dropdown-content" id="requestItemsDropdown"></div>
+    </div>
+
+    <label>Request Diamonds 💎:</label>
+    <input type="number" id="requestDiamonds" placeholder="Amount of diamonds">
 
     <button id="postTradeBtn">Post Trade</button>
 </section>
+
 
 <section class="live-trades">
     <h2>Live Trades</h2>
