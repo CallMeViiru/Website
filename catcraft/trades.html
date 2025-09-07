@@ -10,7 +10,7 @@
 
 <header id="header">
   <img src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Viiru Logo" id="HIcon">
-  <h1 id="HH1">Viiru | Trades</h1>
+  <h1 id="HH1">Viiru</h1>
   <nav>
     <ul>
       <li><a href="https://www.viiru.top/" >Home</a></li>
@@ -56,11 +56,13 @@
   <a href="https://www.viiru.top/tos">Terms of Service</a>
 </footer>
 
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js"></script>
 
 <script>
+  // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
     authDomain: "v11rutop.firebaseapp.com",
@@ -74,8 +76,10 @@
   const db = firebase.firestore();
   const auth = firebase.auth();
 
+  // Items list
   const items = ["Sword", "Helmet", "Shield", "Potion", "Bow"];
 
+  // Create checkboxes in dropdowns
   function createDropdown(dropdownId){
     const container = document.getElementById(dropdownId);
     items.forEach(item => {
@@ -88,6 +92,7 @@
   createDropdown("offerItemsDropdown");
   createDropdown("requestItemsDropdown");
 
+  // Toggle dropdown menus
   document.querySelectorAll('.dropbtn').forEach(btn => {
     btn.addEventListener('click', () => {
       btn.parentElement.classList.toggle('active');
@@ -107,7 +112,7 @@
       auth.signOut();
     } else {
       const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider);
+      auth.signInWithPopup(provider).catch(err => alert(err.message));
     }
   });
 
@@ -157,16 +162,17 @@
 
   function loadTrades(){
     const tradeList = document.getElementById("tradeList");
-    tradeList.innerHTML = "";
     db.collection("trades").orderBy("timestamp","desc").onSnapshot(snapshot => {
       tradeList.innerHTML = "";
       snapshot.forEach(doc => {
         const trade = doc.data();
         const div = document.createElement("div");
         div.className = "trade-box";
-        div.innerHTML = `<h4>${trade.username}</h4>
-                         <p>Offer: ${trade.offerItems.join(", ")} ${trade.offerDiamonds ? "💎"+trade.offerDiamonds : ""}</p>
-                         <p>Request: ${trade.requestItems.join(", ")} ${trade.requestDiamonds ? "💎"+trade.requestDiamonds : ""}</p>`;
+        div.innerHTML = `
+          <h4>${trade.username}</h4>
+          <p>Offer: ${trade.offerItems.join(", ")} ${trade.offerDiamonds ? "💎"+trade.offerDiamonds : ""}</p>
+          <p>Request: ${trade.requestItems.join(", ")} ${trade.requestDiamonds ? "💎"+trade.requestDiamonds : ""}</p>
+        `;
         tradeList.appendChild(div);
       });
     });
