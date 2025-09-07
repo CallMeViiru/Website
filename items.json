@@ -1,10 +1,9 @@
 [
-  "Diamond Sword",
-  "Iron Sword",
-  "Diamond Pickaxe",
-  "Iron Pickaxe",
+  "Sword",
+  "Shield",
   "Helmet",
-  "Chestplate",
-  "Leggings",
-  "Boots"
+  "Pickaxe",
+  "Axe",
+  "Bow",
+  "Armor"
 ]
