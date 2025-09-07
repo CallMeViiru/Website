@@ -27,14 +27,14 @@
     <p id="loginMessage">You must log in to post trades</p>
     <input type="text" id="username" placeholder="Ingame Username">
 
-    <h3>Offer</h3>
-    <div id="offerItems" class="item-select"></div>
-    <label>Diamonds Offered:</label>
+    <h3>Offer Items</h3>
+    <select id="offerItems" multiple></select>
+    <label>💎 Diamonds Offered:</label>
     <input type="number" id="offerDiamonds" min="0" value="0">
 
-    <h3>Request</h3>
-    <div id="requestItems" class="item-select"></div>
-    <label>Diamonds Requested:</label>
+    <h3>Request Items</h3>
+    <select id="requestItems" multiple></select>
+    <label>💎 Diamonds Requested:</label>
     <input type="number" id="requestDiamonds" min="0" value="0">
 
     <button id="postTradeBtn">Post Trade</button>
@@ -76,29 +76,24 @@
     const loginMessage = document.getElementById('loginMessage');
     const tradesList = document.getElementById('tradesList');
     const usernameInput = document.getElementById('username');
-    const offerItemsDiv = document.getElementById('offerItems');
-    const requestItemsDiv = document.getElementById('requestItems');
+    const offerItemsSelect = document.getElementById('offerItems');
+    const requestItemsSelect = document.getElementById('requestItems');
     const offerDiamonds = document.getElementById('offerDiamonds');
     const requestDiamonds = document.getElementById('requestDiamonds');
 
     const itemsList = ["Sword","Helmet","Shield","Bow","Armor"];
 
-    function renderItems(container){
-      container.innerHTML = '';
+    function populateSelect(select) {
+      select.innerHTML="";
       itemsList.forEach(item=>{
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = `
-          <label>
-            <input type="checkbox" value="${item}"> ${item}
-          </label>
-          <input type="number" min="1" value="1" class="itemAmount">
-        `;
-        container.appendChild(wrapper);
+        const option = document.createElement("option");
+        option.value = item;
+        option.textContent = item;
+        select.appendChild(option);
       });
     }
-
-    renderItems(offerItemsDiv);
-    renderItems(requestItemsDiv);
+    populateSelect(offerItemsSelect);
+    populateSelect(requestItemsSelect);
 
     // Dark mode toggle
     const darkModeBtn = document.getElementById('darkModeToggle');
@@ -125,14 +120,8 @@
       }
     });
 
-    function getSelected(container){
-      const selected=[];
-      container.querySelectorAll('div').forEach(div=>{
-        const checkbox=div.querySelector('input[type=checkbox]');
-        const amount=parseInt(div.querySelector('.itemAmount').value);
-        if(checkbox.checked && amount>0) selected.push({item: checkbox.value, amount});
-      });
-      return selected;
+    function getSelected(select){
+      return Array.from(select.selectedOptions).map(o=>({item:o.value, amount:1}));
     }
 
     postTradeBtn.addEventListener('click', async ()=>{
@@ -140,16 +129,14 @@
       const username=usernameInput.value.trim();
       if(!username){ alert("Enter ingame username"); return; }
 
-      const offer=getSelected(offerItemsDiv);
-      const request=getSelected(requestItemsDiv);
+      const offer=getSelected(offerItemsSelect);
+      const request=getSelected(requestItemsSelect);
 
       if(offer.length===0 && parseInt(offerDiamonds.value)===0){ alert("Select or add at least one item or diamonds to offer"); return; }
       if(request.length===0 && parseInt(requestDiamonds.value)===0){ alert("Select or add at least one item or diamonds to request"); return; }
 
-      const offerFinal=[...offer];
-      if(parseInt(offerDiamonds.value)>0) offerFinal.push({item:"Diamonds",amount:parseInt(offerDiamonds.value)});
-      const requestFinal=[...request];
-      if(parseInt(requestDiamonds.value)>0) requestFinal.push({item:"Diamonds",amount:parseInt(requestDiamonds.value)});
+      if(parseInt(offerDiamonds.value)>0) offer.push({item:"💎 Diamonds",amount:parseInt(offerDiamonds.value)});
+      if(parseInt(requestDiamonds.value)>0) request.push({item:"💎 Diamonds",amount:parseInt(requestDiamonds.value)});
 
       // 24h cooldown check
       const userTradesQ=query(collection(db,"trades"), where("userId","==",currentUser.uid));
@@ -166,16 +153,16 @@
         await addDoc(collection(db,"trades"),{
           userId: currentUser.uid,
           username,
-          offer:offerFinal,
-          request:requestFinal,
+          offer,
+          request,
           createdAt:serverTimestamp()
         });
         alert("Trade posted!");
         usernameInput.value="";
         offerDiamonds.value=0;
         requestDiamonds.value=0;
-        renderItems(offerItemsDiv);
-        renderItems(requestItemsDiv);
+        offerItemsSelect.selectedIndex=-1;
+        requestItemsSelect.selectedIndex=-1;
       }catch(e){console.error(e); alert("Error posting trade");}
     });
 
@@ -187,13 +174,14 @@
         const data=doc.data();
         const div=document.createElement('div');
         div.className="trade-box";
-        div.innerHTML=`<strong>${data.username}</strong><br>
-                       Offer: ${data.offer.map(i=>i.item+" x"+i.amount).join(", ")}<br>
-                       Request: ${data.request.map(i=>i.item+" x"+i.amount).join(", ")}`;
+        div.innerHTML=`<strong>${data.username}</strong>
+        <div class="trade-container">
+          <div class="trade-offer"><h4>Offer:</h4> ${data.offer.map(i=>i.item+" x"+i.amount).join(", ")}</div>
+          <div class="trade-request"><h4>Request:</h4> ${data.request.map(i=>i.item+" x"+i.amount).join(", ")}</div>
+        </div>`;
         tradesList.appendChild(div);
       });
     });
   </script>
 </body>
 </html>
-
