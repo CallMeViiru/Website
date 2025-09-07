@@ -3,133 +3,151 @@ body {
   background-color: #f7f9fc;
   margin: 0;
   text-align: center;
-  color: #000;
 }
 
+/* Header */
 #header {
   background-color: #1e293b;
   padding: 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
   border-bottom: 5px solid #0f172a;
 }
-
 #HIcon {
-  height: 40px;
+  height: 50px;
+  margin-right: 10px;
 }
-
 #HH1 {
   color: #93c5fd;
-  margin: 0 10px;
+  margin: 0;
 }
-
 nav ul {
   list-style: none;
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
   margin: 0;
   padding: 0;
+  display: flex;
 }
-
+nav ul li {
+  margin: 0 10px;
+}
 nav ul li a {
   color: #93c5fd;
   text-decoration: none;
   font-weight: bold;
 }
+nav ul li a:hover {
+  text-decoration: underline;
+}
+#loginBtn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#loginBtn:hover {
+  background: #2563eb;
+}
 
-.textsection {
-  max-width: 800px;
-  margin: 20px auto;
+/* Trade form */
+.trade-form {
+  max-width: 500px;
+  margin: 30px auto;
   padding: 20px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: left;
 }
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.trade-form h2 {
+  text-align: center;
 }
-
-input, select {
+.form-group {
+  margin-bottom: 15px;
+}
+input[type="text"], input[type="number"] {
+  width: 95%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-
-select[multiple] {
-  height: 100px;
-}
-
-button {
+button[type="submit"] {
   background-color: #3b82f6;
-  color: white;
+  color: #fff;
   border: none;
-  padding: 10px;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
+  width: 100%;
 }
-
-button:hover {
+button[type="submit"]:hover {
   background-color: #2563eb;
 }
 
-#tradesList {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 15px;
+/* Dropdown checkboxes */
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
 }
-
-.product-box {
-  background: #fff;
-  border-radius: 10px;
-  padding: 15px;
+.dropdown-btn {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background: #f1f5f9;
+  cursor: pointer;
+  border-radius: 5px;
   text-align: left;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1;
+}
+.dropdown-content label {
+  display: block;
+  padding: 8px;
+  cursor: pointer;
+}
+.dropdown-content label:hover {
+  background: #f3f4f6;
+}
+.dropdown.show .dropdown-content {
+  display: block;
 }
 
+/* Trade list */
+.trade-list {
+  max-width: 600px;
+  margin: 40px auto;
+}
+.trade-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  text-align: left;
+}
+.trade-card h3 {
+  margin: 0 0 10px;
+  color: #1e293b;
+}
+
+/* Footer */
 #footer {
   background-color: #1e293b;
   color: #93c5fd;
   padding: 20px;
   margin-top: 40px;
-}
-
-/* === DARK MODE === */
-body.dark-mode {
-  background-color: #0f172a;
-  color: #e2e8f0;
-}
-
-body.dark-mode .textsection,
-body.dark-mode .product-box {
-  background-color: #1e293b;
-  color: #e2e8f0;
-}
-
-body.dark-mode input,
-body.dark-mode select {
-  background-color: #334155;
-  color: #f1f5f9;
-  border: 1px solid #475569;
-}
-
-body.dark-mode button {
-  background-color: #3b82f6;
-}
-
-body.dark-mode button:hover {
-  background-color: #2563eb;
-}
-
-body.dark-mode nav ul li a {
-  color: #f1f5f9;
-}
-
-body.dark-mode #footer {
-  background-color: #0f172a;
+  border-radius: 10px 10px 0 0;
 }
