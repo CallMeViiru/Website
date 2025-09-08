@@ -1,1 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - Viiru</title>
+  <link rel="stylesheet" href="trades.css"> <!-- reuse styles -->
+</head>
+<body>
+  <div id="header">
+    <img id="HIcon" src="https://raw.githubusercontent.com/CallMeViiru/Website/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Logo">
+    <h1 id="HH1">Viiru Admin</h1>
+    <div class="right-h">
+      <button id="loginBtn">Login</button>
+    </div>
+  </div>
+
+  <main>
+    <h2>Manage Items</h2>
+    <form id="addItemForm">
+      <input type="text" id="itemName" placeholder="Item Name" required>
+      <input type="text" id="itemId" placeholder="Item ID (unique)" required>
+      <button type="submit">Add Item</button>
+    </form>
+
+    <h3>Items in Catalog</h3>
+    <div id="itemsList"></div>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithPopup, signOut, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+    // 🔹 Firebase config (yours)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+      authDomain: "v11rutop.firebaseapp.com",
+      projectId: "v11rutop",
+      storageBucket: "v11rutop.firebasestorage.app",
+      messagingSenderId: "664984661004",
+      appId: "1:664984661004:web:357ea8a60723b000e55229"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    const ADMIN_UIDS = ["oJesYMKkejabv6tZcI53Hq0LCzf1"]; // 🔹 Replace with your Firebase UID
+
+    const loginBtn = document.getElementById('loginBtn');
+    const addItemForm = document.getElementById('addItemForm');
+    const itemsList = document.getElementById('itemsList');
+
+    let currentUser = null;
+
+    onAuthStateChanged(auth, user => {
+      currentUser = user;
+      if (user) {
+        loginBtn.textContent = "Logout";
+        if (!ADMIN_UIDS.includes(user.uid)) {
+          alert("You are not authorized to view this page.");
+          window.location.href = "index.html";
+        }
+      } else {
+        loginBtn.textContent = "Login";
+      }
+    });
+
+    loginBtn.addEventListener("click", async () => {
+      if (auth.currentUser) {
+        await signOut(auth);
+      } else {
+        await signInWithPopup(auth, provider);
+      }
+    });
+
+    // 🔹 Add new item
+    addItemForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!currentUser || !ADMIN_UIDS.includes(currentUser.uid)) return;
+      const itemName = document.getElementById("itemName").value;
+      const itemId = document.getElementById("itemId").value;
+      await addDoc(collection(db, "items"), { id: itemId, name: itemName });
+      addItemForm.reset();
+    });
+
+    // 🔹 Live item list
+    onSnapshot(collection(db, "items"), snapshot => {
+      itemsList.innerHTML = '';
+      snapshot.forEach(docSnap => {
+        const it = docSnap.data();
+        const div = document.createElement("div");
+        div.textContent = `${it.id} - ${it.name}`;
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", async () => {
+          await deleteDoc(doc(db, "items", docSnap.id));
+        });
+        div.appendChild(delBtn);
+        itemsList.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>
 
