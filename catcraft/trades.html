@@ -178,14 +178,22 @@
   const darkModeToggle = document.getElementById('darkModeToggle');
 
   // ---------- Items catalog (edit to add server-provided items if needed) ----------
-  const ITEMS = [
-    { id: 'sword', name: 'Sword' },
-    { id: 'helmet', name: 'Helmet' },
-    { id: 'shield', name: 'Shield' },
-    { id: 'bow', name: 'Bow' },
-    { id: 'armor', name: 'Armor' },
-    { id: 'potion', name: 'Potion' }
-  ];
+ 
+
+  // NEW
+  import { getDocs } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+  async function populateItemLists() {
+    offerList.innerHTML = '';
+    wantList.innerHTML = '';
+    const snap = await getDocs(collection(db, 'items'));
+    snap.forEach(docSnap => {
+      const it = docSnap.data();
+      offerList.appendChild(makeItemRow(it.id, it.name, 'offer-list'));
+      wantList.appendChild(makeItemRow(it.id, it.name, 'want-list'));
+    });
+  }
+  populateItemLists();
 
   // ---------- Helpers: create checkbox rows (checkbox + qty) ----------
   function makeItemRow(itemId, itemName, checkboxName) {
@@ -482,6 +490,43 @@
 
   // End of module
   </script>
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+  authDomain: "v11rutop.firebaseapp.com",
+  projectId: "v11rutop",
+  storageBucket: "v11rutop.firebasestorage.app",
+  messagingSenderId: "664984661004",
+  appId: "1:664984661004:web:357ea8a60723b000e55229"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+const loginBtn = document.getElementById('loginBtn');
+const userDisplay = document.createElement('span');
+document.querySelector('.right-h').appendChild(userDisplay);
+
+onAuthStateChanged(auth, user => {
+  if (user) {
+    loginBtn.textContent = "Logout";
+    userDisplay.textContent = `Signed in as ${user.displayName || user.email}`;
+  } else {
+    loginBtn.textContent = "Login";
+    userDisplay.textContent = "";
+  }
+});
+
+loginBtn.addEventListener('click', async () => {
+  if (auth.currentUser) {
+    await signOut(auth);
+  } else {
+    await signInWithPopup(auth, provider);
+  }
+});
+</script>
 </body>
 </html>
