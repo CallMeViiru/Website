@@ -1,156 +1,487 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Viiru | Trades</title>
-  <link rel="icon" type="image/png" href="Images/Viiru.png">
-  <link rel="stylesheet" href="trades.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Viiru · Trades</title>
+  <link rel="icon" href="Images/Viiru.png" />
+  <link rel="stylesheet" href="trades.css" />
 </head>
 <body>
-  <!-- Header -->
+
+  <!-- HEADER (keeps your site look) -->
   <header id="header">
-    <img src="Images/Viiru.png" alt="Viiru Logo" id="HIcon">
-    <h1 id="HH1">Viiru</h1>
+    <div class="left-h">
+      <img id="HIcon" src="Images/Viiru.png" alt="Viiru logo" />
+      <h1 id="HH1">Viiru</h1>
+    </div>
+
     <nav>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="store.html">Store</a></li>
-        <li><a href="socials.html">Socials</a></li>
+        <li><a href="Store.html">Store</a></li>
+        <li><a href="Socials.html">Socials</a></li>
         <li><a href="about.html">About</a></li>
-        <li><a href="trades.html" class="active">Trades</a></li>
       </ul>
     </nav>
-    <button id="loginBtn">Login</button>
+
+    <div class="right-h">
+      <button id="darkModeToggle" title="Toggle dark mode">🌙</button>
+      <button id="loginBtn" class="primary">Login</button>
+    </div>
   </header>
 
-  <!-- Trade Form -->
-  <section class="trade-section">
-    <h2>Post a Trade</h2>
-    <form id="tradeForm">
-      <input type="text" id="username" placeholder="In-game username" required>
+  <!-- TRADE FORM -->
+  <main>
+    <section class="trade-section">
+      <h2>Post Your CatCraft Trade</h2>
 
-      <label for="offerItems">What do you offer?</label>
-      <div class="dropdown-checkbox">
-        <button type="button" class="dropdown-btn">Select Items ▼</button>
-        <div class="dropdown-content" id="offerItems">
-          <label><input type="checkbox" value="Sword"> Sword ⚔️</label>
-          <label><input type="checkbox" value="Helmet"> Helmet ⛑️</label>
-          <label><input type="checkbox" value="Pickaxe"> Pickaxe ⛏️</label>
+      <div id="auth-area" class="auth-area">
+        <div id="user-info" class="user-info" style="display:none">
+          <span id="user-display"></span>
+        </div>
+        <div id="auth-buttons" class="auth-buttons">
+          <button id="openAuthBtn" class="secondary">Sign in / Sign up</button>
         </div>
       </div>
-      <input type="number" id="offerDiamonds" placeholder="Diamonds 💎 (optional)" min="0">
 
-      <label for="wantItems">What do you want?</label>
-      <div class="dropdown-checkbox">
-        <button type="button" class="dropdown-btn">Select Items ▼</button>
-        <div class="dropdown-content" id="wantItems">
-          <label><input type="checkbox" value="Sword"> Sword ⚔️</label>
-          <label><input type="checkbox" value="Helmet"> Helmet ⛑️</label>
-          <label><input type="checkbox" value="Pickaxe"> Pickaxe ⛏️</label>
+      <form id="tradeForm" class="trade-form" style="display:none" autocomplete="off">
+        <label for="ingameName">In-game name</label>
+        <input id="ingameName" type="text" placeholder="Your in-game name" required />
+
+        <!-- Offer items dropdown (checkboxes + qty) -->
+        <label>Items you OFFER</label>
+        <div class="dropdown-checkbox">
+          <button type="button" class="dropbtn" data-target="offer-list">Select offered items ▾</button>
+          <div class="dropdown-content" id="offer-list" aria-hidden="true"></div>
         </div>
-      </div>
-      <input type="number" id="wantDiamonds" placeholder="Diamonds 💎 (optional)" min="0">
 
-      <button type="submit">Post Trade</button>
-    </form>
-  </section>
+        <!-- Diamonds you offer -->
+        <label for="offerDiamonds">Diamonds you OFFER</label>
+        <input id="offerDiamonds" type="number" min="0" value="0" placeholder="0 💎" />
 
-  <!-- Live Trades -->
-  <section class="live-trades">
-    <h2>Live Trades</h2>
-    <div id="tradesList"></div>
-  </section>
+        <!-- Want items dropdown -->
+        <label>Items you WANT</label>
+        <div class="dropdown-checkbox">
+          <button type="button" class="dropbtn" data-target="want-list">Select wanted items ▾</button>
+          <div class="dropdown-content" id="want-list" aria-hidden="true"></div>
+        </div>
+
+        <!-- Diamonds you want -->
+        <label for="wantDiamonds">Diamonds you WANT</label>
+        <input id="wantDiamonds" type="number" min="0" value="0" placeholder="0 💎" />
+
+        <div class="form-row">
+          <button id="postTradeBtn" type="submit" class="primary">Post Trade</button>
+          <button id="clearFormBtn" type="button" class="secondary">Clear</button>
+        </div>
+
+        <p id="formNote" class="note">You can post one trade every 24 hours.</p>
+      </form>
+    </section>
+
+    <!-- LIVE TRADES -->
+    <section class="live-trades">
+      <h2>Live Trades</h2>
+      <div id="tradesContainer" class="trades-container"></div>
+    </section>
+  </main>
 
   <footer id="footer">
-    <p>Copyright © viiru.top 2025</p>
+    <p>Copyright &copy; viiru.top & viiru.ee 2025</p>
+    <a href="privacypolicy.html">Privacy Policy</a> |
+    <a href="tos.html">Terms Of Service</a>
   </footer>
 
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <!-- AUTH MODAL (hidden by default) -->
+  <div id="authModal" class="modal" aria-hidden="true">
+    <div class="modal-inner">
+      <button id="closeAuthModal" class="close">✕</button>
+      <h3>Sign in or Sign up</h3>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-      authDomain: "v11rutop.firebaseapp.com",
-      projectId: "v11rutop",
-      storageBucket: "v11rutop.firebasestorage.app",
-      messagingSenderId: "664984661004",
-      appId: "1:664984661004:web:357ea8a60723b000e55229",
-      measurementId: "G-DMPEGNPVEN"
+      <div class="auth-cols">
+        <div class="auth-col">
+          <p><strong>Quick:</strong></p>
+          <button id="googleSignIn" class="primary">Sign in with Google</button>
+        </div>
+
+        <div class="auth-col">
+          <p><strong>Email</strong></p>
+          <input id="authEmail" type="email" placeholder="Email" />
+          <input id="authPassword" type="password" placeholder="Password" />
+          <div class="form-row">
+            <button id="emailSignIn" class="secondary">Sign In</button>
+            <button id="emailSignUp" class="secondary">Create Account</button>
+          </div>
+          <p class="small">If creating an account, you'll be signed in automatically.</p>
+        </div>
+      </div>
+
+      <div id="authError" class="auth-error" role="alert"></div>
+    </div>
+  </div>
+
+  <!-- Firebase + App logic -->
+  <script type="module">
+  // ---------- Firebase imports ----------
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, doc, getDoc, setDoc,
+    query, orderBy, onSnapshot, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+  import {
+    getAuth, GoogleAuthProvider, signInWithPopup,
+    signInWithEmailAndPassword, createUserWithEmailAndPassword,
+    signOut, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+  // ---------- Config (you supplied these keys earlier) ----------
+  const firebaseConfig = {
+    apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+    authDomain: "v11rutop.firebaseapp.com",
+    projectId: "v11rutop",
+    storageBucket: "v11rutop.firebasestorage.app",
+    messagingSenderId: "664984661004",
+    appId: "1:664984661004:web:357ea8a60723b000e55229"
+  };
+
+  // ---------- Init ----------
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  // ---------- DOM ----------
+  const loginBtn = document.getElementById('loginBtn');
+  const openAuthBtn = document.getElementById('openAuthBtn');
+  const authModal = document.getElementById('authModal');
+  const closeAuthModal = document.getElementById('closeAuthModal');
+  const googleSignIn = document.getElementById('googleSignIn');
+  const emailSignInBtn = document.getElementById('emailSignIn');
+  const emailSignUpBtn = document.getElementById('emailSignUp');
+  const authEmail = document.getElementById('authEmail');
+  const authPassword = document.getElementById('authPassword');
+  const authError = document.getElementById('authError');
+
+  const tradeForm = document.getElementById('tradeForm');
+  const postTradeBtn = document.getElementById('postTradeBtn');
+  const clearFormBtn = document.getElementById('clearFormBtn');
+
+  const ingameName = document.getElementById('ingameName');
+  const offerList = document.getElementById('offer-list');
+  const wantList = document.getElementById('want-list');
+  const offerDiamonds = document.getElementById('offerDiamonds');
+  const wantDiamonds = document.getElementById('wantDiamonds');
+
+  const tradesContainer = document.getElementById('tradesContainer');
+
+  const darkModeToggle = document.getElementById('darkModeToggle');
+
+  // ---------- Items catalog (edit to add server-provided items if needed) ----------
+  const ITEMS = [
+    { id: 'sword', name: 'Sword' },
+    { id: 'helmet', name: 'Helmet' },
+    { id: 'shield', name: 'Shield' },
+    { id: 'bow', name: 'Bow' },
+    { id: 'armor', name: 'Armor' },
+    { id: 'potion', name: 'Potion' }
+  ];
+
+  // ---------- Helpers: create checkbox rows (checkbox + qty) ----------
+  function makeItemRow(itemId, itemName, checkboxName) {
+    // label.row > checkbox, span(name), qty input
+    const label = document.createElement('label');
+    label.className = 'item-row';
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'item-cb';
+    cb.dataset.item = itemId;
+    cb.dataset.itemName = itemName;
+
+    const span = document.createElement('span');
+    span.className = 'item-name';
+    span.textContent = itemName;
+
+    const qty = document.createElement('input');
+    qty.type = 'number';
+    qty.className = 'item-qty';
+    qty.min = 1;
+    qty.value = 1;
+    qty.title = 'Quantity';
+    qty.disabled = true;
+    qty.style.width = '60px';
+
+    cb.addEventListener('change', () => {
+      qty.disabled = !cb.checked;
+      updateDropdownButtonText(checkboxName);
+    });
+
+    qty.addEventListener('input', () => updateDropdownButtonText(checkboxName));
+
+    label.appendChild(cb);
+    label.appendChild(span);
+    label.appendChild(qty);
+    return label;
+  }
+
+  // ---------- Populate dropdowns ----------
+  function populateItemLists() {
+    offerList.innerHTML = '';
+    wantList.innerHTML = '';
+    ITEMS.forEach(it => {
+      offerList.appendChild(makeItemRow(it.id, it.name, 'offer-list'));
+      wantList.appendChild(makeItemRow(it.id, it.name, 'want-list'));
+    });
+  }
+  populateItemLists();
+
+  // ---------- Dropdown toggle behavior ----------
+  document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetId = btn.dataset.target;
+      const container = document.getElementById(targetId);
+      const parent = btn.parentElement;
+      parent.classList.toggle('show');
+      // update label text each time opened
+      updateDropdownButtonText(targetId);
+    });
+  });
+
+  // Close dropdowns when clicking outside
+  window.addEventListener('click', (e) => {
+    document.querySelectorAll('.dropdown-checkbox').forEach(drop => {
+      if (!drop.contains(e.target)) drop.classList.remove('show');
+    });
+  });
+
+  // Update button label with selection summary
+  function updateDropdownButtonText(listId) {
+    const parent = document.querySelector(`[data-target="${listId}"]`)?.parentElement;
+    const btn = parent?.querySelector('.dropbtn');
+    if (!btn) return;
+    const checked = Array.from(document.querySelectorAll(`#${listId} .item-cb`)).filter(c => c.checked);
+    if (checked.length === 0) {
+      btn.textContent = (listId === 'offer-list') ? 'Select offered items ▾' : 'Select wanted items ▾';
+      return;
+    }
+    const names = checked.map(c => {
+      const qty = c.parentElement.querySelector('.item-qty').value || 1;
+      return `${qty}× ${c.dataset.itemName}`;
+    });
+    btn.textContent = names.slice(0,3).join(', ') + (names.length > 3 ? ' … ▾' : ' ▾');
+  }
+
+  // ---------- Auth modal toggles ----------
+  openAuthBtn.addEventListener('click', () => showAuthModal());
+  loginBtn.addEventListener('click', () => showAuthModal());
+  closeAuthModal.addEventListener('click', () => hideAuthModal());
+
+  function showAuthModal() {
+    authModal.style.display = 'block';
+    authModal.setAttribute('aria-hidden','false');
+    authError.textContent = '';
+  }
+  function hideAuthModal() {
+    authModal.style.display = 'none';
+    authModal.setAttribute('aria-hidden','true');
+  }
+
+  // ---------- Sign in handlers ----------
+  googleSignIn.addEventListener('click', async () => {
+    authError.textContent = '';
+    try {
+      await signInWithPopup(auth, googleProvider);
+      hideAuthModal();
+    } catch (err) {
+      authError.textContent = err.message;
+    }
+  });
+
+  emailSignInBtn.addEventListener('click', async () => {
+    authError.textContent = '';
+    const email = authEmail.value.trim();
+    const pass = authPassword.value;
+    if (!email || !pass) { authError.textContent = 'Enter email and password'; return; }
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      hideAuthModal();
+    } catch (err) {
+      authError.textContent = err.message;
+    }
+  });
+
+  emailSignUpBtn.addEventListener('click', async () => {
+    authError.textContent = '';
+    const email = authEmail.value.trim();
+    const pass = authPassword.value;
+    if (!email || !pass) { authError.textContent = 'Enter email and password'; return; }
+    try {
+      await createUserWithEmailAndPassword(auth, email, pass);
+      hideAuthModal();
+    } catch (err) {
+      authError.textContent = err.message;
+    }
+  });
+
+  // ---------- Auth state UI ---------- 
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      loginBtn.textContent = 'Logout';
+      loginBtn.classList.add('logged-in');
+      document.getElementById('user-display').textContent = `Signed in: ${user.displayName || user.email}`;
+      document.getElementById('user-info').style.display = 'block';
+      document.getElementById('auth-buttons').style.display = 'none';
+      tradeForm.style.display = 'block';
+      // prefill ingameName if blank
+      if (!ingameName.value) ingameName.value = user.displayName || '';
+    } else {
+      loginBtn.textContent = 'Login';
+      loginBtn.classList.remove('logged-in');
+      document.getElementById('user-display').textContent = '';
+      document.getElementById('user-info').style.display = 'none';
+      document.getElementById('auth-buttons').style.display = 'block';
+      tradeForm.style.display = 'none';
+    }
+  });
+
+  // clicking Login button while signed in logs out
+  loginBtn.addEventListener('click', async () => {
+    if (auth.currentUser) {
+      await signOut(auth);
+    } else {
+      showAuthModal();
+    }
+  });
+
+  // ---------- Collect selected items (with qty) ----------
+  function collectSelectedItems(listId) {
+    const rows = Array.from(document.querySelectorAll(`#${listId} .item-row`));
+    const selected = [];
+    for (const row of rows) {
+      const cb = row.querySelector('.item-cb');
+      if (cb && cb.checked) {
+        const qty = parseInt(row.querySelector('.item-qty').value) || 1;
+        selected.push({ id: cb.dataset.item, name: cb.dataset.itemName, qty });
+      }
+    }
+    return selected;
+  }
+
+  // ---------- 24h cooldown helpers ----------
+  async function getLastTradeTime(uid) {
+    const userDoc = doc(db, 'users', uid);
+    const snap = await getDoc(userDoc);
+    if (!snap.exists()) return 0;
+    const data = snap.data();
+    return data.lastTrade || 0;
+  }
+
+  async function setLastTradeTime(uid, ts) {
+    const userDoc = doc(db, 'users', uid);
+    await setDoc(userDoc, { lastTrade: ts }, { merge: true });
+  }
+
+  // ---------- Post trade ----------
+  tradeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) { alert('You must be logged in to post a trade.'); return; }
+
+    // cooldown check
+    const last = await getLastTradeTime(user.uid);
+    const now = Date.now();
+    const DAY = 24 * 60 * 60 * 1000;
+    if (now - last < DAY) {
+      const remaining = DAY - (now - last);
+      const hours = Math.floor(remaining / (1000*60*60));
+      const mins = Math.floor((remaining % (1000*60*60)) / (1000*60));
+      alert(`You can post another trade in ${hours}h ${mins}m.`);
+      return;
+    }
+
+    // build trade object
+    const trade = {
+      uid: user.uid,
+      authorName: (ingameName.value || user.displayName || user.email || "unknown"),
+      offerItems: collectSelectedItems('offer-list'),
+      wantItems: collectSelectedItems('want-list'),
+      offerDiamonds: parseInt(offerDiamonds.value) || 0,
+      wantDiamonds: parseInt(wantDiamonds.value) || 0,
+      createdAt: serverTimestamp()
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    // Basic sanity check
+    if (trade.offerItems.length === 0 && trade.offerDiamonds === 0) {
+      alert('You must offer at least one item or diamonds.');
+      return;
+    }
+    if (trade.wantItems.length === 0 && trade.wantDiamonds === 0) {
+      alert('You must want at least one item or diamonds.');
+      return;
+    }
 
-    const loginBtn = document.getElementById("loginBtn");
-    const tradeForm = document.getElementById("tradeForm");
-    const tradesList = document.getElementById("tradesList");
-
-    // 🔹 Login system
-    loginBtn.addEventListener("click", async () => {
-      if (auth.currentUser) {
-        await signOut(auth);
-      } else {
-        const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
-      }
-    });
-
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        loginBtn.textContent = "Logout";
-        tradeForm.style.display = "block";
-      } else {
-        loginBtn.textContent = "Login";
-        tradeForm.style.display = "none";
-      }
-    });
-
-    // 🔹 Post trade
-    tradeForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const username = document.getElementById("username").value;
-      const offerItems = [...document.querySelectorAll("#offerItems input:checked")].map(i => i.value);
-      const wantItems = [...document.querySelectorAll("#wantItems input:checked")].map(i => i.value);
-      const offerDiamonds = document.getElementById("offerDiamonds").value;
-      const wantDiamonds = document.getElementById("wantDiamonds").value;
-
-      if (!auth.currentUser) {
-        alert("You must be logged in to post a trade!");
-        return;
-      }
-
-      await addDoc(collection(db, "trades"), {
-        username,
-        offerItems,
-        offerDiamonds,
-        wantItems,
-        wantDiamonds,
-        timestamp: serverTimestamp()
-      });
-
+    try {
+      await addDoc(collection(db, 'trades'), trade);
+      await setLastTradeTime(user.uid, Date.now());
       tradeForm.reset();
-    });
+      // reset qty inputs and label text
+      document.querySelectorAll('.item-qty').forEach(i => i.disabled = true);
+      document.querySelectorAll('.item-cb').forEach(c => c.checked = false);
+      document.querySelectorAll('.dropbtn').forEach(b => b.textContent = (b.dataset.target === 'offer-list') ? 'Select offered items ▾' : 'Select wanted items ▾');
+      alert('Trade posted!');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to post trade: ' + err.message);
+    }
+  });
 
-    // 🔹 Live trades
-    const q = query(collection(db, "trades"), orderBy("timestamp", "desc"));
-    onSnapshot(q, snapshot => {
-      tradesList.innerHTML = "";
-      snapshot.forEach(doc => {
-        const trade = doc.data();
-        tradesList.innerHTML += `
-          <div class="trade-card">
-            <p><strong>${trade.username}</strong></p>
-            <p>Offers: ${trade.offerItems?.join(", ") || "None"} ${trade.offerDiamonds ? `+ ${trade.offerDiamonds} 💎` : ""}</p>
-            <p>Wants: ${trade.wantItems?.join(", ") || "None"} ${trade.wantDiamonds ? `+ ${trade.wantDiamonds} 💎` : ""}</p>
-          </div>
-        `;
-      });
+  clearFormBtn.addEventListener('click', () => {
+    tradeForm.reset();
+    document.querySelectorAll('.item-qty').forEach(i => i.disabled = true);
+    document.querySelectorAll('.item-cb').forEach(c => c.checked = false);
+    document.querySelectorAll('.dropbtn').forEach(b => b.textContent = (b.dataset.target === 'offer-list') ? 'Select offered items ▾' : 'Select wanted items ▾');
+  });
+
+  // ---------- Live trades using onSnapshot ----------
+  const tradesQuery = query(collection(db, 'trades'), orderBy('createdAt', 'desc'));
+  onSnapshot(tradesQuery, snapshot => {
+    tradesContainer.innerHTML = '';
+    snapshot.forEach(docSnap => {
+      const t = docSnap.data();
+      const card = document.createElement('div');
+      card.className = 'trade-card';
+
+      // format items lists
+      const formatList = (arr) => arr.map(it => `${it.qty}× ${it.name}`).join(', ') || '—';
+      const createdAtText = t.createdAt && t.createdAt.toDate ? t.createdAt.toDate().toLocaleString() : '';
+
+      card.innerHTML = `
+        <h4>${escapeHtml(t.authorName || 'Unknown')}</h4>
+        <p><strong>Offers:</strong> ${escapeHtml(formatList(t.offerItems || []))} ${t.offerDiamonds ? '💎' + t.offerDiamonds : ''}</p>
+        <p><strong>Wants:</strong> ${escapeHtml(formatList(t.wantItems || []))} ${t.wantDiamonds ? '💎' + t.wantDiamonds : ''}</p>
+        <p class="meta">${escapeHtml(createdAtText)}</p>
+      `;
+      tradesContainer.appendChild(card);
     });
+  });
+
+  // ---------- Small helpers ----------
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, s => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[s]));
+  }
+
+  // ---------- Dark mode toggle ----------
+  darkModeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+  });
+
+  // End of module
   </script>
+
 </body>
 </html>
