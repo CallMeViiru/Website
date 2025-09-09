@@ -40,9 +40,6 @@
         <div id="user-info" class="user-info" style="display:none">
           <span id="user-display"></span>
         </div>
-        <div id="auth-buttons" class="auth-buttons">
-          <button id="openAuthBtn" class="secondary">Sign in / Sign up</button>
-        </div>
       </div>
 
       <form id="tradeForm" class="trade-form" style="display:none" autocomplete="off">
@@ -56,7 +53,6 @@
           <div class="dropdown-content" id="offer-list" aria-hidden="true"></div>
         </div>
 
-        <!-- Diamonds offer -->
         <label for="offerDiamonds">Diamonds you OFFER</label>
         <input id="offerDiamonds" type="number" min="0" value="0" placeholder="0 💎" />
 
@@ -67,7 +63,6 @@
           <div class="dropdown-content" id="want-list" aria-hidden="true"></div>
         </div>
 
-        <!-- Diamonds want -->
         <label for="wantDiamonds">Diamonds you WANT</label>
         <input id="wantDiamonds" type="number" min="0" value="0" placeholder="0 💎" />
 
@@ -80,22 +75,20 @@
       </form>
     </section>
 
-    <!-- LIVE TRADES -->
-<section class="live-trades">
-  <h2>Live Trades</h2>
-
-    <!-- Filter dropdown -->
-    <div class="trade-filter">
-      <label>Filter by items</label>
+    <!-- FILTER SECTION -->
+    <section class="filter-section">
+      <h2>Filter Trades</h2>
       <div class="dropdown-checkbox">
-        <button type="button" class="dropbtn" data-target="filter-list">Select items ▾</button>
+        <button type="button" class="dropbtn" data-target="filter-list">Filter by items ▾</button>
         <div class="dropdown-content" id="filter-list" aria-hidden="true"></div>
       </div>
-    </div>
+    </section>
 
-  <div id="tradesContainer" class="trades-container"></div>
-  </section>
-
+    <!-- LIVE TRADES -->
+    <section class="live-trades">
+      <h2>Live Trades</h2>
+      <div id="tradesContainer" class="trades-container"></div>
+    </section>
   </main>
 
   <footer id="footer">
@@ -104,41 +97,7 @@
     <a href="tos.html">Terms Of Service</a>
   </footer>
 
-  <!-- AUTH MODAL -->
-  <div id="authModal" class="modal" aria-hidden="true">
-    <div class="modal-inner">
-      <button id="closeAuthModal" class="close">✕</button>
-      <h3>Sign in or Sign up</h3>
-
-      <div class="auth-cols">
-        <div class="auth-col">
-          <p><strong>Quick:</strong></p>
-          <button id="googleSignIn" class="primary">Sign in with Google</button>
-        </div>
-
-        <div class="auth-col">
-          <p><strong>Email</strong></p>
-          <input id="authEmail" type="email" placeholder="Email" />
-          <input id="authPassword" type="password" placeholder="Password" />
-          <div class="form-row">
-            <button id="emailSignIn" class="secondary">Sign In</button>
-            <button id="emailSignUp" class="secondary">Create Account</button>
-          </div>
-          <p class="small">If creating an account, you'll be signed in automatically.</p>
-        </div>
-
-        <div class="auth-col">
-          <p><strong>Anonymous</strong></p>
-          <input id="anonIngameName" type="text" placeholder="In-game name" />
-          <button id="anonSignIn" class="secondary">Continue without account</button>
-        </div>
-      </div>
-
-      <div id="authError" class="auth-error" role="alert"></div>
-    </div>
-  </div>
-
-  <!-- Firebase + App logic -->
+  <!-- Firebase + Logic -->
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
   import {
@@ -147,11 +106,9 @@
   } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
   import {
     getAuth, GoogleAuthProvider, signInWithPopup,
-    signInWithEmailAndPassword, createUserWithEmailAndPassword,
-    signOut, onAuthStateChanged, signInAnonymously, updateProfile
+    signInAnonymously, signOut, onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-  // ---------- Config ----------
   const firebaseConfig = {
     apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
     authDomain: "v11rutop.firebaseapp.com",
@@ -166,33 +123,17 @@
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
 
-  // ---------- DOM ----------
   const loginBtn = document.getElementById('loginBtn');
-  const openAuthBtn = document.getElementById('openAuthBtn');
-  const authModal = document.getElementById('authModal');
-  const closeAuthModal = document.getElementById('closeAuthModal');
-  const googleSignIn = document.getElementById('googleSignIn');
-  const emailSignInBtn = document.getElementById('emailSignIn');
-  const emailSignUpBtn = document.getElementById('emailSignUp');
-  const authEmail = document.getElementById('authEmail');
-  const authPassword = document.getElementById('authPassword');
-  const authError = document.getElementById('authError');
-  const anonSignInBtn = document.getElementById('anonSignIn');
-  const anonIngameName = document.getElementById('anonIngameName');
-
   const tradeForm = document.getElementById('tradeForm');
-  const postTradeBtn = document.getElementById('postTradeBtn');
-  const clearFormBtn = document.getElementById('clearFormBtn');
-
   const ingameName = document.getElementById('ingameName');
   const offerList = document.getElementById('offer-list');
   const wantList = document.getElementById('want-list');
   const offerDiamonds = document.getElementById('offerDiamonds');
   const wantDiamonds = document.getElementById('wantDiamonds');
   const tradesContainer = document.getElementById('tradesContainer');
+  const filterList = document.getElementById('filter-list');
   const darkModeToggle = document.getElementById('darkModeToggle');
 
-  // ---------- Items ----------
   const ITEMS = [
     { id: 'sefu_clone', name: 'Sefu Clone' },
     { id: 'sefu', name: 'Sefu' },
@@ -204,280 +145,131 @@
     { id: 'shulker_boots', name: 'Shulker Boots' }
   ];
 
-  // ---------- Helpers for dropdowns ----------
-  function makeItemRow(itemId, itemName, checkboxName) {
+  function makeItemRow(itemId, itemName, listId) {
     const label = document.createElement('label');
     label.className = 'item-row';
-
     const cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.className = 'item-cb';
     cb.dataset.item = itemId;
     cb.dataset.itemName = itemName;
-
     const span = document.createElement('span');
-    span.className = 'item-name';
     span.textContent = itemName;
-
     const qty = document.createElement('input');
     qty.type = 'number';
-    qty.className = 'item-qty';
     qty.min = 1;
     qty.value = 1;
     qty.disabled = true;
     qty.style.width = '60px';
-
-    cb.addEventListener('change', () => {
-      qty.disabled = !cb.checked;
-      updateDropdownButtonText(checkboxName);
-    });
-
-    qty.addEventListener('input', () => updateDropdownButtonText(checkboxName));
-
-    label.appendChild(cb);
-    label.appendChild(span);
-    label.appendChild(qty);
+    cb.addEventListener('change',()=>{ qty.disabled=!cb.checked; updateDropdownButtonText(listId); });
+    qty.addEventListener('input',()=>updateDropdownButtonText(listId));
+    label.appendChild(cb); label.appendChild(span); label.appendChild(qty);
     return label;
   }
 
   function populateItemLists() {
     offerList.innerHTML = '';
     wantList.innerHTML = '';
+    filterList.innerHTML = '';
     ITEMS.forEach(it => {
       offerList.appendChild(makeItemRow(it.id, it.name, 'offer-list'));
       wantList.appendChild(makeItemRow(it.id, it.name, 'want-list'));
+      const lbl = document.createElement('label');
+      const cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.className='filter-cb'; cb.value=it.id; cb.dataset.itemName=it.name;
+      lbl.appendChild(cb); lbl.appendChild(document.createTextNode(it.name));
+      filterList.appendChild(lbl);
     });
   }
   populateItemLists();
 
-  // ---------- Filter dropdown ----------
-  const filterList = document.getElementById('filter-list');
-  function populateFilterList() {
-    filterList.innerHTML = '';
-    ITEMS.forEach(it => {
-      filterList.appendChild(makeItemRow(it.id, it.name, 'filter-list'));
-    });
-  }
-  populateFilterList();
-
-  // Update button text when selecting filters
-  function updateFilterButton() {
-    const checked = Array.from(filterList.querySelectorAll('.item-cb')).filter(c => c.checked);
-    const btn = document.querySelector('[data-target="filter-list"]');
-    if (checked.length === 0) {
-      btn.textContent = 'Select items ▾';
-      return;
-    }
-    const names = checked.map(c => c.dataset.itemName);
-    btn.textContent = names.slice(0,3).join(', ') + (names.length > 3 ? ' … ▾' : ' ▾');
-  }
-  filterList.addEventListener('change', updateFilterButton);
-
-  // ---------- Filter function ----------
-  function passesFilter(trade) {
-    const checked = Array.from(filterList.querySelectorAll('.item-cb')).filter(c => c.checked);
-    if (checked.length === 0) return true; // no filter → show all
-
-    const selectedItems = checked.map(c => c.dataset.item);
-    const tradeItems = [
-      ...(trade.offerItems?.map(it => it.id) || []),
-      ...(trade.wantItems?.map(it => it.id) || [])
-    ];
-    return selectedItems.every(item => tradeItems.includes(item));
-  }
-
-
-  document.querySelectorAll('.dropbtn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetId = btn.dataset.target;
-      const parent = btn.parentElement;
+  document.querySelectorAll('.dropbtn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const targetId=btn.dataset.target;
+      const parent=btn.parentElement;
       parent.classList.toggle('show');
       updateDropdownButtonText(targetId);
     });
   });
-
-  window.addEventListener('click', (e) => {
-    document.querySelectorAll('.dropdown-checkbox').forEach(drop => {
-      if (!drop.contains(e.target)) drop.classList.remove('show');
+  window.addEventListener('click',e=>{
+    document.querySelectorAll('.dropdown-checkbox').forEach(drop=>{
+      if(!drop.contains(e.target)) drop.classList.remove('show');
     });
   });
 
-  function updateDropdownButtonText(listId) {
-    const parent = document.querySelector(`[data-target="${listId}"]`)?.parentElement;
-    const btn = parent?.querySelector('.dropbtn');
-    if (!btn) return;
-    const checked = Array.from(document.querySelectorAll(`#${listId} .item-cb`)).filter(c => c.checked);
-    if (checked.length === 0) {
-      btn.textContent = (listId === 'offer-list') ? 'Select offered items ▾' : 'Select wanted items ▾';
-      return;
-    }
-    const names = checked.map(c => {
-      const qty = c.parentElement.querySelector('.item-qty').value || 1;
+  function updateDropdownButtonText(listId){
+    const parent=document.querySelector(`[data-target="${listId}"]`)?.parentElement;
+    const btn=parent?.querySelector('.dropbtn');
+    if(!btn)return;
+    const checked=Array.from(document.querySelectorAll(`#${listId} .item-cb`)).filter(c=>c.checked);
+    if(checked.length===0){ btn.textContent=(listId==='offer-list')?'Select offered items ▾':(listId==='want-list')?'Select wanted items ▾':'Filter by items ▾'; return;}
+    const names=checked.map(c=>{
+      const qty=c.parentElement.querySelector('.item-qty')?.value||1;
       return `${qty}× ${c.dataset.itemName}`;
     });
-    btn.textContent = names.slice(0,3).join(', ') + (names.length > 3 ? ' … ▾' : ' ▾');
+    btn.textContent=names.slice(0,3).join(', ')+(names.length>3?' … ▾':' ▾');
   }
 
-  // ---------- Auth modal ----------
-  openAuthBtn.addEventListener('click', () => showAuthModal());
-  loginBtn.addEventListener('click', () => {
-    if (auth.currentUser) {
-      signOut(auth);
-    } else {
-      showAuthModal();
-    }
+  onAuthStateChanged(auth,user=>{
+    if(user){ loginBtn.textContent='Logout'; tradeForm.style.display='block'; if(!ingameName.value) ingameName.value=user.displayName||'';
+    } else { loginBtn.textContent='Login'; tradeForm.style.display='none'; }
   });
-  closeAuthModal.addEventListener('click', () => hideAuthModal());
 
-  function showAuthModal() {
-    authModal.style.display = 'block';
-    authModal.setAttribute('aria-hidden','false');
-    authError.textContent = '';
-  }
-  function hideAuthModal() {
-    authModal.style.display = 'none';
-    authModal.setAttribute('aria-hidden','true');
+  loginBtn.addEventListener('click',async()=>{
+    if(auth.currentUser){ await signOut(auth); }
+    else { await signInAnonymously(auth); }
+  });
+
+  function collectSelectedItems(listId){
+    return Array.from(document.querySelectorAll(`#${listId} .item-row`)).filter(r=>r.querySelector('.item-cb').checked).map(r=>{
+      return { id:r.querySelector('.item-cb').dataset.item, name:r.querySelector('.item-cb').dataset.itemName, qty:parseInt(r.querySelector('.item-qty').value)||1 };
+    });
   }
 
-  // ---------- Sign in ----------
-  googleSignIn.addEventListener('click', async () => {
-    authError.textContent = '';
-    try {
-      await signInWithPopup(auth, googleProvider);
-      hideAuthModal();
-    } catch (err) { authError.textContent = err.message; }
-  });
+  async function getLastTradeTime(uid){ const snap=await getDoc(doc(db,'users',uid)); return snap.exists()?snap.data().lastTrade||0:0; }
+  async function setLastTradeTime(uid,ts){ await setDoc(doc(db,'users',uid),{lastTrade:ts},{merge:true}); }
 
-  emailSignInBtn.addEventListener('click', async () => {
-    authError.textContent = '';
-    try {
-      await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPassword.value);
-      hideAuthModal();
-    } catch (err) { authError.textContent = err.message; }
-  });
-
-  emailSignUpBtn.addEventListener('click', async () => {
-    authError.textContent = '';
-    try {
-      await createUserWithEmailAndPassword(auth, authEmail.value.trim(), authPassword.value);
-      hideAuthModal();
-    } catch (err) { authError.textContent = err.message; }
-  });
-
-  anonSignInBtn.addEventListener('click', async () => {
-    authError.textContent = '';
-    const name = anonIngameName.value.trim();
-    if (!name) { authError.textContent = 'Enter your in-game name'; return; }
-    try {
-      const cred = await signInAnonymously(auth);
-      await updateProfile(cred.user, { displayName: name });
-      hideAuthModal();
-    } catch (err) { authError.textContent = err.message; }
-  });
-
-  // ---------- Auth state ----------
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      loginBtn.textContent = 'Logout';
-      loginBtn.classList.add('logged-in');
-      document.getElementById('user-display').textContent = `Signed in: ${user.displayName || user.email || "Anon"}`;
-      document.getElementById('user-info').style.display = 'block';
-      document.getElementById('auth-buttons').style.display = 'none';
-      tradeForm.style.display = 'block';
-      if (!ingameName.value) ingameName.value = user.displayName || '';
-    } else {
-      loginBtn.textContent = 'Login';
-      loginBtn.classList.remove('logged-in');
-      document.getElementById('user-display').textContent = '';
-      document.getElementById('user-info').style.display = 'none';
-      document.getElementById('auth-buttons').style.display = 'block';
-      tradeForm.style.display = 'none';
-    }
-  });
-
-  // ---------- 24h cooldown ----------
-  async function getLastTradeTime(uid) {
-    const snap = await getDoc(doc(db, 'users', uid));
-    return snap.exists() ? snap.data().lastTrade || 0 : 0;
-  }
-  async function setLastTradeTime(uid, ts) {
-    await setDoc(doc(db, 'users', uid), { lastTrade: ts }, { merge: true });
-  }
-
-  // ---------- Trade posting ----------
-  function collectSelectedItems(listId) {
-    const rows = Array.from(document.querySelectorAll(`#${listId} .item-row`));
-    return rows.filter(r => r.querySelector('.item-cb').checked).map(r => ({
-      id: r.querySelector('.item-cb').dataset.item,
-      name: r.querySelector('.item-cb').dataset.itemName,
-      qty: parseInt(r.querySelector('.item-qty').value) || 1
-    }));
-  }
-
-  tradeForm.addEventListener('submit', async (e) => {
+  tradeForm.addEventListener('submit',async e=>{
     e.preventDefault();
-    const user = auth.currentUser;
-    if (!user) return alert('Login required.');
-
-    const last = await getLastTradeTime(user.uid);
-    if (Date.now() - last < 24*60*60*1000) {
-      return alert('You can only post one trade every 24h.');
-    }
-
-    const trade = {
-      uid: user.uid,
-      authorName: ingameName.value || user.displayName || "Anon",
-      offerItems: collectSelectedItems('offer-list'),
-      wantItems: collectSelectedItems('want-list'),
-      offerDiamonds: parseInt(offerDiamonds.value) || 0,
-      wantDiamonds: parseInt(wantDiamonds.value) || 0,
-      createdAt: serverTimestamp()
-    };
-
-    if (!trade.offerItems.length && !trade.offerDiamonds) return alert('Must offer something.');
-    if (!trade.wantItems.length && !trade.wantDiamonds) return alert('Must want something.');
-
-    try {
-      await addDoc(collection(db, 'trades'), trade);
-      await setLastTradeTime(user.uid, Date.now());
-      alert('Trade posted!');
-      tradeForm.reset();
-      populateItemLists();
-    } catch (err) { alert(err.message); }
+    const user=auth.currentUser; if(!user){alert('You must be logged in.');return;}
+    const last=await getLastTradeTime(user.uid); const now=Date.now(); const DAY=86400000;
+    if(now-last<DAY){ alert('24h cooldown not passed.'); return; }
+    const trade={ uid:user.uid, authorName:ingameName.value||'Anonymous', offerItems:collectSelectedItems('offer-list'),
+      wantItems:collectSelectedItems('want-list'), offerDiamonds:parseInt(offerDiamonds.value)||0, wantDiamonds:parseInt(wantDiamonds.value)||0, createdAt:serverTimestamp()};
+    await addDoc(collection(db,'trades'),trade); await setLastTradeTime(user.uid,now); alert('Trade posted!');
+    tradeForm.reset(); populateItemLists();
   });
 
-  clearFormBtn.addEventListener('click', () => {
-    tradeForm.reset();
-    populateItemLists();
-  });
+  function escapeHtml(str){ if(!str)return''; return String(str).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])); }
 
-  // ---------- Live trades ----------
-  const tradesQuery = query(collection(db, 'trades'), orderBy('createdAt','desc'));
-  onSnapshot(tradesQuery, snapshot => {
-  tradesContainer.innerHTML = '';
-  snapshot.forEach(docSnap => {
-    const t = docSnap.data();
-    if (!passesFilter(t)) return; // apply filter
-    const card = document.createElement('div');
-    card.className = 'trade-card';
-    const formatList = (arr) => arr.map(it => `${it.qty}× ${it.name}`).join(', ') || '—';
-    card.innerHTML = `
-      <h4>${t.authorName || 'Unknown'}</h4>
-      <p><strong>Offers:</strong> ${formatList(t.offerItems)} ${t.offerDiamonds ? '💎'+t.offerDiamonds : ''}</p>
-      <p><strong>Wants:</strong> ${formatList(t.wantItems)} ${t.wantDiamonds ? '💎'+t.wantDiamonds : ''}</p>
-      <p class="timestamp">${t.createdAt?.toDate().toLocaleString() || ''}</p>
-    `;
-    tradesContainer.appendChild(card);
-  });
-});
+  let allTrades=[];
+  function passesFilter(trade){
+    const selected=Array.from(document.querySelectorAll('.filter-cb:checked')).map(cb=>cb.value);
+    if(selected.length===0)return true;
+    const ids=[...(trade.offerItems||[]).map(it=>it.id),...(trade.wantItems||[]).map(it=>it.id)];
+    return selected.some(id=>ids.includes(id));
+  }
+  function renderTrades(){
+    tradesContainer.innerHTML='';
+    allTrades.forEach(t=>{
+      if(!passesFilter(t))return;
+      const card=document.createElement('div');
+      card.className='trade-card';
+      const formatList=arr=>arr.map(it=>`${it.qty}× ${it.name}`).join(', ')||'—';
+      const createdAtText=t.createdAt?.toDate?t.createdAt.toDate().toLocaleString():'';
+      card.innerHTML=`<h4>${escapeHtml(t.authorName)}</h4>
+      <p><strong>Offers:</strong> ${escapeHtml(formatList(t.offerItems||[]))} ${t.offerDiamonds?'💎'+t.offerDiamonds:''}</p>
+      <p><strong>Wants:</strong> ${escapeHtml(formatList(t.wantItems||[]))} ${t.wantDiamonds?'💎'+t.wantDiamonds:''}</p>
+      <p class="meta">${escapeHtml(createdAtText)}</p>`;
+      tradesContainer.appendChild(card);
+    });
+  }
+  const tradesQuery=query(collection(db,'trades'),orderBy('createdAt','desc'));
+  onSnapshot(tradesQuery,snap=>{ allTrades=[]; snap.forEach(doc=>allTrades.push(doc.data())); renderTrades(); });
+  filterList.addEventListener('change',()=>{ updateDropdownButtonText('filter-list'); renderTrades(); });
 
-
-
-  // ---------- Dark mode ----------
-  darkModeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark');
-  });
-
+  darkModeToggle.addEventListener('click',()=>{ document.body.classList.toggle('dark-mode'); darkModeToggle.textContent=document.body.classList.contains('dark-mode')?'☀️':'🌙'; });
   </script>
+
 </body>
 </html>
