@@ -9,7 +9,7 @@
 </head>
 <body>
 
-  <!-- HEADER (keeps your site look) -->
+  <!-- HEADER -->
   <header id="header">
     <div class="left-h">
       <img id="HIcon" src="Images/Viiru.png" alt="Viiru logo" />
@@ -49,14 +49,14 @@
         <label for="ingameName">In-game name</label>
         <input id="ingameName" type="text" placeholder="Your in-game name" required />
 
-        <!-- Offer items dropdown (checkboxes + qty) -->
+        <!-- Offer items dropdown -->
         <label>Items you OFFER</label>
         <div class="dropdown-checkbox">
           <button type="button" class="dropbtn" data-target="offer-list">Select offered items ▾</button>
           <div class="dropdown-content" id="offer-list" aria-hidden="true"></div>
         </div>
 
-        <!-- Diamonds you offer -->
+        <!-- Diamonds offer -->
         <label for="offerDiamonds">Diamonds you OFFER</label>
         <input id="offerDiamonds" type="number" min="0" value="0" placeholder="0 💎" />
 
@@ -67,7 +67,7 @@
           <div class="dropdown-content" id="want-list" aria-hidden="true"></div>
         </div>
 
-        <!-- Diamonds you want -->
+        <!-- Diamonds want -->
         <label for="wantDiamonds">Diamonds you WANT</label>
         <input id="wantDiamonds" type="number" min="0" value="0" placeholder="0 💎" />
 
@@ -93,7 +93,7 @@
     <a href="tos.html">Terms Of Service</a>
   </footer>
 
-  <!-- AUTH MODAL (hidden by default) -->
+  <!-- AUTH MODAL -->
   <div id="authModal" class="modal" aria-hidden="true">
     <div class="modal-inner">
       <button id="closeAuthModal" class="close">✕</button>
@@ -115,6 +115,12 @@
           </div>
           <p class="small">If creating an account, you'll be signed in automatically.</p>
         </div>
+
+        <div class="auth-col">
+          <p><strong>Anonymous</strong></p>
+          <input id="anonIngameName" type="text" placeholder="In-game name" />
+          <button id="anonSignIn" class="secondary">Continue without account</button>
+        </div>
       </div>
 
       <div id="authError" class="auth-error" role="alert"></div>
@@ -123,7 +129,6 @@
 
   <!-- Firebase + App logic -->
   <script type="module">
-  // ---------- Firebase imports ----------
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
   import {
     getFirestore, collection, addDoc, doc, getDoc, setDoc,
@@ -132,10 +137,10 @@
   import {
     getAuth, GoogleAuthProvider, signInWithPopup,
     signInWithEmailAndPassword, createUserWithEmailAndPassword,
-    signOut, onAuthStateChanged
+    signOut, onAuthStateChanged, signInAnonymously, updateProfile
   } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-  // ---------- Config (you supplied these keys earlier) ----------
+  // ---------- Config ----------
   const firebaseConfig = {
     apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
     authDomain: "v11rutop.firebaseapp.com",
@@ -145,7 +150,6 @@
     appId: "1:664984661004:web:357ea8a60723b000e55229"
   };
 
-  // ---------- Init ----------
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -162,6 +166,8 @@
   const authEmail = document.getElementById('authEmail');
   const authPassword = document.getElementById('authPassword');
   const authError = document.getElementById('authError');
+  const anonSignInBtn = document.getElementById('anonSignIn');
+  const anonIngameName = document.getElementById('anonIngameName');
 
   const tradeForm = document.getElementById('tradeForm');
   const postTradeBtn = document.getElementById('postTradeBtn');
@@ -172,12 +178,10 @@
   const wantList = document.getElementById('want-list');
   const offerDiamonds = document.getElementById('offerDiamonds');
   const wantDiamonds = document.getElementById('wantDiamonds');
-
   const tradesContainer = document.getElementById('tradesContainer');
-
   const darkModeToggle = document.getElementById('darkModeToggle');
 
-  // ---------- Items catalog (edit to add server-provided items if needed) ----------
+  // ---------- Items ----------
   const ITEMS = [
     { id: 'sefu_clone', name: 'Sefu Clone' },
     { id: 'sefu', name: 'Sefu' },
@@ -186,13 +190,11 @@
     { id: 'shulker_helmet', name: 'Shulker Helmet' },
     { id: 'shulker_chestplate', name: 'Shulker Chestplate' },
     { id: 'shulker_leggings', name: 'Shulker Leggings' },
-    { id: 'shulker_boots', name: 'Shulker Boots' },
-    { id: 'shulker_chestplate', name: 'Shulker Chestplate' }
+    { id: 'shulker_boots', name: 'Shulker Boots' }
   ];
 
-  // ---------- Helpers: create checkbox rows (checkbox + qty) ----------
+  // ---------- Helpers for dropdowns ----------
   function makeItemRow(itemId, itemName, checkboxName) {
-    // label.row > checkbox, span(name), qty input
     const label = document.createElement('label');
     label.className = 'item-row';
 
@@ -211,7 +213,6 @@
     qty.className = 'item-qty';
     qty.min = 1;
     qty.value = 1;
-    qty.title = 'Quantity';
     qty.disabled = true;
     qty.style.width = '60px';
 
@@ -228,7 +229,6 @@
     return label;
   }
 
-  // ---------- Populate dropdowns ----------
   function populateItemLists() {
     offerList.innerHTML = '';
     wantList.innerHTML = '';
@@ -239,26 +239,21 @@
   }
   populateItemLists();
 
-  // ---------- Dropdown toggle behavior ----------
   document.querySelectorAll('.dropbtn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', () => {
       const targetId = btn.dataset.target;
-      const container = document.getElementById(targetId);
       const parent = btn.parentElement;
       parent.classList.toggle('show');
-      // update label text each time opened
       updateDropdownButtonText(targetId);
     });
   });
 
-  // Close dropdowns when clicking outside
   window.addEventListener('click', (e) => {
     document.querySelectorAll('.dropdown-checkbox').forEach(drop => {
       if (!drop.contains(e.target)) drop.classList.remove('show');
     });
   });
 
-  // Update button label with selection summary
   function updateDropdownButtonText(listId) {
     const parent = document.querySelector(`[data-target="${listId}"]`)?.parentElement;
     const btn = parent?.querySelector('.dropbtn');
@@ -275,9 +270,15 @@
     btn.textContent = names.slice(0,3).join(', ') + (names.length > 3 ? ' … ▾' : ' ▾');
   }
 
-  // ---------- Auth modal toggles ----------
+  // ---------- Auth modal ----------
   openAuthBtn.addEventListener('click', () => showAuthModal());
-  loginBtn.addEventListener('click', () => showAuthModal());
+  loginBtn.addEventListener('click', () => {
+    if (auth.currentUser) {
+      signOut(auth);
+    } else {
+      showAuthModal();
+    }
+  });
   closeAuthModal.addEventListener('click', () => hideAuthModal());
 
   function showAuthModal() {
@@ -290,53 +291,51 @@
     authModal.setAttribute('aria-hidden','true');
   }
 
-  // ---------- Sign in handlers ----------
+  // ---------- Sign in ----------
   googleSignIn.addEventListener('click', async () => {
     authError.textContent = '';
     try {
       await signInWithPopup(auth, googleProvider);
       hideAuthModal();
-    } catch (err) {
-      authError.textContent = err.message;
-    }
+    } catch (err) { authError.textContent = err.message; }
   });
 
   emailSignInBtn.addEventListener('click', async () => {
     authError.textContent = '';
-    const email = authEmail.value.trim();
-    const pass = authPassword.value;
-    if (!email || !pass) { authError.textContent = 'Enter email and password'; return; }
     try {
-      await signInWithEmailAndPassword(auth, email, pass);
+      await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPassword.value);
       hideAuthModal();
-    } catch (err) {
-      authError.textContent = err.message;
-    }
+    } catch (err) { authError.textContent = err.message; }
   });
 
   emailSignUpBtn.addEventListener('click', async () => {
     authError.textContent = '';
-    const email = authEmail.value.trim();
-    const pass = authPassword.value;
-    if (!email || !pass) { authError.textContent = 'Enter email and password'; return; }
     try {
-      await createUserWithEmailAndPassword(auth, email, pass);
+      await createUserWithEmailAndPassword(auth, authEmail.value.trim(), authPassword.value);
       hideAuthModal();
-    } catch (err) {
-      authError.textContent = err.message;
-    }
+    } catch (err) { authError.textContent = err.message; }
   });
 
-  // ---------- Auth state UI ---------- 
+  anonSignInBtn.addEventListener('click', async () => {
+    authError.textContent = '';
+    const name = anonIngameName.value.trim();
+    if (!name) { authError.textContent = 'Enter your in-game name'; return; }
+    try {
+      const cred = await signInAnonymously(auth);
+      await updateProfile(cred.user, { displayName: name });
+      hideAuthModal();
+    } catch (err) { authError.textContent = err.message; }
+  });
+
+  // ---------- Auth state ----------
   onAuthStateChanged(auth, user => {
     if (user) {
       loginBtn.textContent = 'Logout';
       loginBtn.classList.add('logged-in');
-      document.getElementById('user-display').textContent = `Signed in: ${user.displayName || user.email}`;
+      document.getElementById('user-display').textContent = `Signed in: ${user.displayName || user.email || "Anon"}`;
       document.getElementById('user-info').style.display = 'block';
       document.getElementById('auth-buttons').style.display = 'none';
       tradeForm.style.display = 'block';
-      // prefill ingameName if blank
       if (!ingameName.value) ingameName.value = user.displayName || '';
     } else {
       loginBtn.textContent = 'Login';
@@ -348,65 +347,38 @@
     }
   });
 
-  // clicking Login button while signed in logs out
-  loginBtn.addEventListener('click', async () => {
-    if (auth.currentUser) {
-      await signOut(auth);
-    } else {
-      showAuthModal();
-    }
-  });
+  // ---------- 24h cooldown ----------
+  async function getLastTradeTime(uid) {
+    const snap = await getDoc(doc(db, 'users', uid));
+    return snap.exists() ? snap.data().lastTrade || 0 : 0;
+  }
+  async function setLastTradeTime(uid, ts) {
+    await setDoc(doc(db, 'users', uid), { lastTrade: ts }, { merge: true });
+  }
 
-  // ---------- Collect selected items (with qty) ----------
+  // ---------- Trade posting ----------
   function collectSelectedItems(listId) {
     const rows = Array.from(document.querySelectorAll(`#${listId} .item-row`));
-    const selected = [];
-    for (const row of rows) {
-      const cb = row.querySelector('.item-cb');
-      if (cb && cb.checked) {
-        const qty = parseInt(row.querySelector('.item-qty').value) || 1;
-        selected.push({ id: cb.dataset.item, name: cb.dataset.itemName, qty });
-      }
-    }
-    return selected;
+    return rows.filter(r => r.querySelector('.item-cb').checked).map(r => ({
+      id: r.querySelector('.item-cb').dataset.item,
+      name: r.querySelector('.item-cb').dataset.itemName,
+      qty: parseInt(r.querySelector('.item-qty').value) || 1
+    }));
   }
 
-  // ---------- 24h cooldown helpers ----------
-  async function getLastTradeTime(uid) {
-    const userDoc = doc(db, 'users', uid);
-    const snap = await getDoc(userDoc);
-    if (!snap.exists()) return 0;
-    const data = snap.data();
-    return data.lastTrade || 0;
-  }
-
-  async function setLastTradeTime(uid, ts) {
-    const userDoc = doc(db, 'users', uid);
-    await setDoc(userDoc, { lastTrade: ts }, { merge: true });
-  }
-
-  // ---------- Post trade ----------
   tradeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const user = auth.currentUser;
-    if (!user) { alert('You must be logged in to post a trade.'); return; }
+    if (!user) return alert('Login required.');
 
-    // cooldown check
     const last = await getLastTradeTime(user.uid);
-    const now = Date.now();
-    const DAY = 24 * 60 * 60 * 1000;
-    if (now - last < DAY) {
-      const remaining = DAY - (now - last);
-      const hours = Math.floor(remaining / (1000*60*60));
-      const mins = Math.floor((remaining % (1000*60*60)) / (1000*60));
-      alert(`You can post another trade in ${hours}h ${mins}m.`);
-      return;
+    if (Date.now() - last < 24*60*60*1000) {
+      return alert('You can only post one trade every 24h.');
     }
 
-    // build trade object
     const trade = {
       uid: user.uid,
-      authorName: (ingameName.value || user.displayName || user.email || "unknown"),
+      authorName: ingameName.value || user.displayName || "Anon",
       offerItems: collectSelectedItems('offer-list'),
       wantItems: collectSelectedItems('want-list'),
       offerDiamonds: parseInt(offerDiamonds.value) || 0,
@@ -414,77 +386,47 @@
       createdAt: serverTimestamp()
     };
 
-    // Basic sanity check
-    if (trade.offerItems.length === 0 && trade.offerDiamonds === 0) {
-      alert('You must offer at least one item or diamonds.');
-      return;
-    }
-    if (trade.wantItems.length === 0 && trade.wantDiamonds === 0) {
-      alert('You must want at least one item or diamonds.');
-      return;
-    }
+    if (!trade.offerItems.length && !trade.offerDiamonds) return alert('Must offer something.');
+    if (!trade.wantItems.length && !trade.wantDiamonds) return alert('Must want something.');
 
     try {
       await addDoc(collection(db, 'trades'), trade);
       await setLastTradeTime(user.uid, Date.now());
-      tradeForm.reset();
-      // reset qty inputs and label text
-      document.querySelectorAll('.item-qty').forEach(i => i.disabled = true);
-      document.querySelectorAll('.item-cb').forEach(c => c.checked = false);
-      document.querySelectorAll('.dropbtn').forEach(b => b.textContent = (b.dataset.target === 'offer-list') ? 'Select offered items ▾' : 'Select wanted items ▾');
       alert('Trade posted!');
-    } catch (err) {
-      console.error(err);
-      alert('Failed to post trade: ' + err.message);
-    }
+      tradeForm.reset();
+      populateItemLists();
+    } catch (err) { alert(err.message); }
   });
 
   clearFormBtn.addEventListener('click', () => {
     tradeForm.reset();
-    document.querySelectorAll('.item-qty').forEach(i => i.disabled = true);
-    document.querySelectorAll('.item-cb').forEach(c => c.checked = false);
-    document.querySelectorAll('.dropbtn').forEach(b => b.textContent = (b.dataset.target === 'offer-list') ? 'Select offered items ▾' : 'Select wanted items ▾');
+    populateItemLists();
   });
 
-  // ---------- Live trades using onSnapshot ----------
-  const tradesQuery = query(collection(db, 'trades'), orderBy('createdAt', 'desc'));
+  // ---------- Live trades ----------
+  const tradesQuery = query(collection(db, 'trades'), orderBy('createdAt','desc'));
   onSnapshot(tradesQuery, snapshot => {
     tradesContainer.innerHTML = '';
     snapshot.forEach(docSnap => {
       const t = docSnap.data();
       const card = document.createElement('div');
       card.className = 'trade-card';
-
-      // format items lists
       const formatList = (arr) => arr.map(it => `${it.qty}× ${it.name}`).join(', ') || '—';
-      const createdAtText = t.createdAt && t.createdAt.toDate ? t.createdAt.toDate().toLocaleString() : '';
-
       card.innerHTML = `
-        <h4>${escapeHtml(t.authorName || 'Unknown')}</h4>
-        <p><strong>Offers:</strong> ${escapeHtml(formatList(t.offerItems || []))} ${t.offerDiamonds ? '💎' + t.offerDiamonds : ''}</p>
-        <p><strong>Wants:</strong> ${escapeHtml(formatList(t.wantItems || []))} ${t.wantDiamonds ? '💎' + t.wantDiamonds : ''}</p>
-        <p class="meta">${escapeHtml(createdAtText)}</p>
+        <h4>${t.authorName || 'Unknown'}</h4>
+        <p><strong>Offers:</strong> ${formatList(t.offerItems)} ${t.offerDiamonds ? '💎'+t.offerDiamonds : ''}</p>
+        <p><strong>Wants:</strong> ${formatList(t.wantItems)} ${t.wantDiamonds ? '💎'+t.wantDiamonds : ''}</p>
+        <p class="timestamp">${t.createdAt?.toDate().toLocaleString() || ''}</p>
       `;
       tradesContainer.appendChild(card);
     });
   });
 
-  // ---------- Small helpers ----------
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>"']/g, s => ({
-      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-    }[s]));
-  }
-
-  // ---------- Dark mode toggle ----------
+  // ---------- Dark mode ----------
   darkModeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    darkModeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    document.body.classList.toggle('dark');
   });
 
-  // End of module
   </script>
-
 </body>
 </html>
