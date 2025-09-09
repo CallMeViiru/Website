@@ -56,7 +56,6 @@
           <div class="dropdown-content" id="offer-list" aria-hidden="true"></div>
         </div>
 
-        <!-- Diamonds offer -->
         <label for="offerDiamonds">Diamonds you OFFER</label>
         <input id="offerDiamonds" type="number" min="0" value="0" placeholder="0 💎" />
 
@@ -67,7 +66,6 @@
           <div class="dropdown-content" id="want-list" aria-hidden="true"></div>
         </div>
 
-        <!-- Diamonds want -->
         <label for="wantDiamonds">Diamonds you WANT</label>
         <input id="wantDiamonds" type="number" min="0" value="0" placeholder="0 💎" />
 
@@ -80,20 +78,16 @@
       </form>
     </section>
 
-    <!-- FILTER TRADES -->
-    <section class="filter-section">
-      <h2>Filter Trades</h2>
-      <div class="dropdown-checkbox">
-        <button type="button" class="dropbtn" data-target="filter-list">Select items to filter ▾</button>
-        <div class="dropdown-content" id="filter-list" aria-hidden="true"></div>
-      </div>
-      <button id="applyFilterBtn" class="secondary">Apply Filter</button>
-      <button id="clearFilterBtn" class="secondary">Clear Filter</button>
-    </section>
-
     <!-- LIVE TRADES -->
     <section class="live-trades">
       <h2>Live Trades</h2>
+      <!-- Filter dropdown -->
+      <label>Filter by item:</label>
+      <div class="dropdown-checkbox">
+        <button type="button" class="dropbtn" data-target="filter-list">Select items ▾</button>
+        <div class="dropdown-content" id="filter-list" aria-hidden="true"></div>
+      </div>
+
       <div id="tradesContainer" class="trades-container"></div>
     </section>
   </main>
@@ -104,114 +98,41 @@
     <a href="tos.html">Terms Of Service</a>
   </footer>
 
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="modal" aria-hidden="true">
+    <div class="modal-inner">
+      <button id="closeAuthModal" class="close">✕</button>
+      <h3>Sign in or Sign up</h3>
+
+      <div class="auth-cols">
+        <div class="auth-col">
+          <p><strong>Quick:</strong></p>
+          <button id="googleSignIn" class="primary">Sign in with Google</button>
+        </div>
+
+        <div class="auth-col">
+          <p><strong>Email</strong></p>
+          <input id="authEmail" type="email" placeholder="Email" />
+          <input id="authPassword" type="password" placeholder="Password" />
+          <div class="form-row">
+            <button id="emailSignIn" class="secondary">Sign In</button>
+            <button id="emailSignUp" class="secondary">Create Account</button>
+          </div>
+        </div>
+
+        <div class="auth-col">
+          <p><strong>Anonymous</strong></p>
+          <input id="anonIngameName" type="text" placeholder="In-game name" />
+          <button id="anonSignIn" class="secondary">Continue without account</button>
+        </div>
+      </div>
+
+      <div id="authError" class="auth-error" role="alert"></div>
+    </div>
+  </div>
+
   <!-- Firebase + App logic -->
-  <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-  import {
-    getFirestore, collection, addDoc, doc, getDoc, setDoc,
-    query, orderBy, onSnapshot, serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-  import {
-    getAuth, GoogleAuthProvider, signInWithPopup,
-    signInWithEmailAndPassword, createUserWithEmailAndPassword,
-    signOut, onAuthStateChanged, signInAnonymously, updateProfile
-  } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+  <script type="module" src="trades.js"></script>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
-    authDomain: "v11rutop.firebaseapp.com",
-    projectId: "v11rutop",
-    storageBucket: "v11rutop.firebasestorage.app",
-    messagingSenderId: "664984661004",
-    appId: "1:664984661004:web:357ea8a60723b000e55229"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-  const googleProvider = new GoogleAuthProvider();
-
-  // DOM references
-  const tradesContainer = document.getElementById('tradesContainer');
-  const filterList = document.getElementById('filter-list');
-  const applyFilterBtn = document.getElementById('applyFilterBtn');
-  const clearFilterBtn = document.getElementById('clearFilterBtn');
-
-  // Items
-  const ITEMS = [
-    { id: 'sefu_clone', name: 'Sefu Clone' },
-    { id: 'sefu', name: 'Sefu' },
-    { id: 'aisha_pickaxe', name: 'Aisha Pickaxe' },
-    { id: 'freyja_crossbow', name: 'Freyja Crossbow' },
-    { id: 'shulker_helmet', name: 'Shulker Helmet' },
-    { id: 'shulker_chestplate', name: 'Shulker Chestplate' },
-    { id: 'shulker_leggings', name: 'Shulker Leggings' },
-    { id: 'shulker_boots', name: 'Shulker Boots' }
-  ];
-
-  // Populate filter list
-  function populateFilterList() {
-    filterList.innerHTML = '';
-    ITEMS.forEach(it => {
-      const label = document.createElement('label');
-      label.className = 'item-row';
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.dataset.item = it.id;
-      cb.dataset.itemName = it.name;
-      label.appendChild(cb);
-      label.appendChild(document.createTextNode(it.name));
-      filterList.appendChild(label);
-    });
-  }
-  populateFilterList();
-
-  // Current filter
-  let activeFilter = [];
-
-  applyFilterBtn.addEventListener('click', () => {
-    activeFilter = Array.from(document.querySelectorAll('#filter-list input:checked'))
-      .map(cb => cb.dataset.itemName);
-    renderTrades(lastTrades);
-  });
-
-  clearFilterBtn.addEventListener('click', () => {
-    activeFilter = [];
-    document.querySelectorAll('#filter-list input').forEach(cb => cb.checked = false);
-    renderTrades(lastTrades);
-  });
-
-  // Live trades + filtering
-  let lastTrades = [];
-  const tradesQuery = query(collection(db, 'trades'), orderBy('createdAt','desc'));
-  onSnapshot(tradesQuery, snapshot => {
-    lastTrades = snapshot.docs.map(doc => doc.data());
-    renderTrades(lastTrades);
-  });
-
-  function renderTrades(trades) {
-    tradesContainer.innerHTML = '';
-    trades.forEach(t => {
-      if (activeFilter.length > 0) {
-        const allItems = [
-          ...(t.offerItems || []).map(it => it.name),
-          ...(t.wantItems || []).map(it => it.name)
-        ];
-        if (!activeFilter.some(f => allItems.includes(f))) return;
-      }
-
-      const card = document.createElement('div');
-      card.className = 'trade-card';
-      const formatList = arr => arr.map(it => `${it.qty}× ${it.name}`).join(', ') || '—';
-      card.innerHTML = `
-        <h4>${t.authorName || 'Unknown'}</h4>
-        <p><strong>Offers:</strong> ${formatList(t.offerItems)} ${t.offerDiamonds ? '💎'+t.offerDiamonds : ''}</p>
-        <p><strong>Wants:</strong> ${formatList(t.wantItems)} ${t.wantDiamonds ? '💎'+t.wantDiamonds : ''}</p>
-        <p class="timestamp">${t.createdAt?.toDate().toLocaleString() || ''}</p>
-      `;
-      tradesContainer.appendChild(card);
-    });
-  }
-  </script>
 </body>
 </html>
