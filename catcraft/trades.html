@@ -81,10 +81,21 @@
     </section>
 
     <!-- LIVE TRADES -->
-    <section class="live-trades">
-      <h2>Live Trades</h2>
-      <div id="tradesContainer" class="trades-container"></div>
-    </section>
+<section class="live-trades">
+  <h2>Live Trades</h2>
+
+    <!-- Filter dropdown -->
+    <div class="trade-filter">
+      <label>Filter by items</label>
+      <div class="dropdown-checkbox">
+        <button type="button" class="dropbtn" data-target="filter-list">Select items ▾</button>
+        <div class="dropdown-content" id="filter-list" aria-hidden="true"></div>
+      </div>
+    </div>
+
+  <div id="tradesContainer" class="trades-container"></div>
+  </section>
+
   </main>
 
   <footer id="footer">
@@ -238,6 +249,43 @@
     });
   }
   populateItemLists();
+
+  // ---------- Filter dropdown ----------
+  const filterList = document.getElementById('filter-list');
+  function populateFilterList() {
+    filterList.innerHTML = '';
+    ITEMS.forEach(it => {
+      filterList.appendChild(makeItemRow(it.id, it.name, 'filter-list'));
+    });
+  }
+  populateFilterList();
+
+  // Update button text when selecting filters
+  function updateFilterButton() {
+    const checked = Array.from(filterList.querySelectorAll('.item-cb')).filter(c => c.checked);
+    const btn = document.querySelector('[data-target="filter-list"]');
+    if (checked.length === 0) {
+      btn.textContent = 'Select items ▾';
+      return;
+    }
+    const names = checked.map(c => c.dataset.itemName);
+    btn.textContent = names.slice(0,3).join(', ') + (names.length > 3 ? ' … ▾' : ' ▾');
+  }
+  filterList.addEventListener('change', updateFilterButton);
+
+  // ---------- Filter function ----------
+  function passesFilter(trade) {
+    const checked = Array.from(filterList.querySelectorAll('.item-cb')).filter(c => c.checked);
+    if (checked.length === 0) return true; // no filter → show all
+
+    const selectedItems = checked.map(c => c.dataset.item);
+    const tradeItems = [
+      ...(trade.offerItems?.map(it => it.id) || []),
+      ...(trade.wantItems?.map(it => it.id) || [])
+    ];
+    return selectedItems.every(item => tradeItems.includes(item));
+  }
+
 
   document.querySelectorAll('.dropbtn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -406,21 +454,24 @@
   // ---------- Live trades ----------
   const tradesQuery = query(collection(db, 'trades'), orderBy('createdAt','desc'));
   onSnapshot(tradesQuery, snapshot => {
-    tradesContainer.innerHTML = '';
-    snapshot.forEach(docSnap => {
-      const t = docSnap.data();
-      const card = document.createElement('div');
-      card.className = 'trade-card';
-      const formatList = (arr) => arr.map(it => `${it.qty}× ${it.name}`).join(', ') || '—';
-      card.innerHTML = `
-        <h4>${t.authorName || 'Unknown'}</h4>
-        <p><strong>Offers:</strong> ${formatList(t.offerItems)} ${t.offerDiamonds ? '💎'+t.offerDiamonds : ''}</p>
-        <p><strong>Wants:</strong> ${formatList(t.wantItems)} ${t.wantDiamonds ? '💎'+t.wantDiamonds : ''}</p>
-        <p class="timestamp">${t.createdAt?.toDate().toLocaleString() || ''}</p>
-      `;
-      tradesContainer.appendChild(card);
-    });
+  tradesContainer.innerHTML = '';
+  snapshot.forEach(docSnap => {
+    const t = docSnap.data();
+    if (!passesFilter(t)) return; // apply filter
+    const card = document.createElement('div');
+    card.className = 'trade-card';
+    const formatList = (arr) => arr.map(it => `${it.qty}× ${it.name}`).join(', ') || '—';
+    card.innerHTML = `
+      <h4>${t.authorName || 'Unknown'}</h4>
+      <p><strong>Offers:</strong> ${formatList(t.offerItems)} ${t.offerDiamonds ? '💎'+t.offerDiamonds : ''}</p>
+      <p><strong>Wants:</strong> ${formatList(t.wantItems)} ${t.wantDiamonds ? '💎'+t.wantDiamonds : ''}</p>
+      <p class="timestamp">${t.createdAt?.toDate().toLocaleString() || ''}</p>
+    `;
+    tradesContainer.appendChild(card);
   });
+});
+
+
 
   // ---------- Dark mode ----------
   darkModeToggle.addEventListener('click', () => {
