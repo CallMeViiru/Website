@@ -93,6 +93,15 @@
     <a href="tos.html">Terms Of Service</a>
   </footer>
 
+  <!-- Dark Mode Script -->
+  <script>
+    const toggleButton = document.getElementById('darkModeToggle');
+    toggleButton.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      toggleButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+  </script>
+  
   <!-- AUTH MODAL -->
   <div id="authModal" class="modal" aria-hidden="true">
     <div class="modal-inner">
