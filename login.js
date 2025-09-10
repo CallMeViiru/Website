@@ -46,7 +46,7 @@ emailLoginBtn.addEventListener("click", async () => {
   const password = document.getElementById("password").value;
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    window.location.href = "index.html"; // Redirect after login
+    window.location.href = "https://www.viiru.top/"; // Redirect after login
   } catch (error) {
     alert(error.message);
   }
