@@ -9,6 +9,15 @@ body {
   text-align: center;
 }
 
+section, .textsection {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
 /* ---------- Header (matches your site) ---------- */
 #header {
   display: flex;
