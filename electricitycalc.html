@@ -1,99 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Electricity Calculator · Viiru</title>
-  <link rel="icon" href="Images/Viiru.png" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electricity Price Calculator | Viiru</title>
   <link rel="stylesheet" href="tools.css" />
 </head>
 <body>
   <header id="header">
-    <div class="left-h">
-      <img id="HIcon" src="Images/Viiru.png" alt="Viiru logo" />
-      <h1 id="HH1">Viiru</h1>
-    </div>
-
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="store.html">Store</a></li>
-        <li><a href="socials.html">Socials</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="tools.html" class="active">Tools</a></li>
-      </ul>
-    </nav>
-
-    <div class="right-h">
-      <button id="darkModeToggle">🌙</button>
-      <button id="loginBtn" class="primary">Login</button>
+    <img id="HIcon" src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Viiru Logo" />
+    <h1 id="HH1">Electricity Price Calculator</h1>
+    <div class="login-controls">
+      <button id="loginBtn">Login</button>
+      <button id="logoutBtn" style="display:none;">Logout</button>
     </div>
   </header>
 
-  <main class="tool-page">
-    <h2>⚡ Electricity Price Calculator</h2>
-    <p class="subtitle">Estimate your device running costs.</p>
+  <main>
+    <section class="calculator">
+      <h2>Device Power Usage Calculator</h2>
+      <div class="calc-box">
+        <label>Device Power (Watts):</label>
+        <input type="number" id="wattage" placeholder="e.g. 100" />
 
-    <div class="calculator">
-      <label>Device Power (Watts):</label>
-      <input id="power" type="number" placeholder="500" />
+        <label>Hours Used per Day:</label>
+        <input type="number" id="hours" placeholder="e.g. 4" />
 
-      <label>Usage per Day (Hours):</label>
-      <input id="hours" type="number" placeholder="4" />
+        <label>Electricity Price (€/kWh):</label>
+        <input type="number" id="price" placeholder="e.g. 0.20" step="0.01" />
 
-      <label>Electricity Cost (€/kWh):</label>
-      <input id="price" type="number" placeholder="0.20" />
+        <button id="calculate">Calculate</button>
 
-      <button id="calcBtn" class="primary">Calculate</button>
-
-      <div id="results" class="results" style="display:none;">
-        <h3>Results:</h3>
-        <p><strong>Per Hour:</strong> <span id="hour">-</span> €</p>
-        <p><strong>Per Day:</strong> <span id="day">-</span> €</p>
-        <p><strong>Per Month:</strong> <span id="month">-</span> €</p>
-        <p><strong>Per Year:</strong> <span id="year">-</span> €</p>
+        <div id="results"></div>
       </div>
-    </div>
+    </section>
   </main>
 
   <footer id="footer">
-    <p>Copyright &copy; viiru.top & viiru.ee 2025</p>
-    <a href="privacypolicy.html">Privacy Policy</a> |
-    <a href="tos.html">Terms Of Service</a>
+    <p>© 2025 Viiru. All rights reserved.</p>
   </footer>
 
   <script>
-    const power = document.getElementById("power");
-    const hours = document.getElementById("hours");
-    const price = document.getElementById("price");
-    const results = document.getElementById("results");
-    const calcBtn = document.getElementById("calcBtn");
-    const hour = document.getElementById("hour");
-    const day = document.getElementById("day");
-    const month = document.getElementById("month");
-    const year = document.getElementById("year");
+    document.getElementById("calculate").addEventListener("click", () => {
+      const watts = parseFloat(document.getElementById("wattage").value);
+      const hours = parseFloat(document.getElementById("hours").value);
+      const price = parseFloat(document.getElementById("price").value);
 
-    calcBtn.addEventListener("click", () => {
-      const p = parseFloat(power.value);
-      const h = parseFloat(hours.value);
-      const c = parseFloat(price.value);
-      if (isNaN(p) || isNaN(h) || isNaN(c)) return alert("Please fill all fields!");
+      if (!watts || !hours || !price) {
+        document.getElementById("results").innerHTML = "<p>Please fill all fields!</p>";
+        return;
+      }
 
-      const kwh = p / 1000;
-      const costHour = kwh * c;
-      const costDay = costHour * h;
-      const costMonth = costDay * 30;
-      const costYear = costDay * 365;
+      const kWhPerDay = (watts * hours) / 1000;
+      const costPerDay = kWhPerDay * price;
+      const costPerMonth = costPerDay * 30;
+      const costPerYear = costPerDay * 365;
 
-      hour.textContent = costHour.toFixed(3);
-      day.textContent = costDay.toFixed(3);
-      month.textContent = costMonth.toFixed(2);
-      year.textContent = costYear.toFixed(2);
-      results.style.display = "block";
-    });
-
-    document.getElementById("darkModeToggle").addEventListener("click", () => {
-      document.body.classList.toggle("dark");
+      document.getElementById("results").innerHTML = `
+        <h3>Results</h3>
+        <p>💡 Daily Cost: €${costPerDay.toFixed(2)}</p>
+        <p>📅 Monthly Cost: €${costPerMonth.toFixed(2)}</p>
+        <p>📆 Yearly Cost: €${costPerYear.toFixed(2)}</p>
+      `;
     });
   </script>
 </body>
