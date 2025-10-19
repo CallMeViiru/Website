@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Essential meta -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <title>Free Online Tools and Calculators</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Access a collection of free online tools and calculators — including electricity cost, password generator, discount, and download time calculators. Simple, fast, and accurate." />
+  <meta name="keywords" content="online tools, free calculators, password generator, electricity calculator, download time calculator, percentage off calculator, utilities, web tools" />
+  <meta name="author" content="Website Admin" />
+
+  <!-- Open Graph (for social media previews) -->
+  <meta property="og:title" content="Free Online Tools and Calculators" />
+  <meta property="og:description" content="Use free online calculators for electricity cost, password generation, discounts, and download time estimation." />
+  <meta property="og:image" content="https://www.viiru.top/Images/Viiru.png" />
+  <meta property="og:url" content="https://www.viiru.top/tools.html" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Free Online Tools and Calculators" />
+  <meta name="twitter:description" content="Try easy, accurate, and free online tools — from electricity price calculators to password and discount tools." />
+  <meta name="twitter:image" content="https://www.viiru.top/Images/Viiru.png" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.viiru.top/tools.html" />
+
+  <!-- Favicon & Styles -->
+  <link rel="icon" href="Images/Viiru.png" />
+  <link rel="stylesheet" href="tools.css" />
+
+  <!-- Structured Data (Schema.org JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Online Tools and Calculators",
+    "description": "Free online tools and calculators for everyday tasks — electricity cost, password generation, percentage off, and download time estimation.",
+    "url": "https://www.viiru.top/tools.html",
+    "hasPart": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Electricity Price Calculator",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Password Generator",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Percentage Off Calculator",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Download Time Calculator",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All"
+      }
+    ]
+  }
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DMPEGNPVEN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-DMPEGNPVEN');
+  </script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header id="header">
+    <div class="header-left">
+      <img id="HIcon" src="Images/Viiru.png" alt="Website logo" />
+      <h1 id="HH1">Tools</h1>
+    </div>
+    <div class="login-controls">
+      <button id="loginBtn">Login</button>
+      <button id="logoutBtn" style="display:none;">Logout</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <section class="tools-section">
+      <h2>Free Online Tools 🧰</h2>
+      <p>Explore a growing collection of fast and accurate tools and calculators for everyday use.</p>
+
+      <div class="tools-grid">
+        <article class="tool-card">
+          <h3>Electricity Price Calculator ⚡</h3>
+          <p>Calculate the cost of running electrical devices per day, month, or year based on power usage and energy rates.</p>
+          <a href="electricity-calculator.html" class="tool-btn">Open Tool</a>
+        </article>
+
+        <article class="tool-card">
+          <h3>Password Generator 🔐</h3>
+          <p>Generate strong, secure passwords with adjustable length and customizable options.</p>
+          <a href="password-generator.html" class="tool-btn">Open Tool</a>
+        </article>
+
+        <article class="tool-card">
+          <h3>Percentage Off Calculator 💸</h3>
+          <p>Find how much you save on discounts or calculate the total cost after applying a percentage off multiple items.</p>
+          <a href="percentage-off-calculator.html" class="tool-btn">Open Tool</a>
+        </article>
+
+        <article class="tool-card">
+          <h3>Download Time Calculator ⏱️</h3>
+          <p>Estimate how long a file download will take based on your internet speed and file size.</p>
+          <a href="download-time-calculator.html" class="tool-btn">Open Tool</a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <p>© 2025 All rights reserved.</p>
+    <a href="privacypolicy.html">Privacy Policy</a> |
+    <a href="tos.html">Terms of Service</a>
+  </footer>
+
+  <script type="module">
+    import { setupAuthButtons } from './firebase-config.js';
+    setupAuthButtons();
+  </script>
+</body>
+</html>
