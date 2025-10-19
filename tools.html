@@ -26,7 +26,7 @@
     </nav>
 
     <div class="right-h">
-      <button id="darkModeToggle">🌙</button>
+      <button id="darkModeToggle" title="Toggle dark mode">🌙</button>
       <button id="loginBtn" class="primary">Login</button>
     </div>
   </header>
@@ -37,9 +37,8 @@
     <div class="tools-grid">
       <a href="electricitycalc.html" class="tool-card">
         <h3>⚡ Electricity Price Calculator</h3>
-        <p>Find out how much your device costs to run daily, monthly, and yearly.</p>
+        <p>Calculate how much your device costs to run daily, monthly, and yearly.</p>
       </a>
-      <!-- Future tools can be added here -->
     </div>
   </main>
 
@@ -50,9 +49,114 @@
     <a href="tos.html">Terms Of Service</a>
   </footer>
 
-  <script>
-    // Dark mode toggle
-    document.getElementById("darkModeToggle").addEventListener("click", () => {
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="modal" aria-hidden="true">
+    <div class="modal-inner">
+      <button id="closeAuthModal" class="close">✕</button>
+      <h3>Sign in or Sign up</h3>
+
+      <div class="auth-cols">
+        <div class="auth-col">
+          <p><strong>Quick:</strong></p>
+          <button id="googleSignIn" class="primary">Sign in with Google</button>
+        </div>
+
+        <div class="auth-col">
+          <p><strong>Email</strong></p>
+          <input id="authEmail" type="email" placeholder="Email" />
+          <input id="authPassword" type="password" placeholder="Password" />
+          <div class="form-row">
+            <button id="emailSignIn" class="secondary">Sign In</button>
+            <button id="emailSignUp" class="secondary">Create Account</button>
+          </div>
+        </div>
+
+        <div class="auth-col">
+          <p><strong>Anonymous</strong></p>
+          <input id="anonIngameName" type="text" placeholder="In-game name" />
+          <button id="anonSignIn" class="secondary">Continue without account</button>
+        </div>
+      </div>
+
+      <div id="authError" class="auth-error" role="alert"></div>
+    </div>
+  </div>
+
+  <!-- Firebase Auth -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import {
+      getAuth, GoogleAuthProvider, signInWithPopup,
+      signInWithEmailAndPassword, createUserWithEmailAndPassword,
+      signOut, onAuthStateChanged, signInAnonymously, updateProfile
+    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVJgqD79MXrKbU2okML4wzlMym7yaLxio",
+      authDomain: "v11rutop.firebaseapp.com",
+      projectId: "v11rutop",
+      storageBucket: "v11rutop.firebasestorage.app",
+      messagingSenderId: "664984661004",
+      appId: "1:664984661004:web:357ea8a60723b000e55229"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    const loginBtn = document.getElementById("loginBtn");
+    const darkModeToggle = document.getElementById("darkModeToggle");
+    const authModal = document.getElementById("authModal");
+    const closeAuthModal = document.getElementById("closeAuthModal");
+    const googleSignIn = document.getElementById("googleSignIn");
+    const emailSignIn = document.getElementById("emailSignIn");
+    const emailSignUp = document.getElementById("emailSignUp");
+    const authEmail = document.getElementById("authEmail");
+    const authPassword = document.getElementById("authPassword");
+    const authError = document.getElementById("authError");
+    const anonSignIn = document.getElementById("anonSignIn");
+    const anonIngameName = document.getElementById("anonIngameName");
+
+    loginBtn.addEventListener("click", () => {
+      if (auth.currentUser) signOut(auth);
+      else showAuthModal();
+    });
+    closeAuthModal.addEventListener("click", hideAuthModal);
+    googleSignIn.addEventListener("click", async () => {
+      try { await signInWithPopup(auth, provider); hideAuthModal(); }
+      catch (err) { authError.textContent = err.message; }
+    });
+    emailSignIn.addEventListener("click", async () => {
+      try {
+        await signInWithEmailAndPassword(auth, authEmail.value, authPassword.value);
+        hideAuthModal();
+      } catch (err) { authError.textContent = err.message; }
+    });
+    emailSignUp.addEventListener("click", async () => {
+      try {
+        await createUserWithEmailAndPassword(auth, authEmail.value, authPassword.value);
+        hideAuthModal();
+      } catch (err) { authError.textContent = err.message; }
+    });
+    anonSignIn.addEventListener("click", async () => {
+      const name = anonIngameName.value.trim();
+      if (!name) { authError.textContent = "Enter a name"; return; }
+      try {
+        const cred = await signInAnonymously(auth);
+        await updateProfile(cred.user, { displayName: name });
+        hideAuthModal();
+      } catch (err) { authError.textContent = err.message; }
+    });
+
+    function showAuthModal() { authModal.style.display = "block"; }
+    function hideAuthModal() { authModal.style.display = "none"; }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) loginBtn.textContent = "Logout";
+      else loginBtn.textContent = "Login";
+    });
+
+    darkModeToggle.addEventListener("click", () => {
       document.body.classList.toggle("dark");
     });
   </script>
