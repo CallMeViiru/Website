@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Viiru · Tools</title>
+  <title>Tools · Viiru</title>
   <link rel="icon" href="Images/Viiru.png" />
   <link rel="stylesheet" href="tools.css" />
 </head>
@@ -17,10 +17,10 @@
 
     <nav>
       <ul>
-        <li><a href="https://www.viiru.top/">Home</a></li>
-        <li><a href="https://www.viiru.top/store">Store</a></li>
-        <li><a href="https://www.viiru.top/socials">Socials</a></li>
-        <li><a href="https://www.viiru.top/about">About</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="store.html">Store</a></li>
+        <li><a href="socials.html">Socials</a></li>
+        <li><a href="about.html">About</a></li>
         <li><a href="tools.html" class="active">Tools</a></li>
       </ul>
     </nav>
@@ -31,7 +31,7 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN -->
   <main>
     <h2>Useful Tools</h2>
     <div class="tools-grid">
@@ -70,25 +70,19 @@
             <button id="emailSignUp" class="secondary">Create Account</button>
           </div>
         </div>
-
-        <div class="auth-col">
-          <p><strong>Anonymous</strong></p>
-          <input id="anonIngameName" type="text" placeholder="In-game name" />
-          <button id="anonSignIn" class="secondary">Continue without account</button>
-        </div>
       </div>
 
       <div id="authError" class="auth-error" role="alert"></div>
     </div>
   </div>
 
-  <!-- Firebase Auth -->
+  <!-- FIREBASE AUTH -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
     import {
       getAuth, GoogleAuthProvider, signInWithPopup,
       signInWithEmailAndPassword, createUserWithEmailAndPassword,
-      signOut, onAuthStateChanged, signInAnonymously, updateProfile
+      signOut, onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -105,7 +99,6 @@
     const provider = new GoogleAuthProvider();
 
     const loginBtn = document.getElementById("loginBtn");
-    const darkModeToggle = document.getElementById("darkModeToggle");
     const authModal = document.getElementById("authModal");
     const closeAuthModal = document.getElementById("closeAuthModal");
     const googleSignIn = document.getElementById("googleSignIn");
@@ -114,49 +107,40 @@
     const authEmail = document.getElementById("authEmail");
     const authPassword = document.getElementById("authPassword");
     const authError = document.getElementById("authError");
-    const anonSignIn = document.getElementById("anonSignIn");
-    const anonIngameName = document.getElementById("anonIngameName");
 
+    // Open/close modal
     loginBtn.addEventListener("click", () => {
       if (auth.currentUser) signOut(auth);
-      else showAuthModal();
+      else authModal.style.display = "block";
     });
-    closeAuthModal.addEventListener("click", hideAuthModal);
+    closeAuthModal.addEventListener("click", () => authModal.style.display = "none");
+
+    // Google Sign-In
     googleSignIn.addEventListener("click", async () => {
-      try { await signInWithPopup(auth, provider); hideAuthModal(); }
+      try { await signInWithPopup(auth, provider); authModal.style.display = "none"; }
       catch (err) { authError.textContent = err.message; }
     });
+
+    // Email sign-in / sign-up
     emailSignIn.addEventListener("click", async () => {
       try {
         await signInWithEmailAndPassword(auth, authEmail.value, authPassword.value);
-        hideAuthModal();
+        authModal.style.display = "none";
       } catch (err) { authError.textContent = err.message; }
     });
     emailSignUp.addEventListener("click", async () => {
       try {
         await createUserWithEmailAndPassword(auth, authEmail.value, authPassword.value);
-        hideAuthModal();
+        authModal.style.display = "none";
       } catch (err) { authError.textContent = err.message; }
     });
-    anonSignIn.addEventListener("click", async () => {
-      const name = anonIngameName.value.trim();
-      if (!name) { authError.textContent = "Enter a name"; return; }
-      try {
-        const cred = await signInAnonymously(auth);
-        await updateProfile(cred.user, { displayName: name });
-        hideAuthModal();
-      } catch (err) { authError.textContent = err.message; }
-    });
-
-    function showAuthModal() { authModal.style.display = "block"; }
-    function hideAuthModal() { authModal.style.display = "none"; }
 
     onAuthStateChanged(auth, (user) => {
       if (user) loginBtn.textContent = "Logout";
       else loginBtn.textContent = "Login";
     });
 
-    darkModeToggle.addEventListener("click", () => {
+    document.getElementById("darkModeToggle").addEventListener("click", () => {
       document.body.classList.toggle("dark");
     });
   </script>
