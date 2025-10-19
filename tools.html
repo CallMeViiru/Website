@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tools | Viiru</title>
-  <link rel="stylesheet" href="tools.css">
+  <link rel="stylesheet" href="tools.css" />
 </head>
 <body>
+  <!-- HEADER -->
   <header id="header">
     <div class="header-left">
-      <img id="HIcon" src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Logo">
+      <img id="HIcon" src="Images/Viiru.png" alt="Logo" />
       <h1 id="HH1">Viiru</h1>
     </div>
     <div class="login-controls">
@@ -18,22 +19,30 @@
     </div>
   </header>
 
+  <!-- MAIN -->
   <main>
     <h2>Available Tools</h2>
-    <div class="tool-grid">
+    <div class="tool-grid" id="toolGrid">
+      <!-- Add tools here -->
       <div class="tool-card">
-        <h3>Electricity Price Calculator</h3>
-        <p>Estimate your daily, monthly, and yearly energy costs.</p>
+        <h3>Electricity Price Calculator ⚡</h3>
+        <p>Calculate your energy costs daily, monthly, or yearly.</p>
         <a href="electricity-calculator.html" class="tool-btn">Open Tool</a>
+      </div>
+
+      <div class="tool-card">
+        <h3>Password Generator 🔒</h3>
+        <p>Create strong, random passwords with custom options.</p>
+        <a href="password-generator.html" class="tool-btn">Open Tool</a>
       </div>
     </div>
   </main>
 
+  <!-- FOOTER -->
   <footer id="footer">
     <p>© 2025 Viiru. All rights reserved.</p>
   </footer>
 
-  <!-- Firebase + Login -->
   <script type="module">
     import { setupAuthButtons } from './firebase-config.js';
     setupAuthButtons();
