@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Electricity Price Calculator | Viiru</title>
-  <link rel="stylesheet" href="tools.css" />
+  <link rel="stylesheet" href="tools.css">
 </head>
 <body>
   <header id="header">
-    <img id="HIcon" src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Viiru Logo" />
-    <h1 id="HH1">Electricity Price Calculator</h1>
+    <div class="header-left">
+      <img id="HIcon" src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Logo">
+      <h1 id="HH1">Viiru</h1>
+    </div>
     <div class="login-controls">
       <button id="loginBtn">Login</button>
       <button id="logoutBtn" style="display:none;">Logout</button>
@@ -40,7 +42,11 @@
     <p>© 2025 Viiru. All rights reserved.</p>
   </footer>
 
-  <script>
+  <!-- Firebase + Calculator -->
+  <script type="module">
+    import { setupAuthButtons } from './firebase-config.js';
+    setupAuthButtons();
+
     document.getElementById("calculate").addEventListener("click", () => {
       const watts = parseFloat(document.getElementById("wattage").value);
       const hours = parseFloat(document.getElementById("hours").value);
