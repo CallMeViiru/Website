@@ -1,146 +1,169 @@
-/* General page style */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f9fc;
   margin: 0;
-  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Header */
-#header {
-  background-color: #1e293b;
-  padding: 15px;
+header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-bottom: 5px solid #0f172a;
+  align-items: center;
+  background-color: #1c1c1c;
+  padding: 10px 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
   flex-wrap: wrap;
 }
 
-#HIcon {
-  height: 50px;
+header img {
+  width: 40px;
+  height: 40px;
   margin-right: 10px;
 }
 
-#HH1 {
-  color: #93c5fd;
-  margin: 0;
-  flex: 1;
+.header-left {
+  display: flex;
+  align-items: center;
 }
 
-.login-controls {
-  display: flex;
-  gap: 10px;
+h1 {
+  font-size: 1.5rem;
+  color: #0ff;
 }
 
 .login-controls button {
-  background-color: #3b82f6;
-  color: #fff;
+  background-color: #222;
   border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
+  color: white;
+  padding: 8px 14px;
+  margin: 5px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s;
 }
 
 .login-controls button:hover {
-  background-color: #2563eb;
+  background-color: #00bcd4;
+  color: black;
 }
 
-/* Tool grid */
+main {
+  flex: 1;
+  padding: 20px;
+  text-align: center;
+}
+
+h2 {
+  color: #0ff;
+  margin-bottom: 20px;
+}
+
+/* TOOL GRID */
 .tool-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  padding: 30px;
 }
 
 .tool-card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
   padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.tool-card h3 {
+  margin-bottom: 10px;
+  color: #00bcd4;
 }
 
 .tool-btn {
   display: inline-block;
   margin-top: 10px;
-  background-color: #3b82f6;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 10px 16px;
+  background-color: #00bcd4;
+  color: #000;
   text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
 }
 
 .tool-btn:hover {
-  background-color: #2563eb;
+  background-color: #008c9e;
+  color: #fff;
 }
 
-/* Calculator */
-.calculator {
-  max-width: 400px;
-  margin: 40px auto;
+/* CALCULATORS */
+.calc-box {
+  background-color: #1e1e1e;
   padding: 20px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.calc-box label {
-  display: block;
-  margin: 10px 0 5px;
-}
-
-.calc-box input {
-  width: 80%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+.calc-box input[type="number"], 
+.calc-box input[type="text"] {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background-color: #2a2a2a;
+  color: white;
 }
 
 .calc-box button {
-  margin-top: 15px;
-  background-color: #3b82f6;
-  color: white;
+  background-color: #00bcd4;
+  color: black;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .calc-box button:hover {
-  background-color: #2563eb;
+  background-color: #008c9e;
+  color: white;
 }
 
-/* Footer */
-#footer {
-  background-color: #1e293b;
-  color: #93c5fd;
-  padding: 20px;
-  margin-top: 40px;
-  border-radius: 10px 10px 0 0;
+#resultArea {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
-/* 📱 Mobile Responsiveness */
+#resultArea input {
+  flex: 1;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 15px;
+  background-color: #1c1c1c;
+  font-size: 0.9em;
+  color: #aaa;
+}
+
+/* MOBILE FRIENDLY */
 @media (max-width: 600px) {
-  #header {
+  header {
     flex-direction: column;
-    text-align: center;
+    align-items: flex-start;
   }
-
-  #HH1 {
-    margin: 10px 0;
-  }
-
   .tool-grid {
     grid-template-columns: 1fr;
   }
-
-  .calculator {
-    width: 90%;
-  }
-
-  .calc-box input {
-    width: 100%;
+  #resultArea {
+    flex-direction: column;
   }
 }
