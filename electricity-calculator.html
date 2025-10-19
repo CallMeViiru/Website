@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electricity Price Calculator | Viiru</title>
+  <link rel="stylesheet" href="tools.css">
+</head>
+<body>
+  <header id="header">
+    <div class="header-left">
+      <img id="HIcon" src="https://github.com/CallMeViiru/Website/blob/b0f76f1077e3d3c535c41fc2a11e10c69f4eb62d/Images/Viiru.png" alt="Logo">
+      <h1 id="HH1">Viiru</h1>
+    </div>
+    <div class="login-controls">
+      <button id="loginBtn">Login</button>
+      <button id="logoutBtn" style="display:none;">Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="calculator">
+      <h2>Device Power Usage Calculator</h2>
+      <div class="calc-box">
+        <label>Device Power (Watts):</label>
+        <input type="number" id="wattage" placeholder="e.g. 100" />
+
+        <label>Hours Used per Day:</label>
+        <input type="number" id="hours" placeholder="e.g. 4" />
+
+        <label>Electricity Price (€/kWh):</label>
+        <input type="number" id="price" placeholder="e.g. 0.20" step="0.01" />
+
+        <button id="calculate">Calculate</button>
+
+        <div id="results"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer">
+    <p>© 2025 Viiru. All rights reserved.</p>
+  </footer>
+
+  <!-- Firebase + Calculator -->
+  <script type="module">
+    import { setupAuthButtons } from './firebase-config.js';
+    setupAuthButtons();
+
+    document.getElementById("calculate").addEventListener("click", () => {
+      const watts = parseFloat(document.getElementById("wattage").value);
+      const hours = parseFloat(document.getElementById("hours").value);
+      const price = parseFloat(document.getElementById("price").value);
+
+      if (!watts || !hours || !price) {
+        document.getElementById("results").innerHTML = "<p>Please fill all fields!</p>";
+        return;
+      }
+
+      const kWhPerDay = (watts * hours) / 1000;
+      const costPerDay = kWhPerDay * price;
+      const costPerMonth = costPerDay * 30;
+      const costPerYear = costPerDay * 365;
+
+      document.getElementById("results").innerHTML = `
+        <h3>Results</h3>
+        <p>💡 Daily Cost: €${costPerDay.toFixed(2)}</p>
+        <p>📅 Monthly Cost: €${costPerMonth.toFixed(2)}</p>
+        <p>📆 Yearly Cost: €${costPerYear.toFixed(2)}</p>
+      `;
+    });
+  </script>
+</body>
+</html>
