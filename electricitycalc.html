@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Electricity Price Calculator · Viiru</title>
+  <link rel="icon" href="Images/Viiru.png" />
+  <link rel="stylesheet" href="tools.css" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header id="header">
+    <div class="left-h">
+      <img id="HIcon" src="Images/Viiru.png" alt="Viiru logo" />
+      <h1 id="HH1">Viiru</h1>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="https://www.viiru.top/">Home</a></li>
+        <li><a href="https://www.viiru.top/store">Store</a></li>
+        <li><a href="https://www.viiru.top/socials">Socials</a></li>
+        <li><a href="https://www.viiru.top/about">About</a></li>
+        <li><a href="tools.html">Tools</a></li>
+      </ul>
+    </nav>
+
+    <div class="right-h">
+      <button id="darkModeToggle">🌙</button>
+      <button id="loginBtn" class="primary">Login</button>
+    </div>
+  </header>
+
+  <!-- MAIN TOOL -->
+  <main class="tool-page">
+    <h2>⚡ Electricity Price Calculator</h2>
+    <p class="subtitle">Calculate how much it costs to run your devices</p>
+
+    <div class="calculator">
+      <label for="power">Device Power (Watts):</label>
+      <input id="power" type="number" min="1" placeholder="e.g. 500" />
+
+      <label for="hours">Daily Usage (Hours):</label>
+      <input id="hours" type="number" min="0" step="0.1" placeholder="e.g. 4" />
+
+      <label for="price">Electricity Price (€/kWh):</label>
+      <input id="price" type="number" min="0" step="0.001" placeholder="e.g. 0.20" />
+
+      <button id="calcBtn" class="primary">Calculate</button>
+
+      <div id="results" class="results" style="display:none;">
+        <h3>Results:</h3>
+        <p><strong>Per Hour:</strong> <span id="resHour">-</span> €</p>
+        <p><strong>Per Day:</strong> <span id="resDay">-</span> €</p>
+        <p><strong>Per Month (30d):</strong> <span id="resMonth">-</span> €</p>
+        <p><strong>Per Year (365d):</strong> <span id="resYear">-</span> €</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <p>Copyright &copy; viiru.top & viiru.ee 2025</p>
+    <a href="privacypolicy.html">Privacy Policy</a> |
+    <a href="tos.html">Terms Of Service</a>
+  </footer>
+
+  <script>
+    const power = document.getElementById("power");
+    const hours = document.getElementById("hours");
+    const price = document.getElementById("price");
+    const calcBtn = document.getElementById("calcBtn");
+    const resHour = document.getElementById("resHour");
+    const resDay = document.getElementById("resDay");
+    const resMonth = document.getElementById("resMonth");
+    const resYear = document.getElementById("resYear");
+    const results = document.getElementById("results");
+
+    calcBtn.addEventListener("click", () => {
+      const pwr = parseFloat(power.value);
+      const hrs = parseFloat(hours.value);
+      const cost = parseFloat(price.value);
+
+      if (isNaN(pwr) || isNaN(hrs) || isNaN(cost)) {
+        alert("Please fill in all fields correctly.");
+        return;
+      }
+
+      const kWh = pwr / 1000;
+      const costPerHour = kWh * cost;
+      const costPerDay = costPerHour * hrs;
+      const costPerMonth = costPerDay * 30;
+      const costPerYear = costPerDay * 365;
+
+      resHour.textContent = costPerHour.toFixed(3);
+      resDay.textContent = costPerDay.toFixed(3);
+      resMonth.textContent = costPerMonth.toFixed(2);
+      resYear.textContent = costPerYear.toFixed(2);
+
+      results.style.display = "block";
+    });
+
+    document.getElementById("darkModeToggle").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+    });
+  </script>
+</body>
+</html>
