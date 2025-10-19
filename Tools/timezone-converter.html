@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time Zone Converter</title>
+  <link rel="stylesheet" href="tools.css" />
+</head>
+<body>
+  <header id="header">
+    <div class="header-left">
+      <img id="HIcon" src="Images/Viiru.png" alt="Logo" />
+      <h1 id="HH1">Time Zone Converter</h1>
+    </div>
+    <div class="login-controls">
+      <button id="loginBtn">Login</button>
+      <button id="logoutBtn" style="display:none;">Logout</button>
+    </div>
+  </header>
+
+  <main class="tool-page">
+    <section class="tool-container">
+      <h2>Convert Between Time Zones 🌍</h2>
+
+      <label>Select Base Time:</label>
+      <input type="datetime-local" id="baseTime" />
+
+      <label>From Time Zone:</label>
+      <select id="fromZone"></select>
+
+      <label>To Time Zone:</label>
+      <select id="toZone"></select>
+
+      <button id="convertBtn">Convert</button>
+
+      <div id="result" class="result-box"></div>
+    </section>
+  </main>
+
+  <footer id="footer">
+    <p>© 2025 All rights reserved.</p>
+    <a href="privacypolicy.html">Privacy Policy</a> |
+    <a href="tos.html">Terms of Service</a>
+  </footer>
+
+  <script>
+    const timeZones = Intl.supportedValuesOf("timeZone");
+    const fromZone = document.getElementById("fromZone");
+    const toZone = document.getElementById("toZone");
+
+    timeZones.forEach(zone => {
+      fromZone.innerHTML += `<option value="${zone}">${zone}</option>`;
+      toZone.innerHTML += `<option value="${zone}">${zone}</option>`;
+    });
+    fromZone.value = "UTC";
+    toZone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    document.getElementById("convertBtn").addEventListener("click", () => {
+      const baseTime = document.getElementById("baseTime").value;
+      const from = fromZone.value;
+      const to = toZone.value;
+      const result = document.getElementById("result");
+
+      if (!baseTime) {
+        result.innerHTML = "<p>Please select a date and time.</p>";
+        return;
+      }
+
+      const date = new Date(baseTime);
+      const fromOffset = new Date(date.toLocaleString("en-US", { timeZone: from }));
+      const toOffset = new Date(date.toLocaleString("en-US", { timeZone: to }));
+
+      const diff = toOffset.getTime() - fromOffset.getTime();
+      const converted = new Date(date.getTime() + diff);
+
+      result.innerHTML = `<h3>Converted Time:</h3><p>${converted.toLocaleString("en-US", { timeZone: to })}</p>`;
+    });
+  </script>
+</body>
+</html>
