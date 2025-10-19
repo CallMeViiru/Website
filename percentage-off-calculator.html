@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Percentage Off Calculator | Viiru</title>
+  <link rel="stylesheet" href="tools.css" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header id="header">
+    <div class="header-left">
+      <img id="HIcon" src="Images/Viiru.png" alt="Logo" />
+      <h1 id="HH1">Viiru</h1>
+    </div>
+    <div class="login-controls">
+      <button id="loginBtn">Login</button>
+      <button id="logoutBtn" style="display:none;">Logout</button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <section class="calculator">
+      <h2>Percentage Off Calculator 💸</h2>
+      <p>Calculate your final price after discounts — add multiple products below.</p>
+
+      <div id="productsContainer" class="calc-box"></div>
+
+      <button id="addProductBtn">➕ Add Product</button>
+
+      <div class="calc-box">
+        <label for="totalDiscount">Extra % off total (optional):</label>
+        <input type="number" id="totalDiscount" placeholder="e.g., 10" min="0" max="100" />
+
+        <button id="calculateBtn">Calculate Total</button>
+
+        <div id="results" style="margin-top:10px;">
+          <p id="totalBefore">Total before discount: €0.00</p>
+          <p id="totalAfter">Total after discount: €0.00</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="footer">
+    <p>© 2025 Viiru. All rights reserved.</p>
+  </footer>
+
+  <script type="module">
+    import { setupAuthButtons } from './firebase-config.js';
+    setupAuthButtons();
+
+    const productsContainer = document.getElementById('productsContainer');
+    const addProductBtn = document.getElementById('addProductBtn');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const totalDiscountInput = document.getElementById('totalDiscount');
+    const totalBefore = document.getElementById('totalBefore');
+    const totalAfter = document.getElementById('totalAfter');
+
+    // Add product input set
+    function addProduct() {
+      const productDiv = document.createElement('div');
+      productDiv.classList.add('product-item');
+      productDiv.innerHTML = `
+        <input type="text" placeholder="Product name" class="product-name" />
+        <input type="number" placeholder="Price (€)" class="product-price" min="0" step="0.01" />
+        <input type="number" placeholder="% off" class="product-discount" min="0" max="100" />
+        <button class="removeBtn">❌</button>
+      `;
+      productDiv.querySelector('.removeBtn').addEventListener('click', () => productDiv.remove());
+      productsContainer.appendChild(productDiv);
+    }
+
+    addProductBtn.addEventListener('click', addProduct);
+    addProduct(); // Add one by default
+
+    // Calculate total
+    calculateBtn.addEventListener('click', () => {
+      const productItems = document.querySelectorAll('.product-item');
+      let totalBeforeDiscount = 0;
+      let totalAfterDiscount = 0;
+
+      productItems.forEach(item => {
+        const price = parseFloat(item.querySelector('.product-price').value) || 0;
+        const discount = parseFloat(item.querySelector('.product-discount').value) || 0;
+        totalBeforeDiscount += price;
+        totalAfterDiscount += price * (1 - discount / 100);
+      });
+
+      const extraDiscount = parseFloat(totalDiscountInput.value) || 0;
+      const finalTotal = totalAfterDiscount * (1 - extraDiscount / 100);
+
+      totalBefore.textContent = `Total before discount: €${totalBeforeDiscount.toFixed(2)}`;
+      totalAfter.textContent = `Total after discount: €${finalTotal.toFixed(2)}`;
+    });
+  </script>
+</body>
+</html>
