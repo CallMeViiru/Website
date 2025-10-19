@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Currency Converter</title>
+  <link rel="stylesheet" href="tools.css" />
+</head>
+<body>
+  <header id="header">
+    <div class="header-left">
+      <img id="HIcon" src="Images/Viiru.png" alt="Logo" />
+      <h1 id="HH1">Currency Converter</h1>
+    </div>
+    <div class="login-controls">
+      <button id="loginBtn">Login</button>
+      <button id="logoutBtn" style="display:none;">Logout</button>
+    </div>
+  </header>
+
+  <main class="tool-page">
+    <section class="tool-container">
+      <h2>Convert Between Currencies 💱</h2>
+      <p>Enter the amount and select currencies:</p>
+
+      <input type="number" id="amount" placeholder="Amount" />
+
+      <label for="from">From:</label>
+      <select id="from"></select>
+
+      <label for="to">To:</label>
+      <select id="to"></select>
+
+      <button id="convertBtn">Convert</button>
+
+      <div id="result" class="result-box"></div>
+    </section>
+  </main>
+
+  <footer id="footer">
+    <p>© 2025 All rights reserved.</p>
+    <a href="privacypolicy.html">Privacy Policy</a> |
+    <a href="tos.html">Terms of Service</a>
+  </footer>
+
+  <script>
+    const fromSelect = document.getElementById("from");
+    const toSelect = document.getElementById("to");
+    const result = document.getElementById("result");
+
+    const currencies = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD", "INR"];
+    currencies.forEach(c => {
+      fromSelect.innerHTML += `<option value="${c}">${c}</option>`;
+      toSelect.innerHTML += `<option value="${c}">${c}</option>`;
+    });
+    fromSelect.value = "USD";
+    toSelect.value = "EUR";
+
+    document.getElementById("convertBtn").addEventListener("click", async () => {
+      const amount = parseFloat(document.getElementById("amount").value);
+      if (!amount) {
+        result.innerHTML = "<p>Please enter a valid amount.</p>";
+        return;
+      }
+
+      const from = fromSelect.value;
+      const to = toSelect.value;
+
+      try {
+        const res = await fetch(`https://api.exchangerate.host/convert?from=${from}&to=${to}`);
+        const data = await res.json();
+        const converted = (data.result * amount).toFixed(2);
+        result.innerHTML = `<h3>${amount} ${from} = ${converted} ${to}</h3>`;
+      } catch (err) {
+        result.innerHTML = "<p>Error fetching exchange rate.</p>";
+      }
+    });
+  </script>
+</body>
+</html>
